@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         appBarTheme: AppBarTheme(
           backgroundColor: const Color(0xFFf5f4f0).withOpacity(0.9),
-          // surfaceTintColor: const Color(0xFFf5f4f0),
+          surfaceTintColor: const Color(0xFFf5f4f0),
           centerTitle: false,
         ),
       ),
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         primaryColor: const Color(0xFFb8ed55),
         appBarTheme: AppBarTheme(
           backgroundColor: const Color(0xFF121212).withOpacity(0.9),
-          // surfaceTintColor: const Color(0xFFf5f4f0),
+          surfaceTintColor: const Color(0xFF121212),
           centerTitle: false,
         ),
       ),
