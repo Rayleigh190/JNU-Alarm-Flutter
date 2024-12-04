@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/features/main/main_screen.dart';
+import 'package:jnu_alarm/features/setting/repos/notice_config_repo.dart';
+import 'package:jnu_alarm/features/setting/view_models/notice_setting_view_model.dart';
 import 'package:jnu_alarm/firebase_options.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +24,19 @@ void main() async {
   // make flutter draw behind navigation bar
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
-  runApp(const ProviderScope(child: MyApp()));
+  // make SharedPreferences instance
+  final preferences = await SharedPreferences.getInstance();
+  final repository = NoticeSettingRepository(preferences);
+
+  runApp(
+    ProviderScope(
+      overrides: [
+        noticeSettingProvider
+            .overrideWith(() => NoticeSettingViewModel(repository))
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
