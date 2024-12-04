@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jnu_alarm/features/setting/view_models/notice_setting_view_model.dart';
 import 'package:jnu_alarm/features/setting/views/widgets/settings_ui.dart';
 
-class SettingScreen extends StatelessWidget {
+class SettingScreen extends ConsumerWidget {
   const SettingScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(noticeSettingProvider);
+    final settingsNotifier = ref.read(noticeSettingProvider.notifier);
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -19,52 +24,22 @@ class SettingScreen extends StatelessWidget {
       body: SettingsList(
         platform: DevicePlatform.iOS,
         sections: [
-          SettingsSection(
-            title: const Text('일반'),
-            tiles: <SettingsTile>[
-              SettingsTile.switchTile(
-                onToggle: (value) {},
-                initialValue: true,
-                leading: const Icon(Icons.language),
-                title: const Text('기본 알림'),
-              ),
-              SettingsTile.switchTile(
-                onToggle: (value) {},
-                initialValue: true,
-                leading: const Icon(Icons.format_paint),
-                title: const Text('홍보/광고'),
-              ),
-            ],
-          ),
-          SettingsSection(
-            title: const Text('대학'),
-            tiles: <SettingsTile>[
-              SettingsTile.switchTile(
-                onToggle: (value) {},
-                initialValue: true,
-                leading: const Icon(Icons.format_paint),
-                title: const Text('학사 알림'),
-              ),
-              SettingsTile.switchTile(
-                onToggle: (value) {},
-                initialValue: true,
-                leading: const Icon(Icons.format_paint),
-                title: const Text('장학 알림'),
-              ),
-              SettingsTile.navigation(
-                leading: const Icon(Icons.language),
-                title: const Text('단과대 알림'),
-              ),
-              SettingsTile.navigation(
-                leading: const Icon(Icons.language),
-                title: const Text('학과 알림'),
-              ),
-              SettingsTile.navigation(
-                leading: const Icon(Icons.language),
-                title: const Text('전문대학원 알림'),
-              ),
-            ],
-          ),
+          for (var section in NoticeSettingViewModel.groupedTopics.entries)
+            SettingsSection(
+              title: Text(section.key),
+              tiles: [
+                for (var topicEntry in section.value)
+                  SettingsTile.switchTile(
+                    title: Text(topicEntry.values.first), // 한글명
+                    initialValue:
+                        settings.topics[topicEntry.keys.first] ?? false,
+                    onToggle: (value) {
+                      settingsNotifier.toggleTopic(
+                          topicEntry.keys.first, value);
+                    },
+                  ),
+              ],
+            ),
         ],
       ),
     );
