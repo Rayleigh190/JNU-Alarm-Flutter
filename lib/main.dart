@@ -4,12 +4,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jnu_alarm/error/global_error_listener.dart';
+import 'package:jnu_alarm/common/error/global_error_listener.dart';
 import 'package:jnu_alarm/features/main/main_screen.dart';
 import 'package:jnu_alarm/features/setting/repos/notice_config_repo.dart';
 import 'package:jnu_alarm/features/setting/view_models/notice_setting_view_model.dart';
 import 'package:jnu_alarm/firebase_options.dart';
-import 'package:jnu_alarm/error/global_error_handler.dart';
+import 'package:jnu_alarm/common/error/global_error_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {

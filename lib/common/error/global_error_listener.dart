@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:jnu_alarm/error/global_error_handler.dart';
+import 'package:jnu_alarm/common/error/global_error_handler.dart';
 
 class GlobalErrorListener extends StatefulWidget {
   final Widget child;
