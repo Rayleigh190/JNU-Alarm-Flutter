@@ -21,6 +21,7 @@ class NoticeSettingViewModel extends Notifier<NoticeSettingModel> {
         await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
       }
       await _repository.setTopic(topic, isSubscribed);
+      await _repository.setSubscribedTopics(topic, isSubscribed);
       state = NoticeSettingModel(
         topics: {...state.topics, topic: isSubscribed},
       );
