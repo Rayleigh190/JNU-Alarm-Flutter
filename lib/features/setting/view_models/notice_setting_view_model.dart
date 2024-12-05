@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:jnu_alarm/features/setting/constants/main_setting_const.dart';
+import 'package:jnu_alarm/features/setting/constants/setting_const_model.dart';
 import 'package:jnu_alarm/features/setting/models/notice_setting_model.dart';
 import 'package:jnu_alarm/features/setting/repos/notice_config_repo.dart';
 
@@ -7,18 +9,6 @@ class NoticeSettingViewModel extends Notifier<NoticeSettingModel> {
   final NoticeSettingRepository _repository;
 
   NoticeSettingViewModel(this._repository);
-
-  static const Map<String, String> _topicMap = {
-    "test": "테스트 알림",
-    "test2": "테스트2 알림",
-  };
-
-  static Map<String, List<Map<String, String>>> groupedTopics = {
-    "개발자 모드": [
-      {"test": "테스트 알림"},
-      {"test2": "테스트2 알림"},
-    ],
-  };
 
   Future<void> toggleTopic(String topic, bool isSubscribed) async {
     if (isSubscribed) {
@@ -34,11 +24,12 @@ class NoticeSettingViewModel extends Notifier<NoticeSettingModel> {
 
   @override
   NoticeSettingModel build() {
-    final topicKeys = _topicMap.keys;
-    final savedTopics = Map.fromEntries(
-      topicKeys
-          .map((topic) => MapEntry(topic, _repository.isSubscribed(topic))),
-    );
+    final savedTopics = {
+      for (var tile
+          in mainSettingSectionGroup.expand((section) => section.tiles))
+        if (tile is SwitchTile)
+          tile.topic: _repository.isSubscribed(tile.topic),
+    };
     return NoticeSettingModel(topics: savedTopics);
   }
 }

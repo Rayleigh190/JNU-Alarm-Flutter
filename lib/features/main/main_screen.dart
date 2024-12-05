@@ -3,7 +3,7 @@ import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
 import 'package:jnu_alarm/features/main/widgets/bottom_nav_btn.dart';
 import 'package:jnu_alarm/features/notice/views/notice_screen.dart';
-import 'package:jnu_alarm/features/setting/views/setting_screen.dart';
+import 'package:jnu_alarm/features/setting/views/main_setting_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -19,7 +19,7 @@ class _MainScreenState extends State<MainScreen>
 
   final List<Widget> _page = [
     const NoticeScreen(),
-    const SettingScreen(),
+    const MainSettingScreen(),
   ];
 
   @override
