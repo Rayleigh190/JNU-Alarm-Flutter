@@ -75,6 +75,9 @@ class MyApp extends StatelessWidget {
           surfaceTintColor: const Color(0xFF121212),
           centerTitle: false,
         ),
+        dialogTheme: const DialogTheme(
+          barrierColor: Colors.white10,
+        ),
       ),
       home: const GlobalErrorListener(
         child: MainScreen(),

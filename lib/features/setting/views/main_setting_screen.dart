@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jnu_alarm/common/widgets/loading_dialog.dart';
 import 'package:jnu_alarm/features/setting/constants/main_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/setting_const_model.dart';
 import 'package:jnu_alarm/features/setting/view_models/notice_setting_view_model.dart';
@@ -33,8 +34,16 @@ class MainSettingScreen extends ConsumerWidget {
                 return SettingsTile.switchTile(
                   title: Text(tile.title),
                   initialValue: settings.topics[tile.topic] ?? false,
-                  onToggle: (value) {
-                    settingsNotifier.toggleTopic(tile.topic, value);
+                  onToggle: (value) async {
+                    LoadingDialogBuilder(context).showLoadingDialog(
+                      value
+                          ? "${tile.title} 구독 중.."
+                          : "${tile.title} 구독 취소 중..",
+                    );
+                    await settingsNotifier.toggleTopic(tile.topic, value);
+                    if (context.mounted) {
+                      LoadingDialogBuilder(context).hideLoadingDialog();
+                    }
                   },
                 );
               } else if (tile is NavigationTile) {
