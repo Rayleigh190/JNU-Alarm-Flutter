@@ -1,42 +1,50 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jnu_alarm/error/global_error_listener.dart';
 import 'package:jnu_alarm/features/main/main_screen.dart';
 import 'package:jnu_alarm/features/setting/repos/notice_config_repo.dart';
 import 'package:jnu_alarm/features/setting/view_models/notice_setting_view_model.dart';
 import 'package:jnu_alarm/firebase_options.dart';
+import 'package:jnu_alarm/error/global_error_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
-  // make navigation bar transparent
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.transparent,
-    ),
-  );
-  // make flutter draw behind navigation bar
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    // make navigation bar transparent
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.transparent,
+      ),
+    );
+    // make flutter draw behind navigation bar
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
-  // make SharedPreferences instance
-  final preferences = await SharedPreferences.getInstance();
-  final repository = NoticeSettingRepository(preferences);
+    // make SharedPreferences instance
+    final preferences = await SharedPreferences.getInstance();
+    final repository = NoticeSettingRepository(preferences);
 
-  runApp(
-    ProviderScope(
-      overrides: [
-        noticeSettingProvider
-            .overrideWith(() => NoticeSettingViewModel(repository))
-      ],
-      child: const MyApp(),
-    ),
-  );
+    runApp(
+      ProviderScope(
+        overrides: [
+          noticeSettingProvider
+              .overrideWith(() => NoticeSettingViewModel(repository))
+        ],
+        child: const MyApp(),
+      ),
+    );
+  }, (error, stackTrace) {
+    GlobalErrorHandler().handle(error, stackTrace);
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -68,7 +76,9 @@ class MyApp extends StatelessWidget {
           centerTitle: false,
         ),
       ),
-      home: const MainScreen(),
+      home: const GlobalErrorListener(
+        child: MainScreen(),
+      ),
     );
   }
 }

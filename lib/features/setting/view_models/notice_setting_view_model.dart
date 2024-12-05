@@ -4,6 +4,7 @@ import 'package:jnu_alarm/features/setting/constants/main_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/setting_const_model.dart';
 import 'package:jnu_alarm/features/setting/models/notice_setting_model.dart';
 import 'package:jnu_alarm/features/setting/repos/notice_config_repo.dart';
+import 'package:jnu_alarm/error/global_error_handler.dart';
 
 class NoticeSettingViewModel extends Notifier<NoticeSettingModel> {
   final NoticeSettingRepository _repository;
@@ -11,15 +12,19 @@ class NoticeSettingViewModel extends Notifier<NoticeSettingModel> {
   NoticeSettingViewModel(this._repository);
 
   Future<void> toggleTopic(String topic, bool isSubscribed) async {
-    if (isSubscribed) {
-      await FirebaseMessaging.instance.subscribeToTopic(topic);
-    } else {
-      await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
+    try {
+      if (isSubscribed) {
+        await FirebaseMessaging.instance.subscribeToTopic(topic);
+      } else {
+        await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
+      }
+      await _repository.setTopic(topic, isSubscribed);
+      state = NoticeSettingModel(
+        topics: {...state.topics, topic: isSubscribed},
+      );
+    } catch (e, stackTrace) {
+      GlobalErrorHandler().handle(e, stackTrace);
     }
-    await _repository.setTopic(topic, isSubscribed);
-    state = NoticeSettingModel(
-      topics: {...state.topics, topic: isSubscribed},
-    );
   }
 
   @override
