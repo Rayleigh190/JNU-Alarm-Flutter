@@ -17,6 +17,7 @@ class CollegeSettingScreen extends ConsumerWidget {
     final settingsNotifier = ref.read(collegeNoticeSettingProvider.notifier);
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text(
           "단과대 설정",

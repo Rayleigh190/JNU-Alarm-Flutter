@@ -45,3 +45,8 @@ final collegeNoticeSettingProvider =
     NotifierProvider<NoticeSettingViewModel, NoticeSettingModel>(
   () => throw UnimplementedError(),
 );
+
+final departNoticeSettingProvider =
+    NotifierProvider<NoticeSettingViewModel, NoticeSettingModel>(
+  () => throw UnimplementedError(),
+);
