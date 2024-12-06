@@ -1,7 +1,7 @@
 import 'package:jnu_alarm/features/setting/constants/setting_const_model.dart';
 
 const SettingSection depart1SettingSection = SettingSection(
-  title: "간호대학",
+  title: "각 학과 홈페이지에 새 공지사항이 올라오면 알려드립니다.\n\n간호대학",
   tiles: [
     SwitchTile(
       title: "간호학과",

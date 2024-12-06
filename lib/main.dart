@@ -9,6 +9,7 @@ import 'package:jnu_alarm/features/main/main_screen.dart';
 import 'package:jnu_alarm/features/setting/constants/college_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/depart_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/main_setting_const.dart';
+import 'package:jnu_alarm/features/setting/constants/sg_school_setting_const.dart';
 import 'package:jnu_alarm/features/setting/repos/notice_config_repo.dart';
 import 'package:jnu_alarm/features/setting/view_models/notice_setting_view_model.dart';
 import 'package:jnu_alarm/firebase_options.dart';
@@ -45,6 +46,8 @@ void main() async {
               NoticeSettingViewModel(repository, collegeSettingSectionGroup)),
           departNoticeSettingProvider.overrideWith(() =>
               NoticeSettingViewModel(repository, departSettingSectionGroup)),
+          sgSchoolNoticeSettingProvider.overrideWith(() =>
+              NoticeSettingViewModel(repository, sgSchoolSettingSectionGroup)),
         ],
         child: const MyApp(),
       ),
