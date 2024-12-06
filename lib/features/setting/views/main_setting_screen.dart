@@ -23,8 +23,8 @@ class _MainSettingScreenState extends ConsumerState<MainSettingScreen>
   Widget build(BuildContext context) {
     super.build(context);
 
-    final settings = ref.watch(noticeSettingProvider);
-    final settingsNotifier = ref.read(noticeSettingProvider.notifier);
+    final settings = ref.watch(mainNoticeSettingProvider);
+    final settingsNotifier = ref.read(mainNoticeSettingProvider.notifier);
     final double appBarHeight =
         kToolbarHeight + MediaQuery.of(context).padding.top;
 
@@ -55,6 +55,7 @@ class _MainSettingScreenState extends ConsumerState<MainSettingScreen>
             tiles: section.tiles.map((tile) {
               if (tile is SwitchTile) {
                 return SettingsTile.switchTile(
+                  enabled: tile.enabled,
                   title: Text(tile.title),
                   leading: tile.icon,
                   initialValue: settings.topics[tile.topic] ?? false,

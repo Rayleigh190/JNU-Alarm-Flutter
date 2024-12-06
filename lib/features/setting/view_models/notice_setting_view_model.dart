@@ -1,15 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:jnu_alarm/common/network/network_connection_check.dart';
-import 'package:jnu_alarm/features/setting/constants/main_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/setting_const_model.dart';
 import 'package:jnu_alarm/features/setting/models/notice_setting_model.dart';
 import 'package:jnu_alarm/features/setting/repos/notice_config_repo.dart';
 
 class NoticeSettingViewModel extends Notifier<NoticeSettingModel> {
   final NoticeSettingRepository _repository;
+  final List<SettingSection> _settingSectionGroup;
 
-  NoticeSettingViewModel(this._repository);
+  NoticeSettingViewModel(this._repository, this._settingSectionGroup);
 
   Future<void> toggleTopic(String topic, bool isSubscribed) async {
     await checkNetworkConnection();
@@ -28,8 +28,7 @@ class NoticeSettingViewModel extends Notifier<NoticeSettingModel> {
   @override
   NoticeSettingModel build() {
     final savedTopics = {
-      for (var tile
-          in mainSettingSectionGroup.expand((section) => section.tiles))
+      for (var tile in _settingSectionGroup.expand((section) => section.tiles))
         if (tile is SwitchTile)
           tile.topic: _repository.isSubscribed(tile.topic),
     };
@@ -37,7 +36,12 @@ class NoticeSettingViewModel extends Notifier<NoticeSettingModel> {
   }
 }
 
-final noticeSettingProvider =
+final mainNoticeSettingProvider =
+    NotifierProvider<NoticeSettingViewModel, NoticeSettingModel>(
+  () => throw UnimplementedError(),
+);
+
+final collegeNoticeSettingProvider =
     NotifierProvider<NoticeSettingViewModel, NoticeSettingModel>(
   () => throw UnimplementedError(),
 );

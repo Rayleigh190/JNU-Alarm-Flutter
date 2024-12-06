@@ -13,13 +13,14 @@ const SettingSection basicSettingSection = SettingSection(
         color: Color(0xff009cdf),
         icons: Icons.notifications,
       ),
-      title: "기본 알림",
+      title: "서비스 알림",
       topic: "basic",
+      enabled: false,
     ),
     SwitchTile(
       icon: SettingsIcon(
         color: Color(0xff973999),
-        icons: Icons.campaign,
+        icons: Icons.savings,
       ),
       title: "홍보/광고",
       topic: "ad",
