@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/common/error/global_error_listener.dart';
 import 'package:jnu_alarm/features/main/main_screen.dart';
+import 'package:jnu_alarm/features/setting/constants/business_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/college_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/depart_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/main_setting_const.dart';
@@ -48,6 +49,8 @@ void main() async {
               NoticeSettingViewModel(repository, departSettingSectionGroup)),
           sgSchoolNoticeSettingProvider.overrideWith(() =>
               NoticeSettingViewModel(repository, sgSchoolSettingSectionGroup)),
+          businessNoticeSettingProvider.overrideWith(() =>
+              NoticeSettingViewModel(repository, businessSettingSectionGroup)),
         ],
         child: const MyApp(),
       ),
