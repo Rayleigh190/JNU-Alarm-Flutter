@@ -54,7 +54,7 @@ const SettingSection collegeSettingSection = SettingSection(
         icons: Icons.account_balance,
       ),
       title: "단과대 알림",
-      to: CollegeSettingScreen(),
+      to: CollegeSettingScreen.routeName,
     ),
     NavigationTile(
       icon: SettingsIcon(
@@ -62,7 +62,7 @@ const SettingSection collegeSettingSection = SettingSection(
         icons: Icons.book,
       ),
       title: "학과 알림",
-      to: DepartSettingScreen(),
+      to: DepartSettingScreen.routeName,
     ),
     NavigationTile(
       icon: SettingsIcon(
@@ -70,7 +70,7 @@ const SettingSection collegeSettingSection = SettingSection(
         icons: Icons.auto_awesome,
       ),
       title: "전문대학원 알림",
-      to: SgSchoolSettingScreen(),
+      to: SgSchoolSettingScreen.routeName,
     ),
   ],
 );
@@ -84,7 +84,7 @@ const SettingSection businessSettingSection = SettingSection(
         icons: Icons.domain,
       ),
       title: "사업단 알림",
-      to: BusinessettingScreen(),
+      to: BusinessettingScreen.routeName,
     ),
   ],
 );

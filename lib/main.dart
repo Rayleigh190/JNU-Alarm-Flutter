@@ -13,6 +13,10 @@ import 'package:jnu_alarm/features/setting/constants/main_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/sg_school_setting_const.dart';
 import 'package:jnu_alarm/features/setting/repos/notice_config_repo.dart';
 import 'package:jnu_alarm/features/setting/view_models/notice_setting_view_model.dart';
+import 'package:jnu_alarm/features/setting/views/business_setting_screen.dart';
+import 'package:jnu_alarm/features/setting/views/college_setting_screen.dart';
+import 'package:jnu_alarm/features/setting/views/depart_setting_screen.dart';
+import 'package:jnu_alarm/features/setting/views/sg_school_setting_screen.dart';
 import 'package:jnu_alarm/firebase_options.dart';
 import 'package:jnu_alarm/common/error/global_error_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -78,6 +82,12 @@ class MyApp extends StatelessWidget {
           surfaceTintColor: const Color(0xFFf5f4f0),
           centerTitle: false,
         ),
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+          },
+        ),
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
@@ -88,13 +98,28 @@ class MyApp extends StatelessWidget {
           surfaceTintColor: const Color(0xFF121212),
           centerTitle: false,
         ),
+        pageTransitionsTheme: const PageTransitionsTheme(
+          builders: {
+            TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+            TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+          },
+        ),
         dialogTheme: const DialogTheme(
           barrierColor: Colors.white10,
         ),
       ),
-      home: const GlobalErrorListener(
-        child: MainScreen(),
-      ),
+      initialRoute: "/",
+      routes: {
+        MainScreen.routeName: (context) =>
+            const GlobalErrorListener(child: MainScreen()),
+        CollegeSettingScreen.routeName: (context) =>
+            const CollegeSettingScreen(),
+        DepartSettingScreen.routeName: (context) => const DepartSettingScreen(),
+        SgSchoolSettingScreen.routeName: (context) =>
+            const SgSchoolSettingScreen(),
+        BusinessettingScreen.routeName: (context) =>
+            const BusinessettingScreen(),
+      },
     );
   }
 }

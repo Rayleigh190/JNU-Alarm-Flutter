@@ -17,7 +17,7 @@ class SwitchTile {
 class NavigationTile {
   final Widget icon;
   final String title;
-  final Widget to;
+  final String to;
 
   const NavigationTile({
     required this.icon,

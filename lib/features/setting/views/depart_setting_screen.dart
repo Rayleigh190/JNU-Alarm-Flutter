@@ -9,6 +9,7 @@ import 'package:jnu_alarm/features/setting/view_models/notice_setting_view_model
 import 'package:jnu_alarm/features/setting/views/widgets/settings_ui.dart';
 
 class DepartSettingScreen extends ConsumerWidget {
+  static const routeName = "/depart-setting";
   const DepartSettingScreen({super.key});
 
   @override
@@ -58,11 +59,7 @@ class DepartSettingScreen extends ConsumerWidget {
                   leading: tile.icon,
                   title: Text(tile.title),
                   onPressed: (context) {
-                    Navigator.of(context).push(
-                      CupertinoPageRoute(
-                        builder: (context) => tile.to,
-                      ),
-                    );
+                    Navigator.of(context).pushNamed(tile.to);
                   },
                 );
               }

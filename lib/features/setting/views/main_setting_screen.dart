@@ -80,11 +80,7 @@ class _MainSettingScreenState extends ConsumerState<MainSettingScreen>
                   leading: tile.icon,
                   title: Text(tile.title),
                   onPressed: (context) {
-                    Navigator.of(context).push(
-                      CupertinoPageRoute(
-                        builder: (context) => tile.to,
-                      ),
-                    );
+                    Navigator.of(context).pushNamed(tile.to);
                   },
                 );
               }

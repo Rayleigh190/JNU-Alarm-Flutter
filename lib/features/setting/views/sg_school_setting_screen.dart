@@ -9,6 +9,7 @@ import 'package:jnu_alarm/features/setting/view_models/notice_setting_view_model
 import 'package:jnu_alarm/features/setting/views/widgets/settings_ui.dart';
 
 class SgSchoolSettingScreen extends ConsumerWidget {
+  static const routeName = "/sg-school-setting";
   const SgSchoolSettingScreen({super.key});
 
   @override
@@ -58,11 +59,7 @@ class SgSchoolSettingScreen extends ConsumerWidget {
                   leading: tile.icon,
                   title: Text(tile.title),
                   onPressed: (context) {
-                    Navigator.of(context).push(
-                      CupertinoPageRoute(
-                        builder: (context) => tile.to,
-                      ),
-                    );
+                    Navigator.of(context).pushNamed(tile.to);
                   },
                 );
               }
