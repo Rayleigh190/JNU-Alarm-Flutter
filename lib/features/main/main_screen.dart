@@ -6,7 +6,7 @@ import 'package:jnu_alarm/features/notice/views/notice_screen.dart';
 import 'package:jnu_alarm/features/setting/views/main_setting_screen.dart';
 
 class MainScreen extends StatefulWidget {
-  static const routeName = "/";
+  static const routeName = "/main";
   const MainScreen({super.key});
 
   @override
