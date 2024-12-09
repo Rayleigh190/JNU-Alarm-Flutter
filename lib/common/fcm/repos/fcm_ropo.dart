@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:jnu_alarm/common/fcm/widgets/foreground_notification.dart';
 
 class FcmRepository {
@@ -7,17 +8,31 @@ class FcmRepository {
 
   // FCM 초기화 및 권한 요청
   Future<void> initialize() async {
-    NotificationSettings permission = await _messaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    NotificationSettings permission = await _messaging.requestPermission();
 
     if (permission.authorizationStatus == AuthorizationStatus.authorized) {
       debugPrint("FCM 권한 승인됨.");
     } else {
       debugPrint("FCM 권한 거부됨.");
     }
+
+    setupNotificationChannels();
+  }
+
+  void setupNotificationChannels() async {
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      '100',
+      '모든 알림',
+      importance: Importance.high,
+    );
+
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+
+    final AndroidFlutterLocalNotificationsPlugin androidImplementation =
+        flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()!;
+    await androidImplementation.createNotificationChannel(channel);
   }
 
   // Foreground 메시지 처리
