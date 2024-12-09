@@ -3,18 +3,28 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/features/main/main_screen.dart';
 import 'package:jnu_alarm/features/onboarding/view_models/init_view_model.dart';
-import 'package:jnu_alarm/features/onboarding/views/onboarding_screen.dart';
 
 class InitScreen extends ConsumerWidget {
   static const routeName = "/";
+
   const InitScreen({super.key});
+
+  void replacementToMainScreen(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.of(context).pushReplacement(
+        FadeInPageRoute(
+          page: const MainScreen(),
+        ),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appStateNotifier = ref.read(initProvider.notifier);
+    final initNotifier = ref.read(initProvider.notifier);
 
     return FutureBuilder(
-      future: appStateNotifier.initialize(),
+      future: initNotifier.initialize(context),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Scaffold(
@@ -34,25 +44,11 @@ class InitScreen extends ConsumerWidget {
         } else {
           final appState = ref.watch(initProvider);
           if (appState.isFirstRun) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.pushNamed(context, OnboardingScreen.routeName);
-            });
+            replacementToMainScreen(context);
           } else if (appState.isUpdated) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.of(context).pushReplacement(
-                FadeInPageRoute(
-                  page: const MainScreen(),
-                ),
-              );
-            });
+            replacementToMainScreen(context);
           } else {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.of(context).pushReplacement(
-                FadeInPageRoute(
-                  page: const MainScreen(),
-                ),
-              );
-            });
+            replacementToMainScreen(context);
           }
           return const Scaffold();
         }

@@ -3,6 +3,7 @@ import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
 import 'package:jnu_alarm/features/main/widgets/bottom_nav_btn.dart';
 import 'package:jnu_alarm/features/notice/views/notice_screen.dart';
+import 'package:jnu_alarm/common/fcm/repos/fcm_ropo.dart';
 import 'package:jnu_alarm/features/setting/views/main_setting_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -26,6 +27,13 @@ class _MainScreenState extends State<MainScreen>
   @override
   void initState() {
     super.initState();
+
+    final FcmRepository fcmRepository = FcmRepository();
+    // Foreground 메시지 처리 시 context를 통해 알림 표시
+    fcmRepository.handleForegroundMessage((title, body) {
+      showCustomNotification(context, title, body);
+    });
+
     _tabController = TabController(
       length: _page.length,
       vsync: this,
