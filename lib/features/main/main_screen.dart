@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:jnu_alarm/common/fcm/widgets/foreground_notification.dart';
+import 'package:jnu_alarm/common/fcm/widgets/web_view_page.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
 import 'package:jnu_alarm/features/main/widgets/bottom_nav_btn.dart';
@@ -27,11 +30,26 @@ class _MainScreenState extends State<MainScreen>
   @override
   void initState() {
     super.initState();
-
     final FcmRepository fcmRepository = FcmRepository();
-    // Foreground 메시지 처리 시 context를 통해 알림 표시
+
     fcmRepository.handleForegroundMessage((title, body) {
-      showCustomNotification(context, title, body);
+      showForegroundNotification(context, title, body);
+    });
+
+    fcmRepository.handleOnMessageOpenedFromBackground((title, link) {
+      Navigator.of(context).push(
+        CupertinoPageRoute(
+          builder: (_) => WebViewPage(title: title, link: link),
+        ),
+      );
+    });
+
+    fcmRepository.handleOnMessageOpendFromTerminated((title, link) {
+      Navigator.of(context).push(
+        CupertinoPageRoute(
+          builder: (_) => WebViewPage(title: title, link: link),
+        ),
+      );
     });
 
     _tabController = TabController(
@@ -57,6 +75,28 @@ class _MainScreenState extends State<MainScreen>
   void _onTap(int index) {
     setState(() {
       _tabController.animateTo(index);
+    });
+  }
+
+  void showForegroundNotification(
+      BuildContext context, String title, String body) {
+    final overlay = Overlay.of(context);
+    final overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: 60,
+        left: 14,
+        right: 14,
+        child: ForegroundNotification(
+          title: title,
+          body: body,
+        ),
+      ),
+    );
+
+    overlay.insert(overlayEntry);
+
+    Future.delayed(const Duration(seconds: 4)).then((_) {
+      overlayEntry.remove();
     });
   }
 

@@ -4,22 +4,18 @@ import 'package:jnu_alarm/common/fcm/repos/fcm_ropo.dart';
 import 'package:jnu_alarm/features/onboarding/models/init_state_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class InitViewModel extends StateNotifier<InitState> {
-  final FcmRepository _fcmRepository;
-
-  InitViewModel(this._fcmRepository)
-      : super(InitState(isFirstRun: true, isUpdated: false));
-
+class InitViewModel extends Notifier<InitState> {
   Future<void> initialize(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
+    final fcmRepository = FcmRepository();
+
     final savedVersion = prefs.getInt('app_version');
     const currentVersion = 11; // 현재 앱 버전 (수동 관리 or package_info 사용)
 
     if (savedVersion == null) {
       // 앱 최초 실행
-      await _fcmRepository.initialize();
-      await _fcmRepository.setupBackgroundHandler();
-
+      await fcmRepository.initialize();
+      // await _fcmRepository.setupBackgroundHandler();
       state = InitState(isFirstRun: true, isUpdated: false);
       // await prefs.setInt('app_version', currentVersion);
     } else if (savedVersion < currentVersion) {
@@ -31,8 +27,13 @@ class InitViewModel extends StateNotifier<InitState> {
       state = InitState(isFirstRun: false, isUpdated: false);
     }
   }
+
+  @override
+  InitState build() {
+    throw UnimplementedError();
+  }
 }
 
-final initProvider = StateNotifierProvider<InitViewModel, InitState>(
-  (ref) => InitViewModel(FcmRepository()),
+final initProvider = NotifierProvider<InitViewModel, InitState>(
+  () => InitViewModel(),
 );

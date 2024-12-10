@@ -1,12 +1,10 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:jnu_alarm/common/fcm/widgets/foreground_notification.dart';
 
 class FcmRepository {
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
-  // FCM 초기화 및 권한 요청
   Future<void> initialize() async {
     NotificationSettings permission = await _messaging.requestPermission();
 
@@ -16,10 +14,10 @@ class FcmRepository {
       debugPrint("FCM 권한 거부됨.");
     }
 
-    setupNotificationChannels();
+    _setupNotificationChannels();
   }
 
-  void setupNotificationChannels() async {
+  void _setupNotificationChannels() async {
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
       '100',
       '모든 알림',
@@ -35,7 +33,6 @@ class FcmRepository {
     await androidImplementation.createNotificationChannel(channel);
   }
 
-  // Foreground 메시지 처리
   void handleForegroundMessage(
       void Function(String title, String body) onMessageReceived) {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -48,38 +45,30 @@ class FcmRepository {
     });
   }
 
-  // 백그라운드 메시지 핸들링
-  @pragma('vm:entry-point')
-  Future<void> setupBackgroundHandler() async {
-    FirebaseMessaging.onBackgroundMessage(_backgroundMessageHandler);
+  void handleOnMessageOpenedFromBackground(
+      void Function(String title, String link) onMessageReceived) {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      debugPrint('Notification opened: ${message.data}');
+      final title = message.data['title'];
+      final link = message.data['link'];
+      if (title != null && link != null) {
+        onMessageReceived(title, link);
+      }
+    });
   }
 
-  static Future<void> _backgroundMessageHandler(RemoteMessage message) async {
-    debugPrint('백그라운드 메시지 수신: ${message.notification?.title}');
+  Future<void> handleOnMessageOpendFromTerminated(
+      void Function(String title, String link) onMessageReceived) async {
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+    if (initialMessage != null) {
+      final title = initialMessage.data['title'];
+      final link = initialMessage.data['link'];
+      onMessageReceived(title, link);
+    }
   }
 
   Future<String?> getToken() async {
     return await _messaging.getToken();
   }
-}
-
-void showCustomNotification(BuildContext context, String title, String body) {
-  final overlay = Overlay.of(context);
-  final overlayEntry = OverlayEntry(
-    builder: (context) => Positioned(
-      top: 60,
-      left: 14,
-      right: 14,
-      child: ForegroundNotification(
-        title: title,
-        body: body,
-      ),
-    ),
-  );
-
-  overlay.insert(overlayEntry);
-
-  Future.delayed(const Duration(seconds: 4)).then((_) {
-    overlayEntry.remove();
-  });
 }
