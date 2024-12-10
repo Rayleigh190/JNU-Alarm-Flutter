@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FcmRepository {
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
 
   Future<void> initialize() async {
     NotificationSettings permission = await _messaging.requestPermission();
@@ -14,7 +18,16 @@ class FcmRepository {
       debugPrint("FCM 권한 거부됨.");
     }
 
-    _setupNotificationChannels();
+    if (Platform.isAndroid) {
+      _setupForegroundMessage();
+      _setupNotificationChannels();
+    } else {
+      _messaging.setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    }
   }
 
   void _setupNotificationChannels() async {
@@ -33,22 +46,60 @@ class FcmRepository {
     await androidImplementation.createNotificationChannel(channel);
   }
 
-  void handleForegroundMessage(
-      void Function(String title, String body) onMessageReceived) {
+  void _setupForegroundMessage() {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      debugPrint('Foreground 메시지 수신: ${message.notification?.title}');
       final notification = message.notification;
+      final data = message.data;
+
       if (notification != null) {
-        onMessageReceived(
-            notification.title ?? "No Title", notification.body ?? "No Body");
+        final title = notification.title ?? "No title";
+        final body = notification.body ?? "No body";
+        _showLocalNotification(title, body, data['link']);
       }
     });
+  }
+
+  void _showLocalNotification(String title, String body, String link) async {
+    const AndroidNotificationDetails androidDetails =
+        AndroidNotificationDetails(
+      '100',
+      '모든 알림',
+      importance: Importance.high,
+      priority: Priority.high,
+    );
+
+    const NotificationDetails notificationDetails =
+        NotificationDetails(android: androidDetails);
+
+    await _flutterLocalNotificationsPlugin.show(
+      0,
+      title,
+      body,
+      notificationDetails,
+      payload: "$title $link",
+    );
+  }
+
+  Future<void> handleAndroidForegroundMessage(
+      void Function(String title, String link) onMessageReceived) async {
+    const AndroidInitializationSettings androidSettings =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: androidSettings);
+
+    await _flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: (details) {
+        final data = details.payload?.split(" ");
+        onMessageReceived(data!.first, data.last);
+      },
+    );
   }
 
   void handleOnMessageOpenedFromBackground(
       void Function(String title, String link) onMessageReceived) {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      debugPrint('Notification opened: ${message.data}');
       final title = message.data['title'];
       final link = message.data['link'];
       if (title != null && link != null) {

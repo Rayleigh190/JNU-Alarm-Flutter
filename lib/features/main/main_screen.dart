@@ -1,7 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:jnu_alarm/common/fcm/widgets/foreground_notification.dart';
-import 'package:jnu_alarm/common/fcm/widgets/web_view_page.dart';
+import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
 import 'package:jnu_alarm/features/main/widgets/bottom_nav_btn.dart';
@@ -32,24 +33,18 @@ class _MainScreenState extends State<MainScreen>
     super.initState();
     final FcmRepository fcmRepository = FcmRepository();
 
-    fcmRepository.handleForegroundMessage((title, body) {
-      showForegroundNotification(context, title, body);
-    });
+    if (Platform.isAndroid) {
+      fcmRepository.handleAndroidForegroundMessage((title, link) {
+        pushWebViewScreen(title, link);
+      });
+    }
 
     fcmRepository.handleOnMessageOpenedFromBackground((title, link) {
-      Navigator.of(context).push(
-        CupertinoPageRoute(
-          builder: (_) => WebViewPage(title: title, link: link),
-        ),
-      );
+      pushWebViewScreen(title, link);
     });
 
     fcmRepository.handleOnMessageOpendFromTerminated((title, link) {
-      Navigator.of(context).push(
-        CupertinoPageRoute(
-          builder: (_) => WebViewPage(title: title, link: link),
-        ),
-      );
+      pushWebViewScreen(title, link);
     });
 
     _tabController = TabController(
@@ -58,6 +53,14 @@ class _MainScreenState extends State<MainScreen>
       animationDuration: const Duration(milliseconds: 200),
     );
     _tabController.addListener(tabListener);
+  }
+
+  void pushWebViewScreen(String title, String link) {
+    Navigator.of(context).push(
+      CupertinoPageRoute(
+        builder: (_) => WebViewScreen(title: title, link: link),
+      ),
+    );
   }
 
   @override
@@ -75,28 +78,6 @@ class _MainScreenState extends State<MainScreen>
   void _onTap(int index) {
     setState(() {
       _tabController.animateTo(index);
-    });
-  }
-
-  void showForegroundNotification(
-      BuildContext context, String title, String body) {
-    final overlay = Overlay.of(context);
-    final overlayEntry = OverlayEntry(
-      builder: (context) => Positioned(
-        top: 60,
-        left: 14,
-        right: 14,
-        child: ForegroundNotification(
-          title: title,
-          body: body,
-        ),
-      ),
-    );
-
-    overlay.insert(overlayEntry);
-
-    Future.delayed(const Duration(seconds: 4)).then((_) {
-      overlayEntry.remove();
     });
   }
 
