@@ -15,7 +15,6 @@ class InitViewModel extends Notifier<InitState> {
     if (savedVersion == null) {
       // 앱 최초 실행
       await fcmRepository.initialize();
-      // await _fcmRepository.setupBackgroundHandler();
       state = InitState(isFirstRun: true, isUpdated: false);
       // await prefs.setInt('app_version', currentVersion);
     } else if (savedVersion < currentVersion) {
