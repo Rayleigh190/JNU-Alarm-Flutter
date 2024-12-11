@@ -69,11 +69,14 @@ class NoticeTile extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: Sizes.size14,
-                        fontWeight: FontWeight.w500,
+                    Expanded(
+                      child: Text(
+                        title,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: Sizes.size14,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                     Text(
