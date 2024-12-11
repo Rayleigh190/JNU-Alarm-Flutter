@@ -69,59 +69,91 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen> {
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
       ),
-      body: RefreshIndicator(
-        edgeOffset: appBarHeight,
-        color: Theme.of(context).primaryColor,
-        backgroundColor: const Color(0xFF323430),
-        onRefresh: _onRefresh,
-        child: notices.when(
-          data: (items) {
-            if (items.isEmpty) {
-              return Stack(
-                children: [
-                  const Center(
-                    child: Text("설정에서 알림을 구독하세요!"),
-                  ),
-                  ListView(),
-                ],
-              );
-            }
-            return ListView.separated(
-              controller: _scrollController,
-              padding: EdgeInsets.fromLTRB(
-                Sizes.size20,
-                appBarHeight + Sizes.size5,
-                Sizes.size20,
-                Sizes.size96 + Sizes.size20,
-              ),
-              itemBuilder: (context, index) {
-                final item = items[index];
-                if (item is String) {
-                  return NoticeDivider(
-                    text: item,
-                  );
-                } else if (item is NoticeModel) {
-                  return NoticeTile(
-                    title: item.title,
-                    body: item.body,
-                    link: item.link,
-                    createdAt: item.created_at,
+      body: Stack(
+        children: [
+          RefreshIndicator(
+            edgeOffset: appBarHeight,
+            color: Theme.of(context).primaryColor,
+            backgroundColor: const Color(0xFF323430),
+            onRefresh: _onRefresh,
+            child: notices.when(
+              data: (items) {
+                if (items.isEmpty) {
+                  return Stack(
+                    children: [
+                      const Center(
+                        child: Text("설정에서 알림을 구독하세요!"),
+                      ),
+                      ListView(),
+                    ],
                   );
                 }
-                return item;
+                return ListView.separated(
+                  controller: _scrollController,
+                  padding: EdgeInsets.fromLTRB(
+                    Sizes.size20,
+                    appBarHeight + Sizes.size5,
+                    Sizes.size20,
+                    Sizes.size96 + Sizes.size20,
+                  ),
+                  itemBuilder: (context, index) {
+                    final item = items[index];
+                    if (item is String) {
+                      return NoticeDivider(
+                        text: item,
+                      );
+                    } else if (item is NoticeModel) {
+                      return NoticeTile(
+                        title: item.title,
+                        body: item.body,
+                        link: item.link,
+                        createdAt: item.created_at,
+                      );
+                    }
+                    return item;
+                  },
+                  separatorBuilder: (context, index) =>
+                      (items[index] is String) ? Gaps.v6 : Gaps.v5,
+                  itemCount: items.length,
+                );
               },
-              separatorBuilder: (context, index) =>
-                  (items[index] is String) ? Gaps.v6 : Gaps.v5,
-              itemCount: items.length,
-            );
-          },
-          error: (error, stackTrace) => Center(
-            child: Text(error.toString()),
+              error: (error, stackTrace) => Center(
+                child: Text(error.toString()),
+              ),
+              loading: () => const Center(
+                child: CircularProgressIndicator.adaptive(),
+              ),
+            ),
           ),
-          loading: () => const Center(
-            child: CircularProgressIndicator.adaptive(),
+          Positioned(
+            right: Sizes.size10,
+            bottom: Sizes.size64,
+            child: AnimatedOpacity(
+              opacity: _showScrollUpBtn ? 1 : 0,
+              duration: const Duration(milliseconds: 150),
+              child: GestureDetector(
+                onTap: _tapScrollUpBtn,
+                child: Container(
+                  width: Sizes.size36,
+                  height: Sizes.size36,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(
+                      width: 0.5,
+                      color: Colors.black26,
+                    ),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(50),
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.keyboard_arrow_up,
+                  ),
+                ),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
