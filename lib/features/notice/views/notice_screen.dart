@@ -14,7 +14,8 @@ class NoticeScreen extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _NoticeScreenState();
 }
 
-class _NoticeScreenState extends ConsumerState<NoticeScreen> {
+class _NoticeScreenState extends ConsumerState<NoticeScreen>
+    with AutomaticKeepAliveClientMixin {
   final ScrollController _scrollController = ScrollController();
   bool _showScrollUpBtn = false;
 
@@ -57,6 +58,7 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final double appBarHeight =
         kToolbarHeight + MediaQuery.of(context).padding.top;
     final notices = ref.watch(noticeProvider);
@@ -157,4 +159,7 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
