@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
 import 'package:jnu_alarm/features/notice/models/notice_model.dart';
@@ -25,6 +27,14 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
           duration: const Duration(milliseconds: 200),
           curve: Curves.decelerate);
     }
+  }
+
+  void _onTapNoticeTile(String title, String link) {
+    Navigator.of(context).push(
+      CupertinoPageRoute(
+        builder: (_) => WebViewScreen(title: title, link: link),
+      ),
+    );
   }
 
   void _onScroll() {
@@ -105,11 +115,14 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
                         text: item,
                       );
                     } else if (item is NoticeModel) {
-                      return NoticeTile(
-                        title: item.title,
-                        body: item.body,
-                        link: item.link,
-                        createdAt: item.created_at,
+                      return GestureDetector(
+                        onTap: () => _onTapNoticeTile(item.title, item.link),
+                        child: NoticeTile(
+                          title: item.title,
+                          body: item.body,
+                          link: item.link,
+                          createdAt: item.created_at,
+                        ),
                       );
                     }
                     return item;
