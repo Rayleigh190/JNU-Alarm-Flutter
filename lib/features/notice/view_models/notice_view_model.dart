@@ -32,7 +32,6 @@ class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
     }
 
     List<dynamic> items = [
-      Gaps.v5,
       if (todayNotices.isNotEmpty) ...[
         '오늘',
         ...todayNotices,

@@ -69,14 +69,24 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen> {
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
       ),
-      body: notices.when(
-        data: (items) {
-          return RefreshIndicator(
-            edgeOffset: appBarHeight,
-            color: Theme.of(context).primaryColor,
-            backgroundColor: const Color(0xFF323430),
-            onRefresh: _onRefresh,
-            child: ListView.separated(
+      body: RefreshIndicator(
+        edgeOffset: appBarHeight,
+        color: Theme.of(context).primaryColor,
+        backgroundColor: const Color(0xFF323430),
+        onRefresh: _onRefresh,
+        child: notices.when(
+          data: (items) {
+            if (items.isEmpty) {
+              return Stack(
+                children: [
+                  const Center(
+                    child: Text("설정에서 알림을 구독하세요!"),
+                  ),
+                  ListView(),
+                ],
+              );
+            }
+            return ListView.separated(
               controller: _scrollController,
               padding: EdgeInsets.fromLTRB(
                 Sizes.size20,
@@ -103,14 +113,14 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen> {
               separatorBuilder: (context, index) =>
                   (items[index] is String) ? Gaps.v6 : Gaps.v5,
               itemCount: items.length,
-            ),
-          );
-        },
-        error: (error, stackTrace) => Center(
-          child: Text(error.toString()),
-        ),
-        loading: () => const Center(
-          child: CircularProgressIndicator.adaptive(),
+            );
+          },
+          error: (error, stackTrace) => Center(
+            child: Text(error.toString()),
+          ),
+          loading: () => const Center(
+            child: CircularProgressIndicator.adaptive(),
+          ),
         ),
       ),
     );
