@@ -39,6 +39,10 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen> {
     }
   }
 
+  Future<void> _onRefresh() {
+    return ref.watch(noticeProvider.notifier).refresh();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -67,33 +71,39 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen> {
       ),
       body: notices.when(
         data: (items) {
-          return ListView.separated(
-            controller: _scrollController,
-            padding: EdgeInsets.fromLTRB(
-              Sizes.size20,
-              appBarHeight + Sizes.size5,
-              Sizes.size20,
-              Sizes.size96 + Sizes.size20,
+          return RefreshIndicator(
+            edgeOffset: appBarHeight,
+            color: Theme.of(context).primaryColor,
+            backgroundColor: const Color(0xFF323430),
+            onRefresh: _onRefresh,
+            child: ListView.separated(
+              controller: _scrollController,
+              padding: EdgeInsets.fromLTRB(
+                Sizes.size20,
+                appBarHeight + Sizes.size5,
+                Sizes.size20,
+                Sizes.size96 + Sizes.size20,
+              ),
+              itemBuilder: (context, index) {
+                final item = items[index];
+                if (item is String) {
+                  return NoticeDivider(
+                    text: item,
+                  );
+                } else if (item is NoticeModel) {
+                  return NoticeTile(
+                    title: item.title,
+                    body: item.body,
+                    link: item.link,
+                    createdAt: item.created_at,
+                  );
+                }
+                return item;
+              },
+              separatorBuilder: (context, index) =>
+                  (items[index] is String) ? Gaps.v6 : Gaps.v5,
+              itemCount: items.length,
             ),
-            itemBuilder: (context, index) {
-              final item = items[index];
-              if (item is String) {
-                return NoticeDivider(
-                  text: item,
-                );
-              } else if (item is NoticeModel) {
-                return NoticeTile(
-                  title: item.title,
-                  body: item.body,
-                  link: item.link,
-                  createdAt: item.created_at,
-                );
-              }
-              return item;
-            },
-            separatorBuilder: (context, index) =>
-                (items[index] is String) ? Gaps.v6 : Gaps.v5,
-            itemCount: items.length,
           );
         },
         error: (error, stackTrace) => Center(

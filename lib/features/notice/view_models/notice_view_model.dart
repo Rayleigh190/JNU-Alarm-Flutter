@@ -9,8 +9,7 @@ class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
 
   NoticeViewModel(this._repository);
 
-  @override
-  Future<List<dynamic>> build() async {
+  Future<List<dynamic>> _fetchNotices() async {
     DateTime now = DateTime.now();
     DateTime todayStart = DateTime(now.year, now.month, now.day);
     DateTime yesterdayStart = todayStart.subtract(const Duration(days: 1));
@@ -53,11 +52,14 @@ class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
     return items;
   }
 
-  // Future<void> fetchNotices() async {
-  //   state = const AsyncValue.loading();
-  //   final response = await NoticeRepository.fetchNotices();
-  //   state = AsyncValue.data(response.response);
-  // }
+  @override
+  Future<List<dynamic>> build() async {
+    return _fetchNotices();
+  }
+
+  Future<void> refresh() async {
+    state = AsyncValue.data(await _fetchNotices());
+  }
 }
 
 final noticeProvider = AsyncNotifierProvider<NoticeViewModel, List<dynamic>>(
