@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jnu_alarm/common/utils.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
 
 class NoticeDivider extends StatelessWidget {
@@ -8,13 +9,14 @@ class NoticeDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = isDarkMode(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          decoration: const BoxDecoration(
-            color: Color(0xFFEDECE8),
-            borderRadius: BorderRadius.all(
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF282828) : const Color(0xFFEDECE8),
+            borderRadius: const BorderRadius.all(
               Radius.circular(50),
             ),
           ),
@@ -26,8 +28,8 @@ class NoticeDivider extends StatelessWidget {
             child: Text(
               _text,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.black87,
+              style: TextStyle(
+                color: isDark ? Colors.white70 : Colors.black87,
                 fontSize: Sizes.size12,
                 fontWeight: FontWeight.w600,
               ),

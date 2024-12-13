@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:jnu_alarm/common/utils.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 
@@ -38,9 +39,10 @@ class NoticeTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = isDarkMode(context);
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF282828) : Colors.white,
         borderRadius: BorderRadius.circular(Sizes.size9),
         boxShadow: const [
           BoxShadow(
@@ -81,9 +83,9 @@ class NoticeTile extends StatelessWidget {
                     ),
                     Text(
                       getFormattedTime(createdAt),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: Sizes.size12,
-                        color: Colors.black54,
+                        color: isDark ? Colors.white70 : Colors.black54,
                       ),
                     ),
                   ],

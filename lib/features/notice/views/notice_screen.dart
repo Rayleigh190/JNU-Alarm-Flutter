@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jnu_alarm/common/utils.dart';
 import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
@@ -69,6 +70,7 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    final isDark = isDarkMode(context);
     final double appBarHeight =
         kToolbarHeight + MediaQuery.of(context).padding.top;
     final notices = ref.watch(noticeProvider);
@@ -152,10 +154,10 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
                   width: Sizes.size36,
                   height: Sizes.size36,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: isDark ? const Color(0xFF323430) : Colors.white,
                     border: Border.all(
                       width: 0.5,
-                      color: Colors.black26,
+                      color: isDark ? Colors.white10 : Colors.black26,
                     ),
                     borderRadius: const BorderRadius.all(
                       Radius.circular(50),
