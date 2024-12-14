@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:jnu_alarm/common/utils.dart';
+import 'package:jnu_alarm/constants/sizes.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewScreen extends StatefulWidget {
@@ -71,11 +73,52 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = isDarkMode(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(
+          widget.title,
+          style: const TextStyle(
+            fontSize: Sizes.size20,
+          ),
+        ),
       ),
       body: WebViewWidget(controller: _controller),
+      bottomNavigationBar: SafeArea(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.chevron_left,
+                color: isDark ? Colors.white54 : Colors.black54,
+              ),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.chevron_right,
+                color: isDark ? Colors.white54 : Colors.black54,
+              ),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.refresh,
+                color: isDark ? Colors.white54 : Colors.black54,
+              ),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.ios_share,
+                color: isDark ? Colors.white54 : Colors.black54,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
