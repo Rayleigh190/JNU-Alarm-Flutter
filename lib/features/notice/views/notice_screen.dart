@@ -30,10 +30,10 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
     }
   }
 
-  void _onTapNoticeTile(String title, String link) {
+  void _onTapNoticeTile(String title, String link, String body) {
     Navigator.of(context).push(
       CupertinoPageRoute(
-        builder: (_) => WebViewScreen(title: title, link: link),
+        builder: (_) => WebViewScreen(title: title, link: link, body: body),
       ),
     );
   }
@@ -127,7 +127,8 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
                       );
                     } else if (item is NoticeModel) {
                       return GestureDetector(
-                        onTap: () => _onTapNoticeTile(item.title, item.link),
+                        onTap: () =>
+                            _onTapNoticeTile(item.title, item.link, item.body),
                         child: NoticeTile(
                           title: item.title,
                           body: item.body,

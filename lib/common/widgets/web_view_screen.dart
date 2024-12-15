@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:jnu_alarm/common/utils.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewScreen extends StatefulWidget {
   final String title;
   final String link;
+  final String? body;
 
-  const WebViewScreen({super.key, required this.title, required this.link});
+  const WebViewScreen(
+      {super.key, required this.title, required this.link, this.body});
 
   @override
   State<WebViewScreen> createState() => _WebViewScreenState();
@@ -15,6 +18,7 @@ class WebViewScreen extends StatefulWidget {
 
 class _WebViewScreenState extends State<WebViewScreen> {
   late WebViewController _controller;
+  String currentUrl = "";
 
   @override
   void initState() {
@@ -22,9 +26,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
     _controller = WebViewController();
 
     _controller.setNavigationDelegate(
-      NavigationDelegate(onPageFinished: (String url) {
-        // 강제 확대 가능하도록 meta 태그 수정
-        _controller.runJavaScript('''
+      NavigationDelegate(
+        onPageFinished: (String url) {
+          // 강제 확대 가능하도록 meta 태그 수정
+          _controller.runJavaScript('''
           var meta = document.querySelector('meta[name="viewport"]');
           if (meta) {
             meta.setAttribute('content', 'width=device-width, initial-scale=1, user-scalable=yes');
@@ -36,10 +41,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
           }
         ''');
 
-        if (widget.link.contains("jnu.ac.kr")) {
-          // 이미지 태그 크기를 100%로 변경
-          // http를 https로 변경
-          _controller.runJavaScript('''
+          if (widget.link.contains("jnu.ac.kr")) {
+            // 이미지 태그 크기를 100%로 변경
+            // http를 https로 변경
+            _controller.runJavaScript('''
             document.querySelectorAll('img').forEach(img => {
               img.style.width = '100%';
               img.style.height = '100%';
@@ -49,8 +54,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
             });
           ''');
 
-          // table 태그가 화면에 넘치면 가로 스크롤 가능하도록 설정
-          _controller.runJavaScript('''
+            // table 태그가 화면에 넘치면 가로 스크롤 가능하도록 설정
+            _controller.runJavaScript('''
             var tables = document.getElementsByTagName("table");
             for (var i = 0; i < tables.length; i++) {
               var wrapper = document.createElement("div");
@@ -60,8 +65,12 @@ class _WebViewScreenState extends State<WebViewScreen> {
               wrapper.appendChild(tables[i]);
             }
           ''');
-        }
-      }),
+          }
+        },
+        onUrlChange: (change) {
+          currentUrl = change.url ?? widget.title;
+        },
+      ),
     );
 
     _controller.setJavaScriptMode(JavaScriptMode.unrestricted);
@@ -89,28 +98,44 @@ class _WebViewScreenState extends State<WebViewScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             IconButton(
-              onPressed: () {},
+              onPressed: () async {
+                if (await _controller.canGoBack()) {
+                  _controller.goBack();
+                }
+              },
               icon: Icon(
                 Icons.chevron_left,
                 color: isDark ? Colors.white54 : Colors.black54,
               ),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () async {
+                if (await _controller.canGoForward()) {
+                  _controller.goForward();
+                }
+              },
               icon: Icon(
                 Icons.chevron_right,
                 color: isDark ? Colors.white54 : Colors.black54,
               ),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                _controller.reload();
+              },
               icon: Icon(
                 Icons.refresh,
                 color: isDark ? Colors.white54 : Colors.black54,
               ),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () async {
+                if (widget.body != null) {
+                  await Share.share("[전대알림]\n${widget.body}\n$currentUrl");
+                } else {
+                  await Share.share("[전대알림]\n$currentUrl");
+                }
+              },
               icon: Icon(
                 Icons.ios_share,
                 color: isDark ? Colors.white54 : Colors.black54,

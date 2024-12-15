@@ -76,12 +76,13 @@ class FcmRepository {
       title,
       body,
       notificationDetails,
-      payload: "$title $link",
+      payload: "$title@$link@$body",
     );
   }
 
   Future<void> handleAndroidForegroundMessage(
-      void Function(String title, String link) onMessageReceived) async {
+      void Function(String title, String link, String body)
+          onMessageReceived) async {
     const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
@@ -91,31 +92,34 @@ class FcmRepository {
     await _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: (details) {
-        final data = details.payload?.split(" ");
-        onMessageReceived(data!.first, data.last);
+        final data = details.payload?.split("@");
+        onMessageReceived(data![0], data[1], data[2]);
       },
     );
   }
 
   void handleOnMessageOpenedFromBackground(
-      void Function(String title, String link) onMessageReceived) {
+      void Function(String title, String link, String body) onMessageReceived) {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       final title = message.data['title'];
       final link = message.data['link'];
+      final body = message.notification?.body ?? "";
       if (title != null && link != null) {
-        onMessageReceived(title, link);
+        onMessageReceived(title, link, body);
       }
     });
   }
 
   Future<void> handleOnMessageOpendFromTerminated(
-      void Function(String title, String link) onMessageReceived) async {
+      void Function(String title, String link, String body)
+          onMessageReceived) async {
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
       final title = initialMessage.data['title'];
       final link = initialMessage.data['link'];
-      onMessageReceived(title, link);
+      final body = initialMessage.notification?.body ?? "";
+      onMessageReceived(title, link, body);
     }
   }
 

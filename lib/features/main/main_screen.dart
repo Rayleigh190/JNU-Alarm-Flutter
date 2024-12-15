@@ -34,17 +34,17 @@ class _MainScreenState extends State<MainScreen>
     final FcmRepository fcmRepository = FcmRepository();
 
     if (Platform.isAndroid) {
-      fcmRepository.handleAndroidForegroundMessage((title, link) {
-        pushWebViewScreen(title, link);
+      fcmRepository.handleAndroidForegroundMessage((title, link, body) {
+        pushWebViewScreen(title, link, body);
       });
     }
 
-    fcmRepository.handleOnMessageOpenedFromBackground((title, link) {
-      pushWebViewScreen(title, link);
+    fcmRepository.handleOnMessageOpenedFromBackground((title, link, body) {
+      pushWebViewScreen(title, link, body);
     });
 
-    fcmRepository.handleOnMessageOpendFromTerminated((title, link) {
-      pushWebViewScreen(title, link);
+    fcmRepository.handleOnMessageOpendFromTerminated((title, link, body) {
+      pushWebViewScreen(title, link, body);
     });
 
     _tabController = TabController(
@@ -55,10 +55,14 @@ class _MainScreenState extends State<MainScreen>
     _tabController.addListener(tabListener);
   }
 
-  void pushWebViewScreen(String title, String link) {
+  void pushWebViewScreen(String title, String link, String body) {
     Navigator.of(context).push(
       CupertinoPageRoute(
-        builder: (_) => WebViewScreen(title: title, link: link),
+        builder: (_) => WebViewScreen(
+          title: title,
+          link: link,
+          body: body,
+        ),
       ),
     );
   }
