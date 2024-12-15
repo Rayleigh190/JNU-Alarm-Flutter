@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jnu_alarm/common/utils.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebViewScreen extends StatefulWidget {
@@ -91,6 +92,17 @@ class _WebViewScreenState extends State<WebViewScreen> {
             fontSize: Sizes.size20,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              final url = Uri.parse(currentUrl);
+              if (await canLaunchUrl(url)) {
+                await launchUrl(url, mode: LaunchMode.externalApplication);
+              }
+            },
+            icon: const Icon(Icons.open_in_browser),
+          ),
+        ],
       ),
       body: WebViewWidget(controller: _controller),
       bottomNavigationBar: SafeArea(
