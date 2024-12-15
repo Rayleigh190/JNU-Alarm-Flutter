@@ -18,7 +18,7 @@ class NoticeScreen extends ConsumerStatefulWidget {
 }
 
 class _NoticeScreenState extends ConsumerState<NoticeScreen>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, WidgetsBindingObserver {
   final ScrollController _scrollController = ScrollController();
   bool _showScrollUpBtn = false;
 
@@ -59,12 +59,21 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      ref.watch(noticeProvider.notifier).refresh();
+    }
   }
 
   @override
