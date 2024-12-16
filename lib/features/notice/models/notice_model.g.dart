@@ -26,16 +26,20 @@ Map<String, dynamic> _$$NoticeResponseModelImplToJson(
 
 _$NoticeModelImpl _$$NoticeModelImplFromJson(Map<String, dynamic> json) =>
     _$NoticeModelImpl(
+      id: (json['id'] as num).toInt(),
       title: json['title'] as String,
       body: json['body'] as String,
       link: json['link'] as String,
       created_at: DateTime.parse(json['created_at'] as String),
+      is_read: (json['is_read'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$$NoticeModelImplToJson(_$NoticeModelImpl instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'title': instance.title,
       'body': instance.body,
       'link': instance.link,
       'created_at': instance.created_at.toIso8601String(),
+      'is_read': instance.is_read,
     };

@@ -18,10 +18,12 @@ class NoticeResponseModel with _$NoticeResponseModel {
 @freezed
 class NoticeModel with _$NoticeModel {
   const factory NoticeModel({
+    required int id,
     required String title,
     required String body,
     required String link,
     required DateTime created_at,
+    @Default(0) int is_read,
   }) = _NoticeModel;
 
   factory NoticeModel.fromJson(Map<String, Object?> json) =>

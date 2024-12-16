@@ -216,10 +216,12 @@ NoticeModel _$NoticeModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$NoticeModel {
+  int get id => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   String get body => throw _privateConstructorUsedError;
   String get link => throw _privateConstructorUsedError;
   DateTime get created_at => throw _privateConstructorUsedError;
+  int get is_read => throw _privateConstructorUsedError;
 
   /// Serializes this NoticeModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -237,7 +239,13 @@ abstract class $NoticeModelCopyWith<$Res> {
           NoticeModel value, $Res Function(NoticeModel) then) =
       _$NoticeModelCopyWithImpl<$Res, NoticeModel>;
   @useResult
-  $Res call({String title, String body, String link, DateTime created_at});
+  $Res call(
+      {int id,
+      String title,
+      String body,
+      String link,
+      DateTime created_at,
+      int is_read});
 }
 
 /// @nodoc
@@ -255,12 +263,18 @@ class _$NoticeModelCopyWithImpl<$Res, $Val extends NoticeModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? title = null,
     Object? body = null,
     Object? link = null,
     Object? created_at = null,
+    Object? is_read = null,
   }) {
     return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -277,6 +291,10 @@ class _$NoticeModelCopyWithImpl<$Res, $Val extends NoticeModel>
           ? _value.created_at
           : created_at // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      is_read: null == is_read
+          ? _value.is_read
+          : is_read // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -289,7 +307,13 @@ abstract class _$$NoticeModelImplCopyWith<$Res>
       __$$NoticeModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String title, String body, String link, DateTime created_at});
+  $Res call(
+      {int id,
+      String title,
+      String body,
+      String link,
+      DateTime created_at,
+      int is_read});
 }
 
 /// @nodoc
@@ -305,12 +329,18 @@ class __$$NoticeModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? title = null,
     Object? body = null,
     Object? link = null,
     Object? created_at = null,
+    Object? is_read = null,
   }) {
     return _then(_$NoticeModelImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -327,6 +357,10 @@ class __$$NoticeModelImplCopyWithImpl<$Res>
           ? _value.created_at
           : created_at // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      is_read: null == is_read
+          ? _value.is_read
+          : is_read // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -335,14 +369,18 @@ class __$$NoticeModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$NoticeModelImpl implements _NoticeModel {
   const _$NoticeModelImpl(
-      {required this.title,
+      {required this.id,
+      required this.title,
       required this.body,
       required this.link,
-      required this.created_at});
+      required this.created_at,
+      this.is_read = 0});
 
   factory _$NoticeModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$NoticeModelImplFromJson(json);
 
+  @override
+  final int id;
   @override
   final String title;
   @override
@@ -351,10 +389,13 @@ class _$NoticeModelImpl implements _NoticeModel {
   final String link;
   @override
   final DateTime created_at;
+  @override
+  @JsonKey()
+  final int is_read;
 
   @override
   String toString() {
-    return 'NoticeModel(title: $title, body: $body, link: $link, created_at: $created_at)';
+    return 'NoticeModel(id: $id, title: $title, body: $body, link: $link, created_at: $created_at, is_read: $is_read)';
   }
 
   @override
@@ -362,16 +403,19 @@ class _$NoticeModelImpl implements _NoticeModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$NoticeModelImpl &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.body, body) || other.body == body) &&
             (identical(other.link, link) || other.link == link) &&
             (identical(other.created_at, created_at) ||
-                other.created_at == created_at));
+                other.created_at == created_at) &&
+            (identical(other.is_read, is_read) || other.is_read == is_read));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, title, body, link, created_at);
+  int get hashCode =>
+      Object.hash(runtimeType, id, title, body, link, created_at, is_read);
 
   /// Create a copy of NoticeModel
   /// with the given fields replaced by the non-null parameter values.
@@ -391,14 +435,18 @@ class _$NoticeModelImpl implements _NoticeModel {
 
 abstract class _NoticeModel implements NoticeModel {
   const factory _NoticeModel(
-      {required final String title,
+      {required final int id,
+      required final String title,
       required final String body,
       required final String link,
-      required final DateTime created_at}) = _$NoticeModelImpl;
+      required final DateTime created_at,
+      final int is_read}) = _$NoticeModelImpl;
 
   factory _NoticeModel.fromJson(Map<String, dynamic> json) =
       _$NoticeModelImpl.fromJson;
 
+  @override
+  int get id;
   @override
   String get title;
   @override
@@ -407,6 +455,8 @@ abstract class _NoticeModel implements NoticeModel {
   String get link;
   @override
   DateTime get created_at;
+  @override
+  int get is_read;
 
   /// Create a copy of NoticeModel
   /// with the given fields replaced by the non-null parameter values.
