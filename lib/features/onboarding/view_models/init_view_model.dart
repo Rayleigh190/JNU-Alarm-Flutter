@@ -15,6 +15,9 @@ class InitViewModel extends Notifier<InitState> {
     if (savedVersion == null) {
       // 앱 최초 실행
       await fcmRepository.initialize();
+      if (prefs.getString("last_notice_fetch_date") == null) {
+        prefs.setString("last_notice_fetch_date", DateTime.now().toString());
+      }
       state = InitState(isFirstRun: true, isUpdated: false);
       // await prefs.setInt('app_version', currentVersion);
     } else if (savedVersion < currentVersion) {

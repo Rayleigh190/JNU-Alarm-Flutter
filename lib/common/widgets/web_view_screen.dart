@@ -76,9 +76,11 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
     _controller.setJavaScriptMode(JavaScriptMode.unrestricted);
     _controller.enableZoom(true);
-    _controller.loadRequest(
-      Uri.parse(widget.link),
-    );
+    if (widget.link.isNotEmpty) {
+      _controller.loadRequest(
+        Uri.parse(widget.link),
+      );
+    }
   }
 
   @override

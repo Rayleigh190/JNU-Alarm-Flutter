@@ -56,6 +56,7 @@ class _MainScreenState extends State<MainScreen>
   }
 
   void pushWebViewScreen(String title, String link, String body) {
+    if (link.isEmpty) return;
     Navigator.of(context).push(
       CupertinoPageRoute(
         builder: (_) => WebViewScreen(

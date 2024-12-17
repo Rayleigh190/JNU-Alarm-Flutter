@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jnu_alarm/common/database_helper.dart';
 import 'package:jnu_alarm/common/utils.dart';
 import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
@@ -31,6 +32,7 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
   }
 
   void _onTapNoticeTile(String title, String link, String body) {
+    if (link.isEmpty) return;
     Navigator.of(context).push(
       CupertinoPageRoute(
         builder: (_) => WebViewScreen(title: title, link: link, body: body),
@@ -91,6 +93,14 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
           "알림 내역",
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              await DatabaseHelper.deleteDatabase();
+            },
+            child: const Text("delete"),
+          ),
+        ],
       ),
       body: Stack(
         children: [
@@ -113,6 +123,7 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
                 }
                 return ListView.separated(
                   controller: _scrollController,
+                  physics: const AlwaysScrollableScrollPhysics(),
                   padding: EdgeInsets.fromLTRB(
                     Sizes.size20,
                     appBarHeight + Sizes.size5,
