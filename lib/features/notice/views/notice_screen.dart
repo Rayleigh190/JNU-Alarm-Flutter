@@ -79,6 +79,43 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
     }
   }
 
+  List<dynamic> _convertToListViewItems(List<NoticeModel> notices) {
+    DateTime now = DateTime.now();
+    DateTime todayStart = DateTime(now.year, now.month, now.day);
+    DateTime yesterdayStart = todayStart.subtract(const Duration(days: 1));
+    List<NoticeModel> todayNotices = [];
+    List<NoticeModel> yesterdayNotices = [];
+    List<NoticeModel> previousNotices = [];
+
+    for (var data in notices) {
+      if (data.created_at.isAfter(todayStart)) {
+        todayNotices.add(data);
+      } else if (data.created_at.isAfter(yesterdayStart)) {
+        yesterdayNotices.add(data);
+      } else {
+        previousNotices.add(data);
+      }
+    }
+
+    List<dynamic> items = [
+      if (todayNotices.isNotEmpty) ...[
+        '오늘',
+        ...todayNotices,
+        Gaps.v5,
+      ],
+      if (yesterdayNotices.isNotEmpty) ...[
+        '어제',
+        ...yesterdayNotices,
+        Gaps.v5,
+      ],
+      if (previousNotices.isNotEmpty) ...[
+        '이전',
+        ...previousNotices,
+      ],
+    ];
+    return items;
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -111,7 +148,8 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
             backgroundColor: const Color(0xFF323430),
             onRefresh: _onRefresh,
             child: notices.when(
-              data: (items) {
+              data: (data) {
+                final items = _convertToListViewItems(data);
                 if (items.isEmpty) {
                   return Stack(
                     children: [

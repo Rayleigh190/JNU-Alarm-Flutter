@@ -1,12 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/common/database_helper.dart';
-import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/features/notice/models/notice_model.dart';
 import 'package:jnu_alarm/features/notice/repos/notice_repo.dart';
 import 'package:jnu_alarm/features/setting/repos/notice_config_repo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
+class NoticeViewModel extends AsyncNotifier<List<NoticeModel>> {
   final NoticeSettingRepository _repository;
 
   NoticeViewModel(this._repository);
@@ -30,51 +29,15 @@ class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
     }
   }
 
-  Future<List<dynamic>> _fetchNotices() async {
-    DateTime now = DateTime.now();
-    DateTime todayStart = DateTime(now.year, now.month, now.day);
-    DateTime yesterdayStart = todayStart.subtract(const Duration(days: 1));
-
+  Future<List<NoticeModel>> _fetchNotices() async {
     await _checkNewNoticeAndSave();
-
     // 무한 스크롤에 맞게 수정해야 됨
     final response = await DatabaseHelper.fetchNotices(0, 15);
-
-    List<NoticeModel> todayNotices = [];
-    List<NoticeModel> yesterdayNotices = [];
-    List<NoticeModel> previousNotices = [];
-    for (var data in response) {
-      if (data.created_at.isAfter(todayStart)) {
-        todayNotices.add(data);
-      } else if (data.created_at.isAfter(yesterdayStart)) {
-        yesterdayNotices.add(data);
-      } else {
-        previousNotices.add(data);
-      }
-    }
-
-    List<dynamic> items = [
-      if (todayNotices.isNotEmpty) ...[
-        '오늘',
-        ...todayNotices,
-        Gaps.v5,
-      ],
-      if (yesterdayNotices.isNotEmpty) ...[
-        '어제',
-        ...yesterdayNotices,
-        Gaps.v5,
-      ],
-      if (previousNotices.isNotEmpty) ...[
-        '이전',
-        ...previousNotices,
-      ],
-    ];
-
-    return items;
+    return response;
   }
 
   @override
-  Future<List<dynamic>> build() async {
+  Future<List<NoticeModel>> build() async {
     return _fetchNotices();
   }
 
@@ -88,5 +51,6 @@ class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
   }
 }
 
-final noticeProvider = AsyncNotifierProvider<NoticeViewModel, List<dynamic>>(
-    () => throw UnimplementedError());
+final noticeProvider =
+    AsyncNotifierProvider<NoticeViewModel, List<NoticeModel>>(
+        () => throw UnimplementedError());
