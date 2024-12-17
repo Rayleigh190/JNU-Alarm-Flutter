@@ -81,6 +81,11 @@ class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
   Future<void> refresh() async {
     state = AsyncValue.data(await _fetchNotices());
   }
+
+  Future<void> setReadStatus(int id) async {
+    await DatabaseHelper.updateNoticeReadStatus(id, 1);
+    refresh();
+  }
 }
 
 final noticeProvider = AsyncNotifierProvider<NoticeViewModel, List<dynamic>>(

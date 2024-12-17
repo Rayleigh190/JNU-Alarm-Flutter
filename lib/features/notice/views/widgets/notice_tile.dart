@@ -11,12 +11,14 @@ class NoticeTile extends StatelessWidget {
     required this.body,
     required this.link,
     required this.createdAt,
+    required this.isRead,
   });
 
   final String title;
   final String body;
   final String link;
   final DateTime createdAt;
+  final bool isRead;
 
   String getFormattedTime(DateTime createdAt) {
     final now = DateTime.now();
@@ -60,8 +62,9 @@ class NoticeTile extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            Icons.check_circle_outline,
-            color: Theme.of(context).primaryColor,
+            isRead ? Icons.check_circle_outline : Icons.error_outline,
+            color:
+                isRead ? Colors.grey.shade400 : Theme.of(context).primaryColor,
           ),
           Gaps.h12,
           Expanded(
@@ -103,7 +106,8 @@ class NoticeTile extends StatelessWidget {
           Gaps.h5,
           Icon(
             Icons.arrow_forward_ios_rounded,
-            color: Theme.of(context).primaryColor,
+            color:
+                isRead ? Colors.grey.shade400 : Theme.of(context).primaryColor,
           ),
         ],
       ),
