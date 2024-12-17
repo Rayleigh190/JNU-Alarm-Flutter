@@ -2,23 +2,25 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
 import 'package:jnu_alarm/features/main/widgets/bottom_nav_btn.dart';
+import 'package:jnu_alarm/features/notice/view_models/notice_view_model.dart';
 import 'package:jnu_alarm/features/notice/views/notice_screen.dart';
 import 'package:jnu_alarm/common/fcm/repos/fcm_ropo.dart';
 import 'package:jnu_alarm/features/setting/views/main_setting_screen.dart';
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends ConsumerStatefulWidget {
   static const routeName = "/main";
   const MainScreen({super.key});
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
+  ConsumerState<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen>
+class _MainScreenState extends ConsumerState<MainScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _currentIndex = 0;
@@ -34,17 +36,17 @@ class _MainScreenState extends State<MainScreen>
     final FcmRepository fcmRepository = FcmRepository();
 
     if (Platform.isAndroid) {
-      fcmRepository.handleAndroidForegroundMessage((title, link, body) {
-        pushWebViewScreen(title, link, body);
+      fcmRepository.handleAndroidForegroundMessage((title, link, body, id) {
+        pushWebViewScreen(title, link, body, id);
       });
     }
 
-    fcmRepository.handleOnMessageOpenedFromBackground((title, link, body) {
-      pushWebViewScreen(title, link, body);
+    fcmRepository.handleOnMessageOpenedFromBackground((title, link, body, id) {
+      pushWebViewScreen(title, link, body, id);
     });
 
-    fcmRepository.handleOnMessageOpendFromTerminated((title, link, body) {
-      pushWebViewScreen(title, link, body);
+    fcmRepository.handleOnMessageOpendFromTerminated((title, link, body, id) {
+      pushWebViewScreen(title, link, body, id);
     });
 
     _tabController = TabController(
@@ -55,17 +57,26 @@ class _MainScreenState extends State<MainScreen>
     _tabController.addListener(tabListener);
   }
 
-  void pushWebViewScreen(String title, String link, String body) {
+  Future<void> pushWebViewScreen(
+      String title, String link, String body, int id) async {
+    final noticeProvider_ = ref.read(noticeProvider.notifier);
+    // 1. 새로운 알림내역 가져와서 db에 저장
+    await noticeProvider_.checkNewNoticeAndSave();
+    // 2. 읽음처리
+    await noticeProvider_.setAsRead(id);
+
     if (link.isEmpty) return;
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (_) => WebViewScreen(
-          title: title,
-          link: link,
-          body: body,
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.of(context).push(
+        CupertinoPageRoute(
+          builder: (_) => WebViewScreen(
+            title: title,
+            link: link,
+            body: body,
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   @override

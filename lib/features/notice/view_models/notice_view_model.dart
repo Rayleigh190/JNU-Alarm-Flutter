@@ -37,7 +37,7 @@ class NoticeViewModel extends AsyncNotifier<List<NoticeModel>> {
     return response.response;
   }
 
-  Future<void> _checkNewNoticeAndSave() async {
+  Future<void> checkNewNoticeAndSave() async {
     final newNotices = await _fetchNewNotices();
     if (newNotices.isEmpty) return;
     for (NoticeModel notice in newNotices.reversed) {
@@ -46,7 +46,7 @@ class NoticeViewModel extends AsyncNotifier<List<NoticeModel>> {
   }
 
   Future<List<NoticeModel>> _fetchNotices() async {
-    await _checkNewNoticeAndSave();
+    await checkNewNoticeAndSave();
     _hasMore = true;
     _offset = 0;
     final response = await DatabaseHelper.fetchNotices(_offset, _limit);

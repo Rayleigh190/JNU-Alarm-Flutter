@@ -54,12 +54,14 @@ class FcmRepository {
       if (notification != null) {
         final title = notification.title ?? "No title";
         final body = notification.body ?? "No body";
-        _showLocalNotification(title, body, data['link']);
+        _showLocalNotification(
+            title, body, data['link'], int.parse(data['id']));
       }
     });
   }
 
-  void _showLocalNotification(String title, String body, String link) async {
+  void _showLocalNotification(
+      String title, String body, String link, int id) async {
     const AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails(
       '100',
@@ -76,12 +78,12 @@ class FcmRepository {
       title,
       body,
       notificationDetails,
-      payload: "$title@$link@$body",
+      payload: "$title@$link@$body@$id",
     );
   }
 
   Future<void> handleAndroidForegroundMessage(
-      void Function(String title, String link, String body)
+      void Function(String title, String link, String body, int id)
           onMessageReceived) async {
     const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -93,25 +95,27 @@ class FcmRepository {
       initializationSettings,
       onDidReceiveNotificationResponse: (details) {
         final data = details.payload?.split("@");
-        onMessageReceived(data![0], data[1], data[2]);
+        onMessageReceived(data![0], data[1], data[2], int.parse(data[3]));
       },
     );
   }
 
   void handleOnMessageOpenedFromBackground(
-      void Function(String title, String link, String body) onMessageReceived) {
+      void Function(String title, String link, String body, int id)
+          onMessageReceived) {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       final title = message.data['title'];
       final link = message.data['link'];
       final body = message.notification?.body ?? "";
+      final id = int.parse(message.data['id']);
       if (title != null && link != null) {
-        onMessageReceived(title, link, body);
+        onMessageReceived(title, link, body, id);
       }
     });
   }
 
   Future<void> handleOnMessageOpendFromTerminated(
-      void Function(String title, String link, String body)
+      void Function(String title, String link, String body, int id)
           onMessageReceived) async {
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
@@ -119,7 +123,8 @@ class FcmRepository {
       final title = initialMessage.data['title'];
       final link = initialMessage.data['link'];
       final body = initialMessage.notification?.body ?? "";
-      onMessageReceived(title, link, body);
+      final id = int.parse(initialMessage.data['id']);
+      onMessageReceived(title, link, body, id);
     }
   }
 
