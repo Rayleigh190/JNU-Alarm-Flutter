@@ -10,6 +10,22 @@ class NoticeViewModel extends AsyncNotifier<List<NoticeModel>> {
 
   NoticeViewModel(this._repository);
 
+  int _offset = 0;
+  final int _limit = 15;
+  bool _hasMore = true;
+
+  bool get hasMore => _hasMore;
+
+  Future<void> fetchMoreNotices() async {
+    if (!_hasMore) return;
+    final newNotices = await DatabaseHelper.fetchNotices(_offset, _limit);
+    if (newNotices.length < _limit) {
+      _hasMore = false;
+    }
+    state = AsyncValue.data([...state.value ?? [], ...newNotices]);
+    _offset += _limit;
+  }
+
   Future<List<NoticeModel>> _fetchNewNotices() async {
     final topics = await _repository.getSubscribedTopics();
     final prefs = await SharedPreferences.getInstance();
@@ -31,8 +47,11 @@ class NoticeViewModel extends AsyncNotifier<List<NoticeModel>> {
 
   Future<List<NoticeModel>> _fetchNotices() async {
     await _checkNewNoticeAndSave();
-    // 무한 스크롤에 맞게 수정해야 됨
-    final response = await DatabaseHelper.fetchNotices(0, 15);
+    _hasMore = true;
+    _offset = 0;
+    final response = await DatabaseHelper.fetchNotices(_offset, _limit);
+    if (response.length < _limit) _hasMore = false;
+    _offset += _limit;
     return response;
   }
 

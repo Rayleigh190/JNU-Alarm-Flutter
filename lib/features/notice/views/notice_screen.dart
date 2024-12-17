@@ -123,6 +123,7 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
     final double appBarHeight =
         kToolbarHeight + MediaQuery.of(context).padding.top;
     final notices = ref.watch(noticeProvider);
+    final noticesNotifier = ref.read(noticeProvider.notifier);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -170,6 +171,15 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
                     Sizes.size96 + Sizes.size20,
                   ),
                   itemBuilder: (context, index) {
+                    if (index >= items.length) {
+                      noticesNotifier.fetchMoreNotices();
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: Sizes.size10),
+                          child: CircularProgressIndicator.adaptive(),
+                        ),
+                      );
+                    }
                     final item = items[index];
                     if (item is String) {
                       return NoticeDivider(
@@ -192,7 +202,8 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
                   },
                   separatorBuilder: (context, index) =>
                       (items[index] is String) ? Gaps.v6 : Gaps.v5,
-                  itemCount: items.length,
+                  itemCount:
+                      noticesNotifier.hasMore ? items.length + 1 : items.length,
                 );
               },
               error: (error, stackTrace) => Center(

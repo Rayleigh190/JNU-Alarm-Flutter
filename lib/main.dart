@@ -92,6 +92,8 @@ class MyApp extends StatelessWidget {
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
           },
         ),
+        progressIndicatorTheme:
+            const ProgressIndicatorThemeData(color: Colors.grey),
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
@@ -111,6 +113,8 @@ class MyApp extends StatelessWidget {
         dialogTheme: const DialogTheme(
           barrierColor: Colors.white10,
         ),
+        progressIndicatorTheme:
+            const ProgressIndicatorThemeData(color: Colors.grey),
       ),
       initialRoute: "/",
       routes: {
