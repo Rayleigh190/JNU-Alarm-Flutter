@@ -89,6 +89,21 @@ const SettingSection businessSettingSection = SettingSection(
   ],
 );
 
+const SettingSection etcSettingSection = SettingSection(
+  title: "기타",
+  tiles: [
+    WebViewTile(
+      icon: SettingsIcon(
+        color: Color(0xff009cdf),
+        icons: Icons.help_outline,
+      ),
+      title: "FAQ",
+      link:
+          "https://wackitlab.notion.site/FAQ-b0f2438e25574315baa0962d1dd250e5",
+    )
+  ],
+);
+
 const SettingSection devModeSettingSection = SettingSection(
   title: "개발자 모드",
   tiles: [
@@ -115,5 +130,6 @@ const List<SettingSection> mainSettingSectionGroup = [
   basicSettingSection,
   collegeSettingSection,
   businessSettingSection,
+  etcSettingSection,
   devModeSettingSection,
 ];

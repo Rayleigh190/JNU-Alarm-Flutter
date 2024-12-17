@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/common/error/global_error_handler.dart';
 import 'package:jnu_alarm/common/widgets/loading_dialog.dart';
+import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
 import 'package:jnu_alarm/features/setting/constants/main_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/setting_const_model.dart';
 import 'package:jnu_alarm/features/setting/view_models/notice_setting_view_model.dart';
@@ -82,6 +83,18 @@ class _MainSettingScreenState extends ConsumerState<MainSettingScreen>
                   onPressed: (context) {
                     Navigator.of(context).pushNamed(tile.to);
                   },
+                );
+              } else if (tile is WebViewTile) {
+                return SettingsTile.navigation(
+                  leading: tile.icon,
+                  title: Text(tile.title),
+                  onPressed: (context) => Navigator.of(context).pushNamed(
+                    WebViewScreen.routeName,
+                    arguments: WebViewScreenArgs(
+                      title: tile.title,
+                      link: tile.link,
+                    ),
+                  ),
                 );
               }
               throw Exception("Unsupported tile type: ${tile.runtimeType}");

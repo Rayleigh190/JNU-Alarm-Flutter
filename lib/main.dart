@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/common/error/global_error_listener.dart';
+import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
 import 'package:jnu_alarm/features/main/main_screen.dart';
 import 'package:jnu_alarm/features/notice/view_models/notice_view_model.dart';
 import 'package:jnu_alarm/features/onboarding/views/init_screen.dart';
@@ -129,6 +131,20 @@ class MyApp extends StatelessWidget {
             const SgSchoolSettingScreen(),
         BusinessettingScreen.routeName: (context) =>
             const BusinessettingScreen(),
+        // WebViewScreen.routeName: (context) => const WebViewScreen(),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == WebViewScreen.routeName) {
+          final args = settings.arguments as WebViewScreenArgs;
+          return CupertinoPageRoute(
+            builder: (context) => WebViewScreen(
+              title: args.title,
+              body: args.body,
+              link: args.link,
+            ),
+          );
+        }
+        return null;
       },
     );
   }
