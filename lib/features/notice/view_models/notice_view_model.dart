@@ -45,9 +45,16 @@ class NoticeViewModel extends AsyncNotifier<List<NoticeModel>> {
     state = AsyncValue.data(await _fetchNotices());
   }
 
-  Future<void> setReadStatus(int id) async {
+  Future<void> setAsRead(int id) async {
     await DatabaseHelper.updateNoticeReadStatus(id, 1);
-    refresh();
+    state = state.whenData((notices) {
+      return notices.map((notice) {
+        if (notice.id == id) {
+          return notice.copyWith(is_read: 1);
+        }
+        return notice;
+      }).toList();
+    });
   }
 }
 
