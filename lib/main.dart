@@ -131,7 +131,6 @@ class MyApp extends StatelessWidget {
             const SgSchoolSettingScreen(),
         BusinessettingScreen.routeName: (context) =>
             const BusinessettingScreen(),
-        // WebViewScreen.routeName: (context) => const WebViewScreen(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == WebViewScreen.routeName) {

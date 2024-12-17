@@ -88,7 +88,8 @@ class _MainSettingScreenState extends ConsumerState<MainSettingScreen>
                 return SettingsTile.navigation(
                   leading: tile.icon,
                   title: Text(tile.title),
-                  onPressed: (context) => Navigator.of(context).pushNamed(
+                  onPressed: (context) => Navigator.pushNamed(
+                    context,
                     WebViewScreen.routeName,
                     arguments: WebViewScreenArgs(
                       title: tile.title,

@@ -34,9 +34,13 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
   void _onTapNoticeTile(String title, String link, String body, int id) {
     if (link.isEmpty) return;
     ref.watch(noticeProvider.notifier).setAsRead(id);
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (_) => WebViewScreen(title: title, link: link, body: body),
+    Navigator.pushNamed(
+      context,
+      WebViewScreen.routeName,
+      arguments: WebViewScreenArgs(
+        title: title,
+        link: link,
+        body: body,
       ),
     );
   }

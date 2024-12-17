@@ -67,13 +67,13 @@ class _MainScreenState extends ConsumerState<MainScreen>
 
     if (link.isEmpty) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.of(context).push(
-        CupertinoPageRoute(
-          builder: (_) => WebViewScreen(
-            title: title,
-            link: link,
-            body: body,
-          ),
+      Navigator.pushNamed(
+        context,
+        WebViewScreen.routeName,
+        arguments: WebViewScreenArgs(
+          title: title,
+          link: link,
+          body: body,
         ),
       );
     });
