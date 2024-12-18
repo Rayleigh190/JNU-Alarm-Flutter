@@ -21,6 +21,7 @@ import 'package:jnu_alarm/features/setting/view_models/notice_setting_view_model
 import 'package:jnu_alarm/features/setting/views/business_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/college_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/depart_setting_screen.dart';
+import 'package:jnu_alarm/features/setting/views/info_screen.dart';
 import 'package:jnu_alarm/features/setting/views/sg_school_setting_screen.dart';
 import 'package:jnu_alarm/firebase_options.dart';
 import 'package:jnu_alarm/common/error/global_error_handler.dart';
@@ -131,6 +132,7 @@ class MyApp extends StatelessWidget {
             const SgSchoolSettingScreen(),
         BusinessettingScreen.routeName: (context) =>
             const BusinessettingScreen(),
+        InfoScreen.routeName: (context) => const InfoScreen(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == WebViewScreen.routeName) {

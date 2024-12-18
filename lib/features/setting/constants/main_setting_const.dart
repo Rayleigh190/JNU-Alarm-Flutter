@@ -3,6 +3,7 @@ import 'package:jnu_alarm/features/setting/constants/setting_const_model.dart';
 import 'package:jnu_alarm/features/setting/views/business_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/college_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/depart_setting_screen.dart';
+import 'package:jnu_alarm/features/setting/views/info_screen.dart';
 import 'package:jnu_alarm/features/setting/views/sg_school_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/widgets/settings_icon.dart';
 
@@ -116,7 +117,15 @@ const SettingSection etcSettingSection = SettingSection(
       title: "FAQ",
       link:
           "https://wackitlab.notion.site/FAQ-b0f2438e25574315baa0962d1dd250e5",
-    )
+    ),
+    NavigationTile(
+      icon: SettingsIcon(
+        color: Color(0xff009cdf),
+        icons: Icons.info_outline,
+      ),
+      title: "정보",
+      to: InfoScreen.routeName,
+    ),
   ],
 );
 
