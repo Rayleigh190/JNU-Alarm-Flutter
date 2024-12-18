@@ -9,6 +9,7 @@ import 'package:jnu_alarm/features/setting/constants/main_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/setting_const_model.dart';
 import 'package:jnu_alarm/features/setting/view_models/notice_setting_view_model.dart';
 import 'package:jnu_alarm/features/setting/views/widgets/settings_ui.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MainSettingScreen extends ConsumerStatefulWidget {
   const MainSettingScreen({super.key});
@@ -20,6 +21,13 @@ class MainSettingScreen extends ConsumerStatefulWidget {
 
 class _MainSettingScreenState extends ConsumerState<MainSettingScreen>
     with AutomaticKeepAliveClientMixin {
+  Future<void> openExBrowser(String link) async {
+    final url = Uri.parse(link);
+    if (await canLaunchUrl(url)) {
+      launchUrl(url, mode: LaunchMode.externalApplication);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -96,6 +104,12 @@ class _MainSettingScreenState extends ConsumerState<MainSettingScreen>
                       link: tile.link,
                     ),
                   ),
+                );
+              } else if (tile is ExBrowserTile) {
+                return SettingsTile.navigation(
+                  leading: tile.icon,
+                  title: Text(tile.title),
+                  onPressed: (context) => openExBrowser(tile.link),
                 );
               }
               throw Exception("Unsupported tile type: ${tile.runtimeType}");

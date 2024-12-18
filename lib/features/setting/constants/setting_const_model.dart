@@ -38,6 +38,18 @@ class WebViewTile {
   });
 }
 
+class ExBrowserTile {
+  final Widget icon;
+  final String title;
+  final String link;
+
+  const ExBrowserTile({
+    required this.icon,
+    required this.title,
+    required this.link,
+  });
+}
+
 class SettingSection {
   final String title;
   final List<dynamic> tiles;
