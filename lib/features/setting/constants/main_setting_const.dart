@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:jnu_alarm/features/setting/constants/setting_const_model.dart';
 import 'package:jnu_alarm/features/setting/views/business_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/college_setting_screen.dart';
-import 'package:jnu_alarm/features/setting/views/contact_screen.dart';
 import 'package:jnu_alarm/features/setting/views/depart_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/sg_school_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/widgets/settings_icon.dart';
@@ -93,13 +92,13 @@ const SettingSection businessSettingSection = SettingSection(
 const SettingSection etcSettingSection = SettingSection(
   title: "기타",
   tiles: [
-    NavigationTile(
+    WebViewTile(
       icon: SettingsIcon(
         color: Color(0xffe23838),
         icons: Icons.support_agent,
       ),
       title: "문의 및 제안",
-      to: ContactScreen.routeName,
+      link: "https://forms.gle/UsGc7w7gJ8Tw8FYNA",
     ),
     WebViewTile(
       icon: SettingsIcon(
