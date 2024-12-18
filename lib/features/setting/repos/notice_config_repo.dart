@@ -22,4 +22,12 @@ class NoticeSettingRepository {
   Future<List<String>> getSubscribedTopics() async {
     return _preferences.getStringList("subscribed_topics") ?? [];
   }
+
+  bool isDevModeActivated() {
+    return _preferences.getBool("is_dev_mode") ?? false;
+  }
+
+  Future<void> setDevMode(bool value) async {
+    await _preferences.setBool("is_dev_mode", value);
+  }
 }

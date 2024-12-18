@@ -1,12 +1,25 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jnu_alarm/common/secrets.dart';
 import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
+import 'package:jnu_alarm/features/setting/view_models/setting_section_view_model.dart';
 import 'package:jnu_alarm/features/setting/views/widgets/settings_ui.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:http/http.dart' as http;
 
-class InfoScreen extends StatelessWidget {
+class InfoScreen extends ConsumerStatefulWidget {
   static const routeName = "/info";
 
   const InfoScreen({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _InfoScreenState();
+}
+
+class _InfoScreenState extends ConsumerState<InfoScreen> {
+  final TextEditingController _controller = TextEditingController();
 
   void _openWebView(BuildContext context, String title, String link) {
     Navigator.pushNamed(
@@ -19,7 +32,91 @@ class InfoScreen extends StatelessWidget {
     );
   }
 
-  int _onTapVersion(int count) => count + 1;
+  Future<bool> postDevMode(String pw) async {
+    final url = Uri.parse('$baseUrl/user/dev-mode/');
+    final res = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        "password": _controller.text,
+      }),
+    );
+    _controller.clear();
+    return res.statusCode == 200;
+  }
+
+  void showResultDialog(BuildContext context, String title) {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> submit(BuildContext context) async {
+    if (await postDevMode(_controller.text)) {
+      ref.read(settingSectionProvider.notifier).setDevMode(true);
+      if (context.mounted) showResultDialog(context, "Success");
+    } else {
+      ref.read(settingSectionProvider.notifier).setDevMode(false);
+      if (context.mounted) showResultDialog(context, "Fail");
+    }
+  }
+
+  Future<void> _openDialog(BuildContext context) async {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Activate dev mode"),
+            content: TextField(
+              controller: _controller,
+              obscureText: true,
+              autofocus: true,
+              decoration: const InputDecoration(hintText: "Enter password"),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("CANCLE"),
+              ),
+              TextButton(
+                onPressed: () async {
+                  if (_controller.text.isEmpty) return;
+                  submit(context);
+                },
+                child: const Text("SUBMIT"),
+              ),
+            ],
+          );
+        });
+  }
+
+  int _onTapVersion(BuildContext context, int count) {
+    if (count == 19) _openDialog(context);
+    return count + 1;
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +126,7 @@ class InfoScreen extends StatelessWidget {
         title: const Text("정보"),
       ),
       body: SettingsList(
+        platform: DevicePlatform.iOS,
         sections: [
           SettingsSection(
             tiles: [
@@ -47,8 +145,8 @@ class InfoScreen extends StatelessWidget {
                   },
                 ),
                 onPressed: (context) {
-                  devModeActiveCount = _onTapVersion(devModeActiveCount);
-                  print(devModeActiveCount);
+                  devModeActiveCount =
+                      _onTapVersion(context, devModeActiveCount);
                 },
               ),
               SettingsTile.navigation(

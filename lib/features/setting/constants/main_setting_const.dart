@@ -156,5 +156,12 @@ const List<SettingSection> mainSettingSectionGroup = [
   collegeSettingSection,
   businessSettingSection,
   etcSettingSection,
+];
+
+const List<SettingSection> mainSettingSectionGroupWithDev = [
+  basicSettingSection,
+  collegeSettingSection,
+  businessSettingSection,
+  etcSettingSection,
   devModeSettingSection,
 ];

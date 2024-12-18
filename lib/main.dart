@@ -17,6 +17,7 @@ import 'package:jnu_alarm/features/setting/constants/depart_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/main_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/sg_school_setting_const.dart';
 import 'package:jnu_alarm/features/setting/repos/notice_config_repo.dart';
+import 'package:jnu_alarm/features/setting/view_models/setting_section_view_model.dart';
 import 'package:jnu_alarm/features/setting/view_models/notice_setting_view_model.dart';
 import 'package:jnu_alarm/features/setting/views/business_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/college_setting_screen.dart';
@@ -51,8 +52,8 @@ void main() async {
     runApp(
       ProviderScope(
         overrides: [
-          mainNoticeSettingProvider.overrideWith(() =>
-              NoticeSettingViewModel(repository, mainSettingSectionGroup)),
+          mainNoticeSettingProvider.overrideWith(() => NoticeSettingViewModel(
+              repository, mainSettingSectionGroupWithDev)),
           collegeNoticeSettingProvider.overrideWith(() =>
               NoticeSettingViewModel(repository, collegeSettingSectionGroup)),
           departNoticeSettingProvider.overrideWith(() =>
@@ -61,7 +62,9 @@ void main() async {
               NoticeSettingViewModel(repository, sgSchoolSettingSectionGroup)),
           businessNoticeSettingProvider.overrideWith(() =>
               NoticeSettingViewModel(repository, businessSettingSectionGroup)),
-          noticeProvider.overrideWith(() => NoticeViewModel(repository))
+          noticeProvider.overrideWith(() => NoticeViewModel(repository)),
+          settingSectionProvider
+              .overrideWith(() => SettingSectionViewModel(repository)),
         ],
         child: const MyApp(),
       ),

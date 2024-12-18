@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/common/error/global_error_handler.dart';
 import 'package:jnu_alarm/common/widgets/loading_dialog.dart';
 import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
-import 'package:jnu_alarm/features/setting/constants/main_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/setting_const_model.dart';
+import 'package:jnu_alarm/features/setting/view_models/setting_section_view_model.dart';
 import 'package:jnu_alarm/features/setting/view_models/notice_setting_view_model.dart';
 import 'package:jnu_alarm/features/setting/views/widgets/settings_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -58,7 +58,7 @@ class _MainSettingScreenState extends ConsumerState<MainSettingScreen>
       body: SettingsList(
         contentPadding: EdgeInsets.symmetric(vertical: appBarHeight),
         platform: DevicePlatform.iOS,
-        sections: mainSettingSectionGroup.map((section) {
+        sections: ref.watch(settingSectionProvider).map((section) {
           return SettingsSection(
             title: Text(section.title),
             tiles: section.tiles.map((tile) {
