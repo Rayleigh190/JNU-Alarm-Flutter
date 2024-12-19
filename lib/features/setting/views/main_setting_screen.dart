@@ -52,7 +52,13 @@ class _MainSettingScreenState extends ConsumerState<MainSettingScreen>
             onPressed: () async {
               debugPrint(await FirebaseMessaging.instance.getToken());
             },
-          )
+          ),
+          CupertinoButton(
+            child: const Text("subscribed"),
+            onPressed: () async {
+              debugPrint("${await settingsNotifier.getSubscribedTopics()}");
+            },
+          ),
         ],
       ),
       body: SettingsList(

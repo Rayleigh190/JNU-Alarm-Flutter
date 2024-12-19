@@ -28,9 +28,12 @@ Future<void> build12Update() async {
       await noticeSettingRepository.setSubscribedTopics(topic, true);
     }
     // // 1-2. 최근 3일 알림 가져와 저장
-    final threeDaysAgo = DateTime.now().subtract(const Duration(days: 3));
+    final now = DateTime.now();
+    final threeDaysAgo = now.subtract(const Duration(days: 3));
+    final threeDaysAgoZero =
+        DateTime(threeDaysAgo.year, threeDaysAgo.month, threeDaysAgo.day);
     final noticesRes =
-        await NoticeRepository.fetchNotices(topicKeys, threeDaysAgo);
+        await NoticeRepository.fetchNotices(topicKeys, threeDaysAgoZero);
     for (NoticeModel notice in noticesRes.response.reversed) {
       await DatabaseHelper.insertNotice(notice);
     }

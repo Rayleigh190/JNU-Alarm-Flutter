@@ -25,6 +25,10 @@ class NoticeSettingViewModel extends Notifier<NoticeSettingModel> {
     );
   }
 
+  Future<List<String>> getSubscribedTopics() async {
+    return await _repository.getSubscribedTopics();
+  }
+
   @override
   NoticeSettingModel build() {
     final savedTopics = {

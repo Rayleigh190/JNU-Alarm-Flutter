@@ -27,10 +27,13 @@ class InitScreen extends ConsumerWidget {
     return ref.watch(initProvider).when(
       data: (data) {
         if (data.isFirstRun) {
+          debugPrint("InitScreen - isFirstRun");
           replacementToMainScreen(context);
         } else if (data.isUpdated) {
+          debugPrint("InitScreen - isUpdated");
           replacementToMainScreen(context);
         } else {
+          debugPrint("InitScreen - NoFirstRun & NoUpdated");
           replacementToMainScreen(context);
         }
         return const Scaffold();

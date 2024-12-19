@@ -25,7 +25,8 @@ class InitViewModel extends AsyncNotifier<InitState> {
       }
       // 추가로 해야 될 작업
       await build12Update();
-      // await prefs.setInt('build_number', currentVersion);
+
+      await prefs.setInt('build_number', currentBuildNumber);
       return InitState(isFirstRun: true, isUpdated: false);
     } else if (savedBuildNumber < currentBuildNumber) {
       // 앱 업데이트 실행
