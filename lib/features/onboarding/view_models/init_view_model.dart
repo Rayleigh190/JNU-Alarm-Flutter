@@ -1,41 +1,48 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/common/fcm/repos/fcm_ropo.dart';
+import 'package:jnu_alarm/common/network/network_connection_check.dart';
 import 'package:jnu_alarm/features/onboarding/models/init_state_model.dart';
+import 'package:jnu_alarm/features/onboarding/view_models/updates/build12.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class InitViewModel extends Notifier<InitState> {
-  Future<void> initialize(BuildContext context) async {
+class InitViewModel extends AsyncNotifier<InitState> {
+  Future<InitState> _initialize() async {
     final prefs = await SharedPreferences.getInstance();
     final fcmRepository = FcmRepository();
 
-    final savedVersion = prefs.getInt('app_version');
-    const currentVersion = 11; // 현재 앱 버전 (수동 관리 or package_info 사용)
+    final savedBuildNumber = prefs.getInt('build_number');
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    final currentBuildNumber = int.parse(packageInfo.buildNumber);
 
-    if (savedVersion == null) {
+    if (savedBuildNumber == null) {
+      // 인터넷 연결 확인
+      await checkNetworkConnection();
       // 앱 최초 실행
       await fcmRepository.initialize();
       if (prefs.getString("last_notice_fetch_date") == null) {
         prefs.setString("last_notice_fetch_date", DateTime.now().toString());
       }
-      state = InitState(isFirstRun: true, isUpdated: false);
-      // await prefs.setInt('app_version', currentVersion);
-    } else if (savedVersion < currentVersion) {
+      // 추가로 해야 될 작업
+      await build12Update();
+      // await prefs.setInt('build_number', currentVersion);
+      return InitState(isFirstRun: true, isUpdated: false);
+    } else if (savedBuildNumber < currentBuildNumber) {
       // 앱 업데이트 실행
-      state = InitState(isFirstRun: false, isUpdated: true);
-      await prefs.setInt('app_version', currentVersion);
+      await prefs.setInt('build_number', currentBuildNumber);
+      return InitState(isFirstRun: false, isUpdated: true);
     } else {
       // 일반 실행
-      state = InitState(isFirstRun: false, isUpdated: false);
+      return InitState(isFirstRun: false, isUpdated: false);
     }
   }
 
   @override
-  InitState build() {
-    throw UnimplementedError();
+  Future<InitState> build() async {
+    return await _initialize();
   }
 }
 
-final initProvider = NotifierProvider<InitViewModel, InitState>(
+final initProvider = AsyncNotifierProvider<InitViewModel, InitState>(
   () => InitViewModel(),
 );
