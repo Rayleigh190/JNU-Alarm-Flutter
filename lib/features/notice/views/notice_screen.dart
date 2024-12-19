@@ -97,7 +97,7 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
     for (var data in notices) {
       if (data is TopBannerModel) {
         topBannerImages.add(
-          TopBannerImage(imageUrl: data.image_url),
+          TopBannerImage(model: data),
         );
       } else {
         if (data.created_at.isAfter(todayStart)) {

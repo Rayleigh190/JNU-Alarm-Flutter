@@ -1,23 +1,45 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
+import 'package:jnu_alarm/features/notice/models/top_banner_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TopBannerImage extends StatelessWidget {
   const TopBannerImage({
     super.key,
-    required this.imageUrl,
+    required this.model,
   });
 
-  final String imageUrl;
+  final TopBannerModel model;
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(5),
-      child: FadeInImage(
-        placeholder: MemoryImage(kTransparentImage),
-        image: NetworkImage(imageUrl),
-        fadeInDuration: const Duration(milliseconds: 200),
+    return GestureDetector(
+      onTap: () async {
+        if (model.direction_url.isEmpty) return;
+        if (model.is_external_browser) {
+          final url = Uri.parse(model.direction_url);
+          if (await canLaunchUrl(url)) {
+            launchUrl(url, mode: LaunchMode.externalApplication);
+          }
+        } else {
+          Navigator.of(context).pushNamed(
+            WebViewScreen.routeName,
+            arguments: WebViewScreenArgs(
+              title: model.name,
+              link: model.direction_url,
+            ),
+          );
+        }
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(5),
+        child: FadeInImage(
+          placeholder: MemoryImage(kTransparentImage),
+          image: NetworkImage(model.image_url),
+          fadeInDuration: const Duration(milliseconds: 200),
+        ),
       ),
     );
   }
