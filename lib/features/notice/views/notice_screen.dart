@@ -176,59 +176,58 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
             child: notices.when(
               data: (data) {
                 final items = _convertToListViewItems(data);
-                if (items.isEmpty) {
-                  return Stack(
-                    children: [
+                return Stack(
+                  children: [
+                    if (items.length == 2)
                       const Center(
                         child: Text("설정에서 알림을 구독하세요!"),
                       ),
-                      ListView(),
-                    ],
-                  );
-                }
-                return ListView.separated(
-                  controller: _scrollController,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.fromLTRB(
-                    Sizes.size20,
-                    appBarHeight + Sizes.size5,
-                    Sizes.size20,
-                    Sizes.size96 + Sizes.size20,
-                  ),
-                  itemBuilder: (context, index) {
-                    if (index >= items.length) {
-                      noticesNotifier.fetchMoreNotices();
-                      return const Center(
-                        child: Padding(
-                          padding: EdgeInsets.only(top: Sizes.size10),
-                          child: CircularProgressIndicator.adaptive(),
-                        ),
-                      );
-                    }
-                    final item = items[index];
-                    if (item is String) {
-                      return NoticeDivider(
-                        text: item,
-                      );
-                    } else if (item is NoticeModel) {
-                      return GestureDetector(
-                        onTap: () => _onTapNoticeTile(
-                            item.title, item.link, item.body, item.id),
-                        child: NoticeTile(
-                          title: item.title,
-                          body: item.body,
-                          link: item.link,
-                          createdAt: item.created_at,
-                          isRead: item.is_read == 1,
-                        ),
-                      );
-                    }
-                    return item;
-                  },
-                  separatorBuilder: (context, index) =>
-                      (items[index] is String) ? Gaps.v6 : Gaps.v5,
-                  itemCount:
-                      noticesNotifier.hasMore ? items.length + 1 : items.length,
+                    ListView.separated(
+                      controller: _scrollController,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: EdgeInsets.fromLTRB(
+                        Sizes.size20,
+                        appBarHeight + Sizes.size5,
+                        Sizes.size20,
+                        Sizes.size96 + Sizes.size20,
+                      ),
+                      itemBuilder: (context, index) {
+                        if (index >= items.length) {
+                          noticesNotifier.fetchMoreNotices();
+                          return const Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: Sizes.size10),
+                              child: CircularProgressIndicator.adaptive(),
+                            ),
+                          );
+                        }
+                        final item = items[index];
+                        if (item is String) {
+                          return NoticeDivider(
+                            text: item,
+                          );
+                        } else if (item is NoticeModel) {
+                          return GestureDetector(
+                            onTap: () => _onTapNoticeTile(
+                                item.title, item.link, item.body, item.id),
+                            child: NoticeTile(
+                              title: item.title,
+                              body: item.body,
+                              link: item.link,
+                              createdAt: item.created_at,
+                              isRead: item.is_read == 1,
+                            ),
+                          );
+                        }
+                        return item;
+                      },
+                      separatorBuilder: (context, index) =>
+                          (items[index] is String) ? Gaps.v6 : Gaps.v5,
+                      itemCount: noticesNotifier.hasMore
+                          ? items.length + 1
+                          : items.length,
+                    ),
+                  ],
                 );
               },
               error: (error, stackTrace) => Center(
