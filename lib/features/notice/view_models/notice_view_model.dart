@@ -5,7 +5,7 @@ import 'package:jnu_alarm/features/notice/repos/notice_repo.dart';
 import 'package:jnu_alarm/features/setting/repos/notice_config_repo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class NoticeViewModel extends AsyncNotifier<List<NoticeModel>> {
+class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
   final NoticeSettingRepository _repository;
 
   NoticeViewModel(this._repository);
@@ -45,18 +45,20 @@ class NoticeViewModel extends AsyncNotifier<List<NoticeModel>> {
     }
   }
 
-  Future<List<NoticeModel>> _fetchNotices() async {
+  Future<List<dynamic>> _fetchNotices() async {
     await checkNewNoticeAndSave();
     _hasMore = true;
     _offset = 0;
     final response = await DatabaseHelper.fetchNotices(_offset, _limit);
     if (response.length < _limit) _hasMore = false;
     _offset += _limit;
-    return response;
+
+    final topBannerRes = await NoticeRepository.fetchTopBanner();
+    return [...topBannerRes.response, ...response];
   }
 
   @override
-  Future<List<NoticeModel>> build() async {
+  Future<List<dynamic>> build() async {
     return _fetchNotices();
   }
 
@@ -68,7 +70,7 @@ class NoticeViewModel extends AsyncNotifier<List<NoticeModel>> {
     await DatabaseHelper.updateNoticeReadStatus(id, 1);
     state = state.whenData((notices) {
       return notices.map((notice) {
-        if (notice.id == id) {
+        if (notice is NoticeModel && notice.id == id) {
           return notice.copyWith(is_read: 1);
         }
         return notice;
@@ -77,6 +79,5 @@ class NoticeViewModel extends AsyncNotifier<List<NoticeModel>> {
   }
 }
 
-final noticeProvider =
-    AsyncNotifierProvider<NoticeViewModel, List<NoticeModel>>(
-        () => throw UnimplementedError());
+final noticeProvider = AsyncNotifierProvider<NoticeViewModel, List<dynamic>>(
+    () => throw UnimplementedError());
