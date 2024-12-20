@@ -180,7 +180,14 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
                   children: [
                     if (items.length == 2)
                       const Center(
-                        child: Text("설정에서 알림을 구독하세요!"),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("설정에서 알림을 구독하세요!"),
+                            Gaps.v10,
+                            Text("새로운 알림이 오면 저장됩니다."),
+                          ],
+                        ),
                       ),
                     ListView.separated(
                       controller: _scrollController,
