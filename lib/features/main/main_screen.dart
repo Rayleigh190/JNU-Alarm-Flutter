@@ -1,8 +1,9 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jnu_alarm/common/error/exceptions/custom_exceptions.dart';
+import 'package:jnu_alarm/common/network/network_connection_check.dart';
 import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
@@ -21,7 +22,7 @@ class MainScreen extends ConsumerStatefulWidget {
 }
 
 class _MainScreenState extends ConsumerState<MainScreen>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late TabController _tabController;
   int _currentIndex = 0;
 
@@ -33,6 +34,7 @@ class _MainScreenState extends ConsumerState<MainScreen>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     final FcmRepository fcmRepository = FcmRepository();
 
     if (Platform.isAndroid) {
@@ -81,8 +83,41 @@ class _MainScreenState extends ConsumerState<MainScreen>
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _tabController.dispose();
     super.dispose();
+  }
+
+  @override
+  Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      try {
+        await checkNetworkConnection();
+      } on NoNetworkConnectivityException catch (e) {
+        _showNetworkAlert(e.message);
+      }
+    }
+  }
+
+  void _showNetworkAlert(String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('알림'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('닫기'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void tabListener() {
