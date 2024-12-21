@@ -2,7 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jnu_alarm/common/error/global_error_handler.dart';
+import 'package:jnu_alarm/common/error/exceptions/custom_exceptions.dart';
 import 'package:jnu_alarm/common/widgets/loading_dialog.dart';
 import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
 import 'package:jnu_alarm/features/setting/constants/setting_const_model.dart';
@@ -82,11 +82,14 @@ class _MainSettingScreenState extends ConsumerState<MainSettingScreen>
                     );
                     try {
                       await settingsNotifier.toggleTopic(tile.topic, value);
-                    } catch (e, stackTrace) {
-                      GlobalErrorHandler().handle(e, stackTrace);
-                    }
-                    if (context.mounted) {
-                      LoadingDialogBuilder(context).hideLoadingDialog();
+                    } on NetworkConnectivityException catch (e) {
+                      if (context.mounted) {
+                        await showErrorAlert(context, e.message);
+                      }
+                    } finally {
+                      if (context.mounted) {
+                        LoadingDialogBuilder(context).hideLoadingDialog();
+                      }
                     }
                   },
                 );
