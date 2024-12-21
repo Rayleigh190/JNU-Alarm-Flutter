@@ -5,7 +5,7 @@ import 'package:jnu_alarm/features/notice/models/notice_model.dart';
 import 'package:jnu_alarm/features/notice/models/top_banner_model.dart';
 
 class NoticeRepository {
-  static Future<NoticeResponseModel> fetchNotices(
+  static Future<NoticeResponseModel?> fetchNotices(
       List<String> topics, DateTime date) async {
     final url = Uri.parse(
         '$baseUrl/alarm/notification/?topics=${topics.join(",")}&date=$date');
@@ -17,7 +17,7 @@ class NoticeRepository {
         ),
       );
     }
-    throw Error();
+    return null;
   }
 
   static Future<TopBannerResponseModel> fetchTopBanner() async {

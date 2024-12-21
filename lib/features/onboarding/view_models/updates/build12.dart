@@ -34,10 +34,10 @@ Future<void> build12Update() async {
         DateTime(threeDaysAgo.year, threeDaysAgo.month, threeDaysAgo.day);
     final noticesRes =
         await NoticeRepository.fetchNotices(topicKeys, threeDaysAgoZero);
-    for (NoticeModel notice in noticesRes.response.reversed) {
+    for (NoticeModel notice in noticesRes?.response.reversed ?? []) {
       await DatabaseHelper.insertNotice(notice);
     }
-    debugPrint("build12Update() - 최근 3일 알림 저장: ${noticesRes.response}");
+    debugPrint("build12Update() - 최근 3일 알림 저장: ${noticesRes?.response}");
   } catch (e) {
     debugPrint("build12Update() - $e");
     debugPrint("build12Update() - 신규유저");

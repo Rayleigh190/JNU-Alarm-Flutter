@@ -34,7 +34,7 @@ class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
     final response =
         await NoticeRepository.fetchNotices(topics, lastNoticeFetchDate);
     prefs.setString("last_notice_fetch_date", DateTime.now().toString());
-    return response.response;
+    return response?.response ?? [];
   }
 
   Future<void> checkNewNoticeAndSave() async {
