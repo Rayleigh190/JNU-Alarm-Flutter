@@ -20,7 +20,7 @@ class NoticeRepository {
     return null;
   }
 
-  static Future<TopBannerResponseModel> fetchTopBanner() async {
+  static Future<TopBannerResponseModel?> fetchTopBanner() async {
     final url = Uri.parse('$baseUrl/dashboard/top-banner-ad');
     final response = await http.get(url);
     if (response.statusCode == 200) {
@@ -30,6 +30,6 @@ class NoticeRepository {
         ),
       );
     }
-    throw Error();
+    return null;
   }
 }

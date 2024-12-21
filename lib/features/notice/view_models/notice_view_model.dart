@@ -54,7 +54,7 @@ class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
     _offset += _limit;
 
     final topBannerRes = await NoticeRepository.fetchTopBanner();
-    return [...topBannerRes.response, ...response];
+    return [...topBannerRes?.response ?? [], ...response];
   }
 
   @override
