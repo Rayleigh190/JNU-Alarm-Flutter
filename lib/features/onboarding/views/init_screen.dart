@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jnu_alarm/common/error/exceptions/custom_exceptions.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/features/main/main_screen.dart';
 import 'package:jnu_alarm/features/onboarding/view_models/init_view_model.dart';
@@ -20,6 +21,30 @@ class InitScreen extends ConsumerWidget {
         ),
       );
     });
+  }
+
+  Widget errorScaffold(String message1, String message2) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("오류: $message1"),
+            Text("\n$message2"),
+            TextButton(
+              onPressed: () {
+                if (Platform.isAndroid) {
+                  SystemNavigator.pop();
+                } else {
+                  exit(0);
+                }
+              },
+              child: const Text("종료하기"),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -55,28 +80,20 @@ class InitScreen extends ConsumerWidget {
         );
       },
       error: (error, stackTrace) {
-        // TODO: 예외처리 고도화 필요
-        debugPrint("InitScreen - $error");
-        return Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(error.toString()),
-                const Text("\n인터넷을 연결 후 앱을 완전히 재시작 해주세요."),
-                TextButton(
-                  onPressed: () {
-                    if (Platform.isAndroid) {
-                      SystemNavigator.pop();
-                    } else {
-                      exit(0);
-                    }
-                  },
-                  child: const Text("종료하기"),
-                ),
-              ],
-            ),
-          ),
+        if (error is NoNetworkConnectivityException) {
+          return errorScaffold(
+            error.message,
+            "인터넷을 연결 후 앱을 완전히 재시작 해주세요.",
+          );
+        } else if (error is ApiInternalServerException) {
+          return errorScaffold(
+            error.message,
+            "신속하게 복구 중입니다. 잠시 후 다시 시도해 주세요.",
+          );
+        }
+        return errorScaffold(
+          error.toString(),
+          "알 수 없는 오류입니다. 개발자에게 문의하세요.",
         );
       },
     );

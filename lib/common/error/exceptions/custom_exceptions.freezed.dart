@@ -241,3 +241,223 @@ abstract class NoNetworkConnectivityException
           _$NoNetworkConnectivityExceptionImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
+
+/// @nodoc
+mixin _$APIException {
+  String get message => throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String message) internal,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String message)? internal,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String message)? internal,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ApiInternalServerException value) internal,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(ApiInternalServerException value)? internal,
+  }) =>
+      throw _privateConstructorUsedError;
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ApiInternalServerException value)? internal,
+    required TResult orElse(),
+  }) =>
+      throw _privateConstructorUsedError;
+
+  /// Create a copy of APIException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $APIExceptionCopyWith<APIException> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $APIExceptionCopyWith<$Res> {
+  factory $APIExceptionCopyWith(
+          APIException value, $Res Function(APIException) then) =
+      _$APIExceptionCopyWithImpl<$Res, APIException>;
+  @useResult
+  $Res call({String message});
+}
+
+/// @nodoc
+class _$APIExceptionCopyWithImpl<$Res, $Val extends APIException>
+    implements $APIExceptionCopyWith<$Res> {
+  _$APIExceptionCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of APIException
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_value.copyWith(
+      message: null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$ApiInternalServerExceptionImplCopyWith<$Res>
+    implements $APIExceptionCopyWith<$Res> {
+  factory _$$ApiInternalServerExceptionImplCopyWith(
+          _$ApiInternalServerExceptionImpl value,
+          $Res Function(_$ApiInternalServerExceptionImpl) then) =
+      __$$ApiInternalServerExceptionImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String message});
+}
+
+/// @nodoc
+class __$$ApiInternalServerExceptionImplCopyWithImpl<$Res>
+    extends _$APIExceptionCopyWithImpl<$Res, _$ApiInternalServerExceptionImpl>
+    implements _$$ApiInternalServerExceptionImplCopyWith<$Res> {
+  __$$ApiInternalServerExceptionImplCopyWithImpl(
+      _$ApiInternalServerExceptionImpl _value,
+      $Res Function(_$ApiInternalServerExceptionImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of APIException
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? message = null,
+  }) {
+    return _then(_$ApiInternalServerExceptionImpl(
+      null == message
+          ? _value.message
+          : message // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$ApiInternalServerExceptionImpl implements ApiInternalServerException {
+  const _$ApiInternalServerExceptionImpl(this.message);
+
+  @override
+  final String message;
+
+  @override
+  String toString() {
+    return 'APIException.internal(message: $message)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ApiInternalServerExceptionImpl &&
+            (identical(other.message, message) || other.message == message));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, message);
+
+  /// Create a copy of APIException
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ApiInternalServerExceptionImplCopyWith<_$ApiInternalServerExceptionImpl>
+      get copyWith => __$$ApiInternalServerExceptionImplCopyWithImpl<
+          _$ApiInternalServerExceptionImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String message) internal,
+  }) {
+    return internal(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String message)? internal,
+  }) {
+    return internal?.call(message);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String message)? internal,
+    required TResult orElse(),
+  }) {
+    if (internal != null) {
+      return internal(message);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(ApiInternalServerException value) internal,
+  }) {
+    return internal(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(ApiInternalServerException value)? internal,
+  }) {
+    return internal?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(ApiInternalServerException value)? internal,
+    required TResult orElse(),
+  }) {
+    if (internal != null) {
+      return internal(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class ApiInternalServerException implements APIException {
+  const factory ApiInternalServerException(final String message) =
+      _$ApiInternalServerExceptionImpl;
+
+  @override
+  String get message;
+
+  /// Create a copy of APIException
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$ApiInternalServerExceptionImplCopyWith<_$ApiInternalServerExceptionImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}

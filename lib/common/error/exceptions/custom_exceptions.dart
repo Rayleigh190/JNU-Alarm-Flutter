@@ -10,6 +10,12 @@ class NetworkConnectivityException with _$NetworkConnectivityException {
       NoNetworkConnectivityException;
 }
 
+@freezed
+class APIException with _$APIException {
+  const factory APIException.internal(String message) =
+      ApiInternalServerException;
+}
+
 Future<void> showErrorAlert(BuildContext context, String message) async {
   await showDialog(
     context: context,
