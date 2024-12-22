@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/common/database_helper.dart';
+import 'package:jnu_alarm/common/error/exceptions/custom_exceptions.dart';
 import 'package:jnu_alarm/features/notice/models/notice_model.dart';
 import 'package:jnu_alarm/features/notice/repos/notice_repo.dart';
 import 'package:jnu_alarm/features/setting/repos/notice_config_repo.dart';
@@ -31,9 +33,14 @@ class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
     final prefs = await SharedPreferences.getInstance();
     final lastNoticeFetchDate =
         DateTime.parse(prefs.getString("last_notice_fetch_date")!);
-    final response =
-        await NoticeRepository.fetchNotices(topics, lastNoticeFetchDate);
-    prefs.setString("last_notice_fetch_date", DateTime.now().toString());
+    NoticeResponseModel? response;
+    try {
+      response =
+          await NoticeRepository.fetchNotices(topics, lastNoticeFetchDate);
+      prefs.setString("last_notice_fetch_date", DateTime.now().toString());
+    } on ApiInternalServerException catch (e) {
+      debugPrint(e.message);
+    }
     return response?.response ?? [];
   }
 

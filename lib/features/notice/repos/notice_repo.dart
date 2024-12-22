@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:jnu_alarm/common/error/exceptions/custom_exceptions.dart';
 import 'package:jnu_alarm/common/secrets.dart';
 import 'package:jnu_alarm/features/notice/models/notice_model.dart';
 import 'package:jnu_alarm/features/notice/models/top_banner_model.dart';
@@ -16,6 +17,8 @@ class NoticeRepository {
           utf8.decode(response.bodyBytes),
         ),
       );
+    } else if (response.statusCode >= 500) {
+      throw const ApiInternalServerException("서버와 연결이 끊겼습니다.");
     }
     return null;
   }
