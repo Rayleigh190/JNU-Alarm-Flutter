@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/common/database_helper.dart';
@@ -176,9 +177,9 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
             child: notices.when(
               data: (data) {
                 final items = _convertToListViewItems(data);
-                return Stack(
-                  children: [
-                    if (items.length == 2)
+                if (items.length == 2) {
+                  return Stack(
+                    children: [
                       const Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -189,7 +190,13 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
                           ],
                         ),
                       ),
-                    ListView.separated(
+                      ListView(),
+                    ],
+                  );
+                } else {
+                  return CupertinoScrollbar(
+                    controller: _scrollController,
+                    child: ListView.separated(
                       controller: _scrollController,
                       physics: const AlwaysScrollableScrollPhysics(),
                       padding: EdgeInsets.fromLTRB(
@@ -234,8 +241,8 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
                           ? items.length + 1
                           : items.length,
                     ),
-                  ],
-                );
+                  );
+                }
               },
               error: (error, stackTrace) => Center(
                 child: Text(error.toString()),

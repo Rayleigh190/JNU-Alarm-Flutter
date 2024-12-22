@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:jnu_alarm/common/error/exceptions/custom_exceptions.dart';
 import 'package:jnu_alarm/common/widgets/loading_dialog.dart';
 import 'package:jnu_alarm/features/setting/constants/setting_const_model.dart';
@@ -6,12 +6,12 @@ import 'package:jnu_alarm/features/setting/models/notice_setting_model.dart';
 import 'package:jnu_alarm/features/setting/view_models/notice_setting_view_model.dart';
 import 'package:jnu_alarm/features/setting/views/widgets/settings_ui.dart';
 
-Scrollbar getSettingScreenBody(
+CupertinoScrollbar getSettingScreenBody(
     NoticeSettingModel settings,
     BuildContext context,
     NoticeSettingViewModel settingsNotifier,
     List<SettingSection> settingSectionGroup) {
-  return Scrollbar(
+  return CupertinoScrollbar(
     child: SettingsList(
       platform: DevicePlatform.iOS,
       sections: settingSectionGroup.map((section) {

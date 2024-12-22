@@ -61,7 +61,7 @@ class _MainSettingScreenState extends ConsumerState<MainSettingScreen>
           ),
         ],
       ),
-      body: Scrollbar(
+      body: CupertinoScrollbar(
         child: SettingsList(
           contentPadding: EdgeInsets.symmetric(vertical: appBarHeight),
           platform: DevicePlatform.iOS,
