@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:jnu_alarm/common/utils.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
@@ -37,6 +39,18 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
     _controller.setNavigationDelegate(
       NavigationDelegate(
+        onNavigationRequest: (request) async {
+          final url = request.url;
+          if (url.contains("open.kakao.com") ||
+              (Platform.isAndroid && url.contains("play.google.com/store"))) {
+            final toUrl = Uri.parse(url);
+            if (await canLaunchUrl(toUrl)) {
+              await launchUrl(toUrl, mode: LaunchMode.externalApplication);
+            }
+            return NavigationDecision.prevent;
+          }
+          return NavigationDecision.navigate;
+        },
         onPageFinished: (String url) {
           // 강제 확대 가능하도록 meta 태그 수정
           _controller.runJavaScript('''
@@ -78,7 +92,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
           }
         },
         onUrlChange: (change) {
-          currentUrl = change.url ?? widget.title;
+          currentUrl = change.url ?? widget.link;
         },
       ),
     );
