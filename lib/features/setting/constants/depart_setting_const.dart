@@ -243,7 +243,7 @@ const SettingSection depart6SettingSection = SettingSection(
       enabled: false,
     ),
     SwitchTile(
-      title: "신문방송학과",
+      title: "미디어커뮤니케이션학과", // 신문방송학과 > 미디어커뮤니케이션학과
       topic: "comm",
     ),
     SwitchTile(
