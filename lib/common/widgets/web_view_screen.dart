@@ -89,6 +89,15 @@ class _WebViewScreenState extends State<WebViewScreen> {
               wrapper.appendChild(tables[i]);
             }
           ''');
+
+            // 최하단 목록 버튼 안 보이도록 설정
+            // Play Store 거부 대상
+            _controller.runJavaScript('''
+            var elements = document.getElementsByClassName('btn-deco color2');
+            if (elements.length > 0) {
+               elements[0].style.display = 'none';
+            }
+          ''');
           }
         },
         onUrlChange: (change) {
