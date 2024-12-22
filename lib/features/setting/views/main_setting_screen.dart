@@ -61,70 +61,72 @@ class _MainSettingScreenState extends ConsumerState<MainSettingScreen>
           ),
         ],
       ),
-      body: SettingsList(
-        contentPadding: EdgeInsets.symmetric(vertical: appBarHeight),
-        platform: DevicePlatform.iOS,
-        sections: ref.watch(settingSectionProvider).map((section) {
-          return SettingsSection(
-            title: Text(section.title),
-            tiles: section.tiles.map((tile) {
-              if (tile is SwitchTile) {
-                return SettingsTile.switchTile(
-                  enabled: tile.enabled,
-                  title: Text(tile.title),
-                  leading: tile.icon,
-                  initialValue: settings.topics[tile.topic] ?? false,
-                  onToggle: (value) async {
-                    LoadingDialogBuilder(context).showLoadingDialog(
-                      value
-                          ? "${tile.title} 구독 중.."
-                          : "${tile.title} 구독 취소 중..",
-                    );
-                    try {
-                      await settingsNotifier.toggleTopic(tile.topic, value);
-                    } on NetworkConnectivityException catch (e) {
-                      if (context.mounted) {
-                        await showErrorAlert(context, e.message);
+      body: Scrollbar(
+        child: SettingsList(
+          contentPadding: EdgeInsets.symmetric(vertical: appBarHeight),
+          platform: DevicePlatform.iOS,
+          sections: ref.watch(settingSectionProvider).map((section) {
+            return SettingsSection(
+              title: Text(section.title),
+              tiles: section.tiles.map((tile) {
+                if (tile is SwitchTile) {
+                  return SettingsTile.switchTile(
+                    enabled: tile.enabled,
+                    title: Text(tile.title),
+                    leading: tile.icon,
+                    initialValue: settings.topics[tile.topic] ?? false,
+                    onToggle: (value) async {
+                      LoadingDialogBuilder(context).showLoadingDialog(
+                        value
+                            ? "${tile.title} 구독 중.."
+                            : "${tile.title} 구독 취소 중..",
+                      );
+                      try {
+                        await settingsNotifier.toggleTopic(tile.topic, value);
+                      } on NetworkConnectivityException catch (e) {
+                        if (context.mounted) {
+                          await showErrorAlert(context, e.message);
+                        }
+                      } finally {
+                        if (context.mounted) {
+                          LoadingDialogBuilder(context).hideLoadingDialog();
+                        }
                       }
-                    } finally {
-                      if (context.mounted) {
-                        LoadingDialogBuilder(context).hideLoadingDialog();
-                      }
-                    }
-                  },
-                );
-              } else if (tile is NavigationTile) {
-                return SettingsTile.navigation(
-                  leading: tile.icon,
-                  title: Text(tile.title),
-                  onPressed: (context) {
-                    Navigator.of(context).pushNamed(tile.to);
-                  },
-                );
-              } else if (tile is WebViewTile) {
-                return SettingsTile.navigation(
-                  leading: tile.icon,
-                  title: Text(tile.title),
-                  onPressed: (context) => Navigator.pushNamed(
-                    context,
-                    WebViewScreen.routeName,
-                    arguments: WebViewScreenArgs(
-                      title: tile.title,
-                      link: tile.link,
+                    },
+                  );
+                } else if (tile is NavigationTile) {
+                  return SettingsTile.navigation(
+                    leading: tile.icon,
+                    title: Text(tile.title),
+                    onPressed: (context) {
+                      Navigator.of(context).pushNamed(tile.to);
+                    },
+                  );
+                } else if (tile is WebViewTile) {
+                  return SettingsTile.navigation(
+                    leading: tile.icon,
+                    title: Text(tile.title),
+                    onPressed: (context) => Navigator.pushNamed(
+                      context,
+                      WebViewScreen.routeName,
+                      arguments: WebViewScreenArgs(
+                        title: tile.title,
+                        link: tile.link,
+                      ),
                     ),
-                  ),
-                );
-              } else if (tile is ExBrowserTile) {
-                return SettingsTile.navigation(
-                  leading: tile.icon,
-                  title: Text(tile.title),
-                  onPressed: (context) => openExBrowser(tile.link),
-                );
-              }
-              throw Exception("Unsupported tile type: ${tile.runtimeType}");
-            }).toList(),
-          );
-        }).toList(),
+                  );
+                } else if (tile is ExBrowserTile) {
+                  return SettingsTile.navigation(
+                    leading: tile.icon,
+                    title: Text(tile.title),
+                    onPressed: (context) => openExBrowser(tile.link),
+                  );
+                }
+                throw Exception("Unsupported tile type: ${tile.runtimeType}");
+              }).toList(),
+            );
+          }).toList(),
+        ),
       ),
     );
   }
