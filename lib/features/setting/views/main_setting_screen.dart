@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,20 +45,6 @@ class _MainSettingScreenState extends ConsumerState<MainSettingScreen>
             fontWeight: FontWeight.w600,
           ),
         ),
-        actions: [
-          CupertinoButton(
-            child: const Text("Get token"),
-            onPressed: () async {
-              debugPrint(await FirebaseMessaging.instance.getToken());
-            },
-          ),
-          CupertinoButton(
-            child: const Text("subscribed"),
-            onPressed: () async {
-              debugPrint("${await settingsNotifier.getSubscribedTopics()}");
-            },
-          ),
-        ],
       ),
       body: CupertinoScrollbar(
         child: SettingsList(

@@ -2,7 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jnu_alarm/common/database_helper.dart';
 import 'package:jnu_alarm/common/utils.dart';
 import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
@@ -158,14 +157,6 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
           "알림 내역",
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              await DatabaseHelper.deleteDatabase();
-            },
-            child: const Text("delete"),
-          ),
-        ],
       ),
       body: Stack(
         children: [
