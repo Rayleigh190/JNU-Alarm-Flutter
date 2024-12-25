@@ -15,11 +15,7 @@ class InitScreen extends ConsumerWidget {
 
   void replacementToMainScreen(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Navigator.of(context).pushReplacement(
-        FadeInPageRoute(
-          page: const MainScreen(),
-        ),
-      );
+      Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
     });
   }
 
@@ -98,17 +94,4 @@ class InitScreen extends ConsumerWidget {
       },
     );
   }
-}
-
-class FadeInPageRoute extends PageRouteBuilder {
-  final Widget page;
-
-  FadeInPageRoute({required this.page})
-      : super(
-          pageBuilder: (context, animation, secondaryAnimation) => page,
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-          transitionDuration: const Duration(milliseconds: 1000),
-        );
 }

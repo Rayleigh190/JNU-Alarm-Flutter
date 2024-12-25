@@ -1,8 +1,10 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jnu_alarm/common/analytics_service.dart';
 import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
 import 'package:jnu_alarm/features/main/main_screen.dart';
 import 'package:jnu_alarm/features/notice/view_models/notice_view_model.dart';
@@ -24,12 +26,14 @@ import 'package:jnu_alarm/features/setting/views/sg_school_setting_screen.dart';
 import 'package:jnu_alarm/firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  AnalyticsService.setAnalyticsCollectionEnabled(true);
 
   // make navigation bar transparent
   SystemChrome.setSystemUIOverlayStyle(
@@ -69,12 +73,16 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: AnalyticsService.instance);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '전대알림',
       themeMode: ThemeMode.system,
+      navigatorObservers: <NavigatorObserver>[observer],
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFFF5F4F0),
         primaryColor: const Color(0xFFb8ed55),
@@ -118,7 +126,6 @@ class MyApp extends StatelessWidget {
       routes: {
         InitScreen.routeName: (context) => const InitScreen(),
         OnboardingScreen.routeName: (context) => const OnboardingScreen(),
-        MainScreen.routeName: (context) => const MainScreen(),
         CollegeSettingScreen.routeName: (context) =>
             const CollegeSettingScreen(),
         DepartSettingScreen.routeName: (context) => const DepartSettingScreen(),
@@ -132,15 +139,32 @@ class MyApp extends StatelessWidget {
         if (settings.name == WebViewScreen.routeName) {
           final args = settings.arguments as WebViewScreenArgs;
           return CupertinoPageRoute(
+            settings: const RouteSettings(name: WebViewScreen.routeName),
             builder: (context) => WebViewScreen(
               title: args.title,
               body: args.body,
               link: args.link,
             ),
           );
+        } else if (settings.name == MainScreen.routeName) {
+          return _fadeRoute(const MainScreen(), MainScreen.routeName);
         }
         return null;
       },
+    );
+  }
+
+  PageRouteBuilder _fadeRoute(Widget page, String routeName) {
+    return PageRouteBuilder(
+      settings: RouteSettings(name: routeName),
+      pageBuilder: (context, animation, secondaryAnimation) => page,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(
+          opacity: animation,
+          child: child,
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 1000),
     );
   }
 }
