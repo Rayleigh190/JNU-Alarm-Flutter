@@ -20,6 +20,9 @@ class BottomNavBtn extends StatelessWidget {
     return GestureDetector(
       onTap: () => onTap(index),
       child: AnimatedContainer(
+        decoration: const BoxDecoration(
+          color: Colors.transparent,
+        ),
         duration: const Duration(milliseconds: 200),
         height: Sizes.size36,
         width: Sizes.size36,
