@@ -43,12 +43,8 @@ class _MainScreenState extends ConsumerState<MainScreen>
       });
     }
 
-    fcmRepository.handleOnMessageOpenedFromBackground((title, link, body, id) {
-      pushWebViewScreen(title, link, body, id);
-    });
-
-    fcmRepository.handleOnMessageOpendFromTerminated((title, link, body, id) {
-      pushWebViewScreen(title, link, body, id);
+    fcmRepository.handleOnMessageOpenedFromBackgroundAndTerminated((message) {
+      pushWebViewScreen(message.title, message.link, message.body, message.id);
     });
 
     _tabController = TabController(

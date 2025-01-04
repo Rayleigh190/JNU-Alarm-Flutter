@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:jnu_alarm/features/main/models/fcm_message_model.dart';
 
 class FcmRepository {
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
@@ -100,32 +101,25 @@ class FcmRepository {
     );
   }
 
-  void handleOnMessageOpenedFromBackground(
-      void Function(String title, String link, String body, int id)
-          onMessageReceived) {
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      final title = message.data['title'];
-      final link = message.data['link'];
-      final body = message.notification?.body ?? "";
-      final id = int.parse(message.data['id']);
-      if (title != null && link != null) {
-        onMessageReceived(title, link, body, id);
-      }
-    });
-  }
-
-  Future<void> handleOnMessageOpendFromTerminated(
-      void Function(String title, String link, String body, int id)
-          onMessageReceived) async {
+  Future<void> handleOnMessageOpenedFromBackgroundAndTerminated(
+      void Function(FcmMessageModel message) onMessageReceived) async {
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
-      final title = initialMessage.data['title'];
-      final link = initialMessage.data['link'];
-      final body = initialMessage.notification?.body ?? "";
-      final id = int.parse(initialMessage.data['id']);
-      onMessageReceived(title, link, body, id);
+      onMessageReceived(_parseMessage(initialMessage));
     }
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      onMessageReceived(_parseMessage(message));
+    });
+  }
+
+  FcmMessageModel _parseMessage(RemoteMessage message) {
+    final title = message.data['title'];
+    final link = message.data['link'];
+    final body = message.notification?.body ?? "";
+    final id = int.parse(message.data['id']);
+    return FcmMessageModel(title, link, body, id);
   }
 
   Future<String?> getToken() async {
