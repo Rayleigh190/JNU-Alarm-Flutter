@@ -42,7 +42,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
         onNavigationRequest: (request) async {
           final url = request.url;
           if (url.contains("open.kakao.com") ||
-              (Platform.isAndroid && url.contains("play.google.com/store"))) {
+              (Platform.isAndroid && url.contains("play.google.com/store")) ||
+              url.contains("download") ||
+              url.contains("displayFile")) {
             final toUrl = Uri.parse(url);
             if (await canLaunchUrl(toUrl)) {
               await launchUrl(toUrl, mode: LaunchMode.externalApplication);
