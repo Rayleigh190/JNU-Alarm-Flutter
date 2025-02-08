@@ -29,10 +29,12 @@ class InitViewModel extends AsyncNotifier<InitState> {
       await prefs.setInt('build_number', currentBuildNumber);
       return InitState(isFirstRun: true, isUpdated: false);
     } else if (savedBuildNumber < currentBuildNumber) {
+      // await checkNetworkConnection();
       // 앱 업데이트 실행
       await prefs.setInt('build_number', currentBuildNumber);
       return InitState(isFirstRun: false, isUpdated: true);
     } else {
+      // await checkNetworkConnection();
       // 일반 실행
       return InitState(isFirstRun: false, isUpdated: false);
     }
