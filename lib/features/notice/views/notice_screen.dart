@@ -1,5 +1,7 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/common/utils.dart';
@@ -12,6 +14,7 @@ import 'package:jnu_alarm/features/notice/view_models/notice_view_model.dart';
 import 'package:jnu_alarm/features/notice/views/widgets/notice_divider.dart';
 import 'package:jnu_alarm/features/notice/views/widgets/notice_tile.dart';
 import 'package:jnu_alarm/features/notice/views/widgets/top_banner_image.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class NoticeScreen extends ConsumerStatefulWidget {
   const NoticeScreen({super.key});
@@ -22,6 +25,56 @@ class NoticeScreen extends ConsumerStatefulWidget {
 
 class _NoticeScreenState extends ConsumerState<NoticeScreen>
     with AutomaticKeepAliveClientMixin, WidgetsBindingObserver {
+  // AdMob Start
+  NativeAd? _nativeAd;
+  bool _nativeAdIsLoaded = false;
+  final double _adAspectRatioSmall = (91 / 355);
+
+  final String _debugAdUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/2247696110'
+      : 'ca-app-pub-3940256099942544/3986624511';
+  final String _releaseAdUnitId = Platform.isAndroid
+      ? 'ca-app-pub-4183402691727093/9784516940'
+      : 'ca-app-pub-4183402691727093/3174914557';
+  String get _adUnitId => kDebugMode ? _debugAdUnitId : _releaseAdUnitId;
+
+  /// Loads a native ad.
+  void loadAd() {
+    _nativeAd = NativeAd(
+      adUnitId: _adUnitId,
+      listener: NativeAdListener(
+        onAdLoaded: (ad) {
+          debugPrint('$NativeAd loaded.');
+          setState(() {
+            _nativeAdIsLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          // Dispose the ad here to free resources.
+          debugPrint('$NativeAd failed to load: $error');
+          ad.dispose();
+        },
+      ),
+      request: const AdRequest(),
+      // Styling
+      nativeTemplateStyle: NativeTemplateStyle(
+        // Required: Choose a template.
+        templateType: TemplateType.small,
+        // Optional: Customize the ad's style.
+        mainBackgroundColor: Colors.transparent,
+        cornerRadius: 10.0,
+        callToActionTextStyle: NativeTemplateTextStyle(
+            textColor: const Color(0xFF282828),
+            backgroundColor: const Color(0xFFb8ed55),
+            // style: NativeTemplateFontStyle.monospace,
+            size: 16.0),
+        primaryTextStyle: NativeTemplateTextStyle(
+            style: NativeTemplateFontStyle.normal, size: 16.0),
+      ),
+    )..load();
+  }
+  // AdMob End
+
   final ScrollController _scrollController = ScrollController();
   bool _showScrollUpBtn = false;
 
@@ -67,6 +120,7 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
   @override
   void initState() {
     super.initState();
+    loadAd();
     _scrollController.addListener(_onScroll);
     WidgetsBinding.instance.addObserver(this);
   }
@@ -75,6 +129,7 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
   void dispose() {
     _scrollController.dispose();
     WidgetsBinding.instance.removeObserver(this);
+    _nativeAd?.dispose();
     super.dispose();
   }
 
@@ -111,17 +166,31 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
     }
 
     List<dynamic> items = [
-      ClipRRect(
-        borderRadius: BorderRadius.circular(5),
-        child: CarouselSlider(
-          items: topBannerImages,
-          options: CarouselOptions(
-            aspectRatio: 1080 / 260,
-            viewportFraction: 1,
-            autoPlay: true,
+      // AdMob Start
+      if (_nativeAdIsLoaded && _nativeAd != null)
+        Container(
+          decoration: BoxDecoration(
+            color: isDarkMode(context) ? const Color(0xFF282828) : Colors.white,
+            borderRadius: const BorderRadius.all(
+              Radius.circular(Sizes.size9),
+            ),
+            boxShadow: const [
+              BoxShadow(
+                color: Color.fromARGB(5, 0, 0, 0),
+                blurRadius: Sizes.size5,
+                spreadRadius: Sizes.size1,
+                offset: Offset(0, 3),
+              )
+            ],
+          ),
+          padding: const EdgeInsets.only(left: 10),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.width * _adAspectRatioSmall,
+            width: MediaQuery.of(context).size.width,
+            child: AdWidget(ad: _nativeAd!),
           ),
         ),
-      ),
+      // AdMob End
       Gaps.v5,
       if (todayNotices.isNotEmpty) ...[
         '오늘',
