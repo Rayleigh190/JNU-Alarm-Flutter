@@ -7,6 +7,7 @@ import 'package:jnu_alarm/common/network/network_connection_check.dart';
 import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
+import 'package:jnu_alarm/features/dashboard/views/dashboard_screen.dart';
 import 'package:jnu_alarm/features/main/widgets/bottom_nav_btn.dart';
 import 'package:jnu_alarm/features/notice/view_models/notice_view_model.dart';
 import 'package:jnu_alarm/features/notice/views/notice_screen.dart';
@@ -28,6 +29,7 @@ class _MainScreenState extends ConsumerState<MainScreen>
 
   final List<Widget> _page = [
     const NoticeScreen(),
+    const DashboardScreen(),
     const MainSettingScreen(),
   ];
 
@@ -189,9 +191,16 @@ class _MainScreenState extends ConsumerState<MainScreen>
                           ),
                           Gaps.h10,
                           BottomNavBtn(
-                            icon: Icons.settings,
+                            icon: Icons.space_dashboard_rounded,
                             currentIndex: _currentIndex,
                             index: 1,
+                            onTap: (index) => _onTap(index),
+                          ),
+                          Gaps.h10,
+                          BottomNavBtn(
+                            icon: Icons.settings,
+                            currentIndex: _currentIndex,
+                            index: 2,
                             onTap: (index) => _onTap(index),
                           ),
                         ],
