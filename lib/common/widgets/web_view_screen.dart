@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:jnu_alarm/common/utils.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
 import 'package:share_plus/share_plus.dart';
@@ -31,6 +33,48 @@ class WebViewScreen extends StatefulWidget {
 class _WebViewScreenState extends State<WebViewScreen> {
   late WebViewController _controller;
   String currentUrl = "";
+
+  // AdMob Start
+  BannerAd? _bannerAd;
+  bool _isLoaded = false;
+
+  // TODO: replace this test ad unit with your own ad unit.
+  final String _debugAdUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/9214589741'
+      : 'ca-app-pub-3940256099942544/2435281174';
+  final String _releaseAdUnitId = Platform.isAndroid
+      ? 'ca-app-pub-4183402691727093/6476970284'
+      : 'ca-app-pub-4183402691727093/5410662598';
+  String get _adUnitId => kDebugMode ? _debugAdUnitId : _releaseAdUnitId;
+
+  /// Loads a banner ad.
+  void _loadAd() async {
+    // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
+    final size = await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+        MediaQuery.sizeOf(context).width.truncate());
+
+    _bannerAd = BannerAd(
+      adUnitId: _adUnitId,
+      request: const AdRequest(),
+      size: size as AdSize,
+      listener: BannerAdListener(
+        // Called when an ad is successfully received.
+        onAdLoaded: (ad) {
+          debugPrint('$ad loaded.');
+          setState(() {
+            _isLoaded = true;
+          });
+        },
+        // Called when an ad request failed.
+        onAdFailedToLoad: (ad, error) {
+          debugPrint('BannerAd failed to load: $error');
+          // Dispose the ad here to free resources.
+          ad.dispose();
+        },
+      ),
+    )..load();
+  }
+  // AdMob End
 
   @override
   void initState() {
@@ -115,6 +159,16 @@ class _WebViewScreenState extends State<WebViewScreen> {
         Uri.parse(widget.link),
       );
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadAd();
+    });
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    super.dispose();
   }
 
   @override
@@ -140,7 +194,21 @@ class _WebViewScreenState extends State<WebViewScreen> {
           ),
         ],
       ),
-      body: WebViewWidget(controller: _controller),
+      body: Column(
+        children: [
+          Expanded(
+            child: WebViewWidget(controller: _controller),
+          ),
+          // AdMob Start
+          if (_bannerAd != null && _isLoaded)
+            SizedBox(
+              width: _bannerAd!.size.width.toDouble(),
+              height: _bannerAd!.size.height.toDouble(),
+              child: AdWidget(ad: _bannerAd!),
+            )
+          // AdMob End
+        ],
+      ),
       bottomNavigationBar: SafeArea(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
