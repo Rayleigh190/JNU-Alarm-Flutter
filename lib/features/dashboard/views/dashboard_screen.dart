@@ -132,15 +132,17 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 children: [
                   DashboardMainButton(
                     title: "학사일정",
-                    icon: Icons.calendar_month_outlined,
+                    emoji: '🗓️',
                   ),
                   Gaps.h16,
                   DashboardMainButton(
-                      title: "학식메뉴", icon: Icons.restaurant_menu),
+                    title: "학식메뉴",
+                    emoji: '🍱',
+                  ),
                   Gaps.h16,
                   DashboardMainButton(
                     title: "긱식메뉴",
-                    icon: Icons.restaurant,
+                    emoji: '🍽️',
                   ),
                 ],
               ),

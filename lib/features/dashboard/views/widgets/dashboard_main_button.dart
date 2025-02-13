@@ -7,11 +7,11 @@ class DashboardMainButton extends StatelessWidget {
   const DashboardMainButton({
     super.key,
     required this.title,
-    required this.icon,
+    required this.emoji,
   });
 
   final String title;
-  final IconData icon;
+  final String emoji;
 
   @override
   Widget build(BuildContext context) {
@@ -39,20 +39,10 @@ class DashboardMainButton extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(Sizes.size10),
-                  decoration: const BoxDecoration(
-                    color: Color(0xffb8ed55),
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(
-                        Sizes.size56,
-                      ),
-                    ),
-                  ),
-                  child: Icon(
-                    icon,
-                    size: Sizes.size32,
-                    color: const Color(0xff323531),
+                Text(
+                  emoji,
+                  style: const TextStyle(
+                    fontSize: Sizes.size40,
                   ),
                 ),
                 Gaps.v5,
