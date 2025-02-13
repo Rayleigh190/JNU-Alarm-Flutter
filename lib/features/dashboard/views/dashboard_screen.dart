@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:jnu_alarm/common/utils.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
+import 'package:jnu_alarm/features/dashboard/view_models/dashboard_view_model.dart';
 import 'package:jnu_alarm/features/dashboard/views/widgets/dashboard_main_button.dart';
-import 'package:jnu_alarm/features/notice/views/widgets/top_banner_image.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -16,7 +17,17 @@ class DashboardScreen extends ConsumerStatefulWidget {
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.watch(dashboardProvider.notifier).refresh();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final dashboardState = ref.watch(dashboardProvider);
+
     final isDark = isDarkMode(context);
     return Scaffold(
       body: SingleChildScrollView(
@@ -36,27 +47,38 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
               ),
               Gaps.v16,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FadeInImage(
-                    width: 80,
-                    placeholder: MemoryImage(kTransparentImage),
-                    image: const NetworkImage(
-                        "https://uxwing.com/wp-content/themes/uxwing/download/weather/weather-icon.png"),
-                  ),
-                  Gaps.h10,
-                  const Text(
-                    "${2}°C",
-                    style: TextStyle(
-                      fontSize: Sizes.size24,
-                      fontWeight: FontWeight.bold,
+              dashboardState.when(
+                data: (data) => Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.network(
+                      width: 60,
+                      data.weather.imageUrl,
+                      placeholderBuilder: (context) => const SizedBox(
+                        width: 60,
+                        height: 60,
+                      ),
                     ),
-                  ),
-                  const Icon(
-                    Icons.arrow_forward_ios_rounded,
-                  ),
-                ],
+                    Gaps.h6,
+                    Text(
+                      "${data.weather.temperature}°C",
+                      style: const TextStyle(
+                        fontSize: Sizes.size24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Icon(
+                      Icons.arrow_forward_ios_rounded,
+                    ),
+                  ],
+                ),
+                loading: () => const SizedBox(
+                  height: 60,
+                ),
+                error: (err, stack) => SizedBox(
+                  height: 60,
+                  child: Center(child: Text('Error: $err')),
+                ),
               ),
               Gaps.h10,
               Container(
