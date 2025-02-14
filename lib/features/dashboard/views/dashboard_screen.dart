@@ -198,22 +198,70 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                 ),
               ),
               Gaps.v36,
-              const Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  DashboardMainButton(
-                    title: "학사일정",
-                    emoji: '🗓️',
+                  Flexible(
+                    child: GestureDetector(
+                      onTap: () => _onTapWeb(
+                        "학사일정",
+                        "https://www.jnu.ac.kr/WebApp/web/HOM/TOP/Schedule300.aspx",
+                        "학사일정을 확인해 보세요!",
+                      ),
+                      child: const DashboardMainButton(
+                        title: "학사일정",
+                        emoji: '🗓️',
+                      ),
+                    ),
                   ),
                   Gaps.h16,
-                  DashboardMainButton(
-                    title: "학식메뉴",
-                    emoji: '🍱',
+                  Flexible(
+                    child: GestureDetector(
+                      onTap: () => _onTapWeb(
+                        "학사메뉴",
+                        "https://today.jnu.ac.kr/Program/MealPlan.aspx",
+                        "학식메뉴를 확인해 보세요!",
+                      ),
+                      child: const DashboardMainButton(
+                        title: "학식메뉴",
+                        emoji: '🍱',
+                      ),
+                    ),
                   ),
                   Gaps.h16,
-                  DashboardMainButton(
-                    title: "긱식메뉴",
-                    emoji: '🍽️',
+                  Flexible(
+                    child: PopupMenuButton(
+                      onSelected: (value) {
+                        _onTapWeb(
+                          "긱식메뉴",
+                          value,
+                          "긱식메뉴를 확인해 보세요!",
+                        );
+                      },
+                      itemBuilder: (context) {
+                        return [
+                          const PopupMenuItem(
+                            value:
+                                "https://dormitory.jnu.ac.kr/Board/Board.aspx?BoardID=2",
+                            child: Text("용봉캠"),
+                          ),
+                          const PopupMenuItem(
+                            value:
+                                "https://house.jnu.ac.kr/Board/Board.aspx?BoardID=36",
+                            child: Text("여수캠"),
+                          ),
+                          const PopupMenuItem(
+                            value:
+                                "https://hsdorm.jnu.ac.kr/Board/Board.aspx?BoardID=70",
+                            child: Text("화순캠"),
+                          ),
+                        ];
+                      },
+                      child: const DashboardMainButton(
+                        title: "긱식메뉴",
+                        emoji: '🍽️',
+                      ),
+                    ),
                   ),
                 ],
               ),

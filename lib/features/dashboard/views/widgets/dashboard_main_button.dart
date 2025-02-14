@@ -16,45 +16,43 @@ class DashboardMainButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = isDarkMode(context);
-    return Flexible(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 200),
-        child: AspectRatio(
-          aspectRatio: 1,
-          child: Container(
-            decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF282828) : Colors.white,
-              borderRadius: const BorderRadius.all(
-                Radius.circular(Sizes.size12),
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 200),
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: Container(
+          decoration: BoxDecoration(
+            color: isDark ? const Color(0xFF282828) : Colors.white,
+            borderRadius: const BorderRadius.all(
+              Radius.circular(Sizes.size12),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.1),
+                blurRadius: 1.0,
+                spreadRadius: 1,
+                offset: const Offset(0, 0),
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.1),
-                  blurRadius: 1.0,
-                  spreadRadius: 1,
-                  offset: const Offset(0, 0),
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                emoji,
+                style: const TextStyle(
+                  fontSize: Sizes.size40,
                 ),
-              ],
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  emoji,
-                  style: const TextStyle(
-                    fontSize: Sizes.size40,
-                  ),
+              ),
+              Gaps.v5,
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: Sizes.size16,
+                  fontWeight: FontWeight.bold,
                 ),
-                Gaps.v5,
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: Sizes.size16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
