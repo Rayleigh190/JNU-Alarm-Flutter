@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:jnu_alarm/common/enums/campus_type.dart';
 import 'package:jnu_alarm/common/utils.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
@@ -27,8 +28,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final dashboardState = ref.watch(dashboardProvider);
-
     final isDark = isDarkMode(context);
+
     return Scaffold(
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(
@@ -92,35 +93,55 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ),
                 child: PopupMenuButton(
+                  onSelected: (value) {
+                    ref
+                        .watch(dashboardProvider.notifier)
+                        .setWeatherCampus(value);
+                  },
                   itemBuilder: (context) {
                     return [
                       const PopupMenuItem(
-                        child: Text('용봉캠'),
+                        value: CampusType.yongbong,
+                        child: Text('광주캠'),
                       ),
                       const PopupMenuItem(
+                        value: CampusType.yeosu,
                         child: Text('여수캠'),
                       ),
                       const PopupMenuItem(
+                        value: CampusType.hwasun,
                         child: Text('화순캠'),
                       ),
                     ];
                   },
-                  child: const Row(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.location_pin,
                         color: Colors.white70,
                         size: Sizes.size20,
                       ),
                       Gaps.h1,
-                      Text(
-                        "광주캠",
-                        style: TextStyle(
-                          color: Colors.white70,
-                          fontSize: Sizes.size16,
-                          fontWeight: FontWeight.w500,
+                      dashboardState.when(
+                        data: (data) => Text(
+                          data.weather.campusName,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: Sizes.size16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
+                        loading: () => const Text(
+                          "ㅇㅇ캠",
+                          style: TextStyle(
+                            color: Color(0xFF323430),
+                            fontSize: Sizes.size16,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        error: (Object error, StackTrace stackTrace) =>
+                            Text('Error: $error'),
                       ),
                     ],
                   ),

@@ -17,8 +17,10 @@ class WeatherNotifier extends AsyncNotifier<WeatherModel> {
         prefs.getString('weather_campus') ?? CampusType.yongbong.name);
     final weatherResponse = await DashboardRepo.fetchWeather(campusType);
     return WeatherModel(
-        imageUrl: wtToUrl(weatherResponse.weatherType),
-        temperature: weatherResponse.temperature);
+      imageUrl: wtToUrl(weatherResponse.weatherType),
+      temperature: weatherResponse.temperature,
+      campusName: campusType.displayName,
+    );
   }
 
   Future<void> refresh() async {

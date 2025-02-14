@@ -8,6 +8,11 @@ class WeatherResponseModel {
 class WeatherModel {
   final String temperature;
   final String imageUrl;
+  final String campusName;
 
-  WeatherModel({required this.temperature, required this.imageUrl});
+  WeatherModel({
+    required this.temperature,
+    required this.imageUrl,
+    required this.campusName,
+  });
 }

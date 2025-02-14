@@ -2,7 +2,7 @@ String wtToUrl(String type) {
   String seletedWt;
   switch (type) {
     case 'wt1':
-      seletedWt = 'wt';
+      seletedWt = 'wt1';
       break;
     case 'wt2':
       seletedWt = 'wt2';
