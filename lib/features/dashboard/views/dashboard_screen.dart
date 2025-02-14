@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:jnu_alarm/common/enums/campus_type.dart';
 import 'package:jnu_alarm/common/utils.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
@@ -29,6 +30,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   Widget build(BuildContext context) {
     final dashboardState = ref.watch(dashboardProvider);
     final isDark = isDarkMode(context);
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('M월 d일 (E)', 'ko_KR').format(now);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -39,10 +42,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
           child: Column(
             children: [
               Gaps.v24,
-              const Center(
+              Center(
                 child: Text(
-                  "${00}월 ${00}일 (월)",
-                  style: TextStyle(
+                  formattedDate,
+                  style: const TextStyle(
                     fontSize: Sizes.size20,
                   ),
                 ),

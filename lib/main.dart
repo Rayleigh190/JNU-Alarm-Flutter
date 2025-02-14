@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:jnu_alarm/common/analytics_service.dart';
 import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
 import 'package:jnu_alarm/features/main/main_screen.dart';
@@ -33,6 +34,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
+  await initializeDateFormatting();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
