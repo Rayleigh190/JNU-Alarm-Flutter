@@ -20,7 +20,7 @@ class DashboardViewModel extends AsyncNotifier<DashboardInfoModel> {
   Future<void> setWeatherCampus(CampusType campus) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('weather_campus', campus.name);
-    ref.watch(weatherProvider.notifier).refresh();
+    refresh();
   }
 }
 

@@ -12,6 +12,7 @@ class WeatherNotifier extends AsyncNotifier<WeatherModel> {
   }
 
   Future<WeatherModel> fetchWeather() async {
+    state = const AsyncValue.loading();
     final prefs = await SharedPreferences.getInstance();
     final campusType = CampusType.getByString(
         prefs.getString('weather_campus') ?? CampusType.yongbong.name);

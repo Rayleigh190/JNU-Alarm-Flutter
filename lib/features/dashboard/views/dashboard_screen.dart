@@ -17,7 +17,22 @@ class DashboardScreen extends ConsumerStatefulWidget {
       _DashboardScreenState();
 }
 
-class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+class _DashboardScreenState extends ConsumerState<DashboardScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    _animation =
+        CurvedAnimation(parent: _animationController, curve: Curves.easeIn);
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -52,39 +67,48 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               ),
               Gaps.v16,
               dashboardState.when(
-                data: (data) => Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.network(
-                      width: 60,
-                      data.weather.imageUrl,
-                      placeholderBuilder: (context) => const SizedBox(
-                        width: 60,
-                        height: 60,
-                      ),
+                data: (data) {
+                  _animationController.forward(); // 데이터 로딩 후 애니메이션 실행
+                  return FadeTransition(
+                    opacity: _animation,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.network(
+                          width: 60,
+                          data.weather.imageUrl,
+                          placeholderBuilder: (context) => const SizedBox(
+                            width: 60,
+                            height: 60,
+                          ),
+                        ),
+                        Gaps.h6,
+                        Text(
+                          "${data.weather.temperature}°C",
+                          style: const TextStyle(
+                            fontSize: Sizes.size24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Icon(
+                          Icons.arrow_forward_ios_rounded,
+                        ),
+                      ],
                     ),
-                    Gaps.h6,
-                    Text(
-                      "${data.weather.temperature}°C",
-                      style: const TextStyle(
-                        fontSize: Sizes.size24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const Icon(
-                      Icons.arrow_forward_ios_rounded,
-                    ),
-                  ],
-                ),
-                loading: () => const SizedBox(
-                  height: 60,
-                ),
+                  );
+                },
+                loading: () {
+                  _animationController.reset();
+                  return const SizedBox(
+                    height: 60,
+                  );
+                },
                 error: (err, stack) => SizedBox(
                   height: 60,
                   child: Center(child: Text('Error: $err')),
                 ),
               ),
-              Gaps.h10,
+              Gaps.v5,
               Container(
                 padding: const EdgeInsets.fromLTRB(5, 4, 11, 3),
                 decoration: const BoxDecoration(
@@ -123,23 +147,28 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       const Icon(
                         Icons.location_pin,
                         color: Colors.white70,
-                        size: Sizes.size20,
+                        size: Sizes.size16,
                       ),
                       Gaps.h1,
                       dashboardState.when(
-                        data: (data) => Text(
-                          data.weather.campusName,
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: Sizes.size16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                        data: (data) {
+                          return FadeTransition(
+                            opacity: _animation,
+                            child: Text(
+                              data.weather.campusName,
+                              style: const TextStyle(
+                                color: Colors.white70,
+                                fontSize: Sizes.size14,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          );
+                        },
                         loading: () => const Text(
                           "ㅇㅇ캠",
                           style: TextStyle(
                             color: Color(0xFF323430),
-                            fontSize: Sizes.size16,
+                            fontSize: Sizes.size14,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
