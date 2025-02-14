@@ -21,6 +21,7 @@ class WeatherNotifier extends AsyncNotifier<WeatherModel> {
       imageUrl: wtToUrl(weatherResponse.weatherType),
       temperature: weatherResponse.temperature,
       campusName: campusType.displayName,
+      naverUrl: weatherResponse.naverUrl,
     );
   }
 

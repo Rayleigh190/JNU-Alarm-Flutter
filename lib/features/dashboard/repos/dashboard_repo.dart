@@ -43,10 +43,16 @@ class DashboardRepo {
 
       if (temperature != null && weatherType != null) {
         return WeatherResponseModel(
-            weatherType: weatherType[1] ?? "wt99",
-            temperature: temperature[0] ?? "99");
+          weatherType: weatherType[1] ?? "wt99",
+          temperature: temperature[0] ?? "99",
+          naverUrl: url,
+        );
       }
     }
-    return WeatherResponseModel(weatherType: "wt99", temperature: "99");
+    return WeatherResponseModel(
+      weatherType: "wt99",
+      temperature: "99",
+      naverUrl: url,
+    );
   }
 }

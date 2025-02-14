@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:jnu_alarm/common/enums/campus_type.dart';
 import 'package:jnu_alarm/common/utils.dart';
+import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
 import 'package:jnu_alarm/features/dashboard/view_models/dashboard_view_model.dart';
@@ -41,6 +42,19 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
     });
   }
 
+  void _onTapWeb(String title, String link, String body) {
+    if (link.isEmpty) return;
+    Navigator.pushNamed(
+      context,
+      WebViewScreen.routeName,
+      arguments: WebViewScreenArgs(
+        title: title,
+        link: link,
+        body: body,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final dashboardState = ref.watch(dashboardProvider);
@@ -71,29 +85,33 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                   _animationController.forward(); // 데이터 로딩 후 애니메이션 실행
                   return FadeTransition(
                     opacity: _animation,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SvgPicture.network(
-                          width: 60,
-                          data.weather.imageUrl,
-                          placeholderBuilder: (context) => const SizedBox(
+                    child: GestureDetector(
+                      onTap: () => _onTapWeb(
+                          "캠퍼스 날씨", data.weather.naverUrl, "캠퍼스 날씨를 확인해 보세요!"),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.network(
                             width: 60,
-                            height: 60,
+                            data.weather.imageUrl,
+                            placeholderBuilder: (context) => const SizedBox(
+                              width: 60,
+                              height: 60,
+                            ),
                           ),
-                        ),
-                        Gaps.h6,
-                        Text(
-                          "${data.weather.temperature}°C",
-                          style: const TextStyle(
-                            fontSize: Sizes.size24,
-                            fontWeight: FontWeight.bold,
+                          Gaps.h6,
+                          Text(
+                            "${data.weather.temperature}°C",
+                            style: const TextStyle(
+                              fontSize: Sizes.size24,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const Icon(
-                          Icons.arrow_forward_ios_rounded,
-                        ),
-                      ],
+                          const Icon(
+                            Icons.arrow_forward_ios_rounded,
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
