@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:jnu_alarm/common/enums/campus_type.dart';
 import 'package:jnu_alarm/common/utils.dart';
@@ -19,19 +23,85 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
+  late AnimationController _adAnimationController;
+  late Animation<double> _adAnimation;
+
+  // AdMob Start
+  NativeAd? _nativeAd;
+  bool _nativeAdIsLoaded = false;
+
+  final String _debugAdUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/2247696110'
+      : 'ca-app-pub-3940256099942544/3986624511';
+  final String _releaseAdUnitId = Platform.isAndroid
+      ? 'ca-app-pub-4183402691727093/9886095896'
+      : 'ca-app-pub-4183402691727093/7281820149';
+  String get _adUnitId => kDebugMode ? _debugAdUnitId : _releaseAdUnitId;
+
+  /// Loads a native ad.
+  void loadAd() {
+    _nativeAd = NativeAd(
+      adUnitId: _adUnitId,
+      listener: NativeAdListener(
+        onAdLoaded: (ad) {
+          debugPrint('$NativeAd loaded.');
+          setState(() {
+            _nativeAdIsLoaded = true;
+          });
+          _adAnimationController.forward();
+        },
+        onAdFailedToLoad: (ad, error) {
+          // Dispose the ad here to free resources.
+          debugPrint('$NativeAd failed to load: $error');
+          ad.dispose();
+        },
+      ),
+      request: const AdRequest(),
+      // Styling
+      nativeTemplateStyle: NativeTemplateStyle(
+        // Required: Choose a template.
+        templateType: TemplateType.medium,
+        // Optional: Customize the ad's style.
+        mainBackgroundColor: Colors.transparent,
+        cornerRadius: 10.0,
+        callToActionTextStyle: NativeTemplateTextStyle(
+            textColor: const Color(0xFF282828),
+            backgroundColor: const Color(0xFFb8ed55),
+            size: 16.0),
+        primaryTextStyle: NativeTemplateTextStyle(
+            style: NativeTemplateFontStyle.normal, size: 16.0),
+      ),
+    )..load();
+  }
+  // AdMob End
 
   @override
   void initState() {
     super.initState();
+    loadAd();
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
     _animation =
         CurvedAnimation(parent: _animationController, curve: Curves.easeIn);
+    _adAnimationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+    _adAnimation =
+        CurvedAnimation(parent: _adAnimationController, curve: Curves.easeIn);
+  }
+
+  @override
+  void dispose() {
+    _nativeAd?.dispose();
+    _animationController.dispose();
+    _adAnimationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -266,23 +336,37 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                 ],
               ),
               Gaps.v20,
-              Container(
-                height: 200,
-                decoration: BoxDecoration(
-                  color: isDark ? const Color(0xFF282828) : Colors.white,
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(Sizes.size12),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      blurRadius: 1.0,
-                      spreadRadius: 1,
-                      offset: const Offset(0, 0),
+              if (_nativeAdIsLoaded && _nativeAd != null)
+                FadeTransition(
+                  opacity: _adAnimation,
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 2),
+                    decoration: BoxDecoration(
+                      color: isDark ? const Color(0xFF282828) : Colors.white,
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(Sizes.size12),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          blurRadius: 1.0,
+                          spreadRadius: 1,
+                          offset: const Offset(0, 0),
+                        ),
+                      ],
                     ),
-                  ],
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        minWidth: 320, // minimum recommended width
+                        minHeight: 320, // minimum recommended height
+                        maxWidth: 614,
+                        maxHeight: 320,
+                      ),
+                      child: AdWidget(ad: _nativeAd!),
+                    ),
+                    // AdMob End,
+                  ),
                 ),
-              ),
             ],
           ),
         ),
