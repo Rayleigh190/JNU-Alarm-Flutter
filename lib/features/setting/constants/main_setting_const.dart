@@ -101,14 +101,6 @@ const SettingSection etcSettingSection = SettingSection(
       title: "문의 및 제안",
       link: "https://forms.gle/UsGc7w7gJ8Tw8FYNA",
     ),
-    ExBrowserTile(
-      icon: SettingsIcon(
-        color: Color(0xff973999),
-        icons: Icons.ad_units,
-      ),
-      title: "배너광고 요청",
-      link: "https://forms.gle/TgURBqn82vgaEzRD8",
-    ),
     WebViewTile(
       icon: SettingsIcon(
         color: Color(0xff009cdf),
