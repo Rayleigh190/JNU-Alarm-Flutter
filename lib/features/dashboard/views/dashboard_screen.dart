@@ -12,6 +12,7 @@ import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
 import 'package:jnu_alarm/features/dashboard/view_models/dashboard_view_model.dart';
+import 'package:jnu_alarm/features/dashboard/views/map_screen.dart';
 import 'package:jnu_alarm/features/dashboard/views/widgets/dashboard_main_button.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -123,6 +124,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
         body: body,
       ),
     );
+  }
+
+  void _onTapMap() {
+    Navigator.of(context).pushNamed(MapScreen.routeName);
   }
 
   @override
@@ -335,7 +340,47 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                   ),
                 ],
               ),
-              Gaps.v20,
+              Gaps.v16,
+              GestureDetector(
+                onTap: () =>
+                    Navigator.of(context).pushNamed(MapScreen.routeName),
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: isDark ? const Color(0xFF282828) : Colors.white,
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(Sizes.size12),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.1),
+                        blurRadius: 1.0,
+                        spreadRadius: 1,
+                        offset: const Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "🗺️",
+                        style: TextStyle(
+                          fontSize: Sizes.size40,
+                        ),
+                      ),
+                      Text(
+                        "전대지도",
+                        style: TextStyle(
+                          fontSize: Sizes.size16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Gaps.v16,
               if (_nativeAdIsLoaded && _nativeAd != null)
                 FadeTransition(
                   opacity: _adAnimation,

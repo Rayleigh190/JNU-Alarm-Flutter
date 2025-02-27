@@ -4,12 +4,15 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:jnu_alarm/common/analytics_service.dart';
 import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
+import 'package:jnu_alarm/features/dashboard/views/map_screen.dart';
 import 'package:jnu_alarm/features/main/main_screen.dart';
 import 'package:jnu_alarm/features/notice/view_models/notice_view_model.dart';
 import 'package:jnu_alarm/features/onboarding/views/init_screen.dart';
@@ -40,7 +43,12 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  AnalyticsService.setAnalyticsCollectionEnabled(true);
+  // 디버그 모드에서 Firebase Analytics 비활성화
+  if (kDebugMode) {
+    AnalyticsService.setAnalyticsCollectionEnabled(false);
+  } else {
+    AnalyticsService.setAnalyticsCollectionEnabled(true);
+  }
 
   // START: Crashlytics setting
   FlutterError.onError = (errorDetails) {
@@ -65,6 +73,9 @@ Future<void> main() async {
   // make SharedPreferences instance
   final preferences = await SharedPreferences.getInstance();
   final repository = NoticeSettingRepository(preferences);
+
+  // Naver Map SDK
+  await NaverMapSdk.instance.initialize(clientId: "1m80wlkxd7");
 
   runApp(
     ProviderScope(
@@ -152,6 +163,7 @@ class MyApp extends StatelessWidget {
         BusinessettingScreen.routeName: (context) =>
             const BusinessettingScreen(),
         InfoScreen.routeName: (context) => const InfoScreen(),
+        MapScreen.routeName: (context) => const MapScreen(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == WebViewScreen.routeName) {
