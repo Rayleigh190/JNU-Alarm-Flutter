@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
+import 'package:jnu_alarm/features/dashboard/view_models/map_top_category_view_model.dart';
 import 'package:jnu_alarm/features/dashboard/views/widgets/map_bottom_sheet.dart';
 import 'package:jnu_alarm/features/dashboard/views/widgets/map_top_category_button.dart';
 
@@ -20,6 +21,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final topCategoryAsync = ref.watch(topCategoryProvider);
+
     return Scaffold(
       key: scaffoldState,
       body: Stack(
@@ -46,7 +49,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                     size: const Size(30, 36),
                     context: context,
                   ),
-                  position: const NLatLng(35.1755091, 126.9071166),
+                  position:
+                      const NLatLng(35.178359596721634, 126.9093914649144),
                   caption: const NOverlayCaption(text: "대학본부"));
               marker.setOnTapListener(
                 (NMarker marker) {
@@ -114,24 +118,20 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                     ),
                   ],
                 ),
-                const SingleChildScrollView(
-                  physics: ClampingScrollPhysics(),
-                  padding: EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                SingleChildScrollView(
+                  padding: const EdgeInsets.only(right: 8, top: 6, bottom: 6),
                   scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      MapTopCategoryButton(),
-                      Gaps.h8,
-                      MapTopCategoryButton(),
-                      Gaps.h8,
-                      MapTopCategoryButton(),
-                      Gaps.h8,
-                      MapTopCategoryButton(),
-                      Gaps.h8,
-                      MapTopCategoryButton(),
-                      Gaps.h8,
-                      MapTopCategoryButton(),
-                    ],
+                  child: topCategoryAsync.maybeWhen(
+                    data: (categories) => Row(
+                      children: categories.map(
+                        (category) {
+                          return MapTopCategoryButton(name: category.name);
+                        },
+                      ).toList(),
+                    ),
+                    orElse: () {
+                      return const SizedBox.shrink();
+                    },
                   ),
                 ),
               ],
