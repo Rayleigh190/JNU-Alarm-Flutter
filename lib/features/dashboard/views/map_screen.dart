@@ -41,7 +41,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           NaverMap(
             options: const NaverMapViewOptions(
               initialCameraPosition: NCameraPosition(
-                target: NLatLng(35.1755091, 126.9071166),
+                target: NLatLng(35.17773883237159, 126.90795676604174),
                 zoom: 14,
               ),
               extent: NLatLngBounds(

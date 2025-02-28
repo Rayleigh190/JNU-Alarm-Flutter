@@ -75,8 +75,7 @@ class MapBottomSheet extends StatelessWidget {
                           Text(
                             place.description,
                             style: const TextStyle(
-                              fontSize: 16,
-                            ),
+                                fontSize: 16, color: Colors.black),
                           )
                         ],
                       ),
@@ -86,7 +85,15 @@ class MapBottomSheet extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(6),
                         child: Image.network(
-                          "https://placehold.co/100.png",
+                          place.image_url,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              width: 100,
+                              height: 100,
+                              decoration:
+                                  BoxDecoration(color: Colors.grey[300]),
+                            );
+                          },
                           width: 100,
                           height: 100,
                         ),
@@ -104,9 +111,7 @@ class MapBottomSheet extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     place.tag,
-                    style: const TextStyle(
-                      fontSize: 16,
-                    ),
+                    style: const TextStyle(fontSize: 16, color: Colors.black),
                   ),
                 ),
               )
