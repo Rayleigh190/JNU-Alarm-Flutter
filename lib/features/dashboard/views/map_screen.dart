@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
 import 'package:jnu_alarm/features/dashboard/models/map_model.dart';
 import 'package:jnu_alarm/features/dashboard/view_models/map_top_category_view_model.dart';
 import 'package:jnu_alarm/features/dashboard/views/widgets/map_bottom_sheet.dart';
@@ -84,9 +85,47 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                       onPressed: () {},
                       color: Colors.white,
                       shape: const CircleBorder(),
-                      child: const Icon(
-                        Icons.menu,
-                        color: Colors.black,
+                      child: PopupMenuButton(
+                        color: Colors.white,
+                        onSelected: (value) {
+                          if (value == 0) {
+                            Navigator.pushNamed(
+                                context, WebViewScreen.routeName,
+                                arguments: WebViewScreenArgs(
+                                  title: "문의하기",
+                                  link: "https://forms.gle/pXpf8qZV5f6pXvpo9",
+                                ));
+                          } else if (value == 1) {
+                            Navigator.pushNamed(
+                                context, WebViewScreen.routeName,
+                                arguments: WebViewScreenArgs(
+                                  title: "지도 오픈카톡",
+                                  link: "https://open.kakao.com/o/sU2FdHih",
+                                ));
+                          }
+                        },
+                        itemBuilder: (context) {
+                          return [
+                            const PopupMenuItem(
+                              value: 0,
+                              child: Text(
+                                '문의하기\n(장소등록,수정요청 등)',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                            const PopupMenuItem(
+                              value: 1,
+                              child: Text(
+                                '장소 사진 등록\n(오픈카톡)',
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ),
+                          ];
+                        },
+                        child: const Icon(
+                          Icons.menu,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ],
