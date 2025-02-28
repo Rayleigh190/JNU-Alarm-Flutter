@@ -28,7 +28,6 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
   // AdMob Start
   NativeAd? _nativeAd;
   bool _nativeAdIsLoaded = false;
-  final double _adAspectRatioSmall = (91 / 355);
 
   final String _debugAdUnitId = Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/2247696110'
@@ -65,7 +64,7 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
         cornerRadius: 10.0,
         callToActionTextStyle: NativeTemplateTextStyle(
             textColor: const Color(0xFF282828),
-            backgroundColor: const Color(0xFFb8ed55),
+            backgroundColor: Colors.transparent,
             // style: NativeTemplateFontStyle.monospace,
             size: 16.0),
         primaryTextStyle: NativeTemplateTextStyle(
@@ -183,10 +182,12 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
               )
             ],
           ),
-          padding: const EdgeInsets.only(left: 10),
+          padding:
+              const EdgeInsets.only(left: 14, top: 5, right: 14, bottom: 5),
           child: SizedBox(
-            height: MediaQuery.of(context).size.width * _adAspectRatioSmall,
-            width: MediaQuery.of(context).size.width,
+            height: (MediaQuery.of(context).size.width - ((14 + 20) * 2)) *
+                (2.67 / 8),
+            width: MediaQuery.of(context).size.width - ((14 + 20) * 2),
             child: AdWidget(ad: _nativeAd!),
           ),
         ),

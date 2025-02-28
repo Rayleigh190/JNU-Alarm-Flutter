@@ -69,9 +69,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
         mainBackgroundColor: Colors.transparent,
         cornerRadius: 10.0,
         callToActionTextStyle: NativeTemplateTextStyle(
-            textColor: const Color(0xFF282828),
-            backgroundColor: const Color(0xFFb8ed55),
-            size: 16.0),
+          textColor: const Color(0xFF282828),
+          backgroundColor: Colors.transparent,
+          size: 16.0,
+          style: NativeTemplateFontStyle.bold,
+        ),
         primaryTextStyle: NativeTemplateTextStyle(
             style: NativeTemplateFontStyle.normal, size: 16.0),
       ),
@@ -124,10 +126,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
         body: body,
       ),
     );
-  }
-
-  void _onTapMap() {
-    Navigator.of(context).pushNamed(MapScreen.routeName);
   }
 
   @override
@@ -293,7 +291,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                   Flexible(
                     child: GestureDetector(
                       onTap: () => _onTapWeb(
-                        "학사메뉴",
+                        "학식메뉴",
                         "https://today.jnu.ac.kr/Program/MealPlan.aspx",
                         "학식메뉴를 확인해 보세요!",
                       ),
@@ -385,7 +383,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                 FadeTransition(
                   opacity: _adAnimation,
                   child: Container(
-                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 2),
+                    padding: const EdgeInsets.fromLTRB(15, 15, 15, 5),
                     decoration: BoxDecoration(
                       color: isDark ? const Color(0xFF282828) : Colors.white,
                       borderRadius: const BorderRadius.all(
@@ -405,9 +403,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                         minWidth: 320, // minimum recommended width
                         minHeight: 320, // minimum recommended height
                         maxWidth: 614,
-                        maxHeight: 320,
+                        maxHeight: 614,
                       ),
-                      child: AdWidget(ad: _nativeAd!),
+                      child: SizedBox(
+                        width:
+                            MediaQuery.of(context).size.width - (16 + 15) * 2,
+                        height:
+                            MediaQuery.of(context).size.width - (16 + 15) * 2,
+                        child: AdWidget(ad: _nativeAd!),
+                      ),
                     ),
                     // AdMob End,
                   ),
