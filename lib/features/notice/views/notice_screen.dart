@@ -9,11 +9,9 @@ import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
 import 'package:jnu_alarm/features/notice/models/notice_model.dart';
-import 'package:jnu_alarm/features/notice/models/top_banner_model.dart';
 import 'package:jnu_alarm/features/notice/view_models/notice_view_model.dart';
 import 'package:jnu_alarm/features/notice/views/widgets/notice_divider.dart';
 import 'package:jnu_alarm/features/notice/views/widgets/notice_tile.dart';
-import 'package:jnu_alarm/features/notice/views/widgets/top_banner_image.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class NoticeScreen extends ConsumerStatefulWidget {
@@ -143,24 +141,17 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
     DateTime now = DateTime.now();
     DateTime todayStart = DateTime(now.year, now.month, now.day);
     DateTime yesterdayStart = todayStart.subtract(const Duration(days: 1));
-    List<TopBannerImage> topBannerImages = [];
     List<NoticeModel> todayNotices = [];
     List<NoticeModel> yesterdayNotices = [];
     List<NoticeModel> previousNotices = [];
 
     for (var data in notices) {
-      if (data is TopBannerModel) {
-        topBannerImages.add(
-          TopBannerImage(model: data),
-        );
+      if (data.created_at.isAfter(todayStart)) {
+        todayNotices.add(data);
+      } else if (data.created_at.isAfter(yesterdayStart)) {
+        yesterdayNotices.add(data);
       } else {
-        if (data.created_at.isAfter(todayStart)) {
-          todayNotices.add(data);
-        } else if (data.created_at.isAfter(yesterdayStart)) {
-          yesterdayNotices.add(data);
-        } else {
-          previousNotices.add(data);
-        }
+        previousNotices.add(data);
       }
     }
 
