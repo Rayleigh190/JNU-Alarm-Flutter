@@ -344,6 +344,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                     Navigator.of(context).pushNamed(MapScreen.routeName),
                 child: Container(
                   width: double.infinity,
+                  constraints: const BoxConstraints(maxWidth: 632),
                   decoration: BoxDecoration(
                     color: isDark ? const Color(0xFF282828) : Colors.white,
                     borderRadius: const BorderRadius.all(

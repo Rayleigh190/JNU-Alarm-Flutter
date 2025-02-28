@@ -34,7 +34,8 @@ class MapTopCategoryButton extends StatelessWidget {
         child: Text(
           name,
           style: const TextStyle(
-            fontSize: 18,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
             color: Colors.black,
           ),
         ),
