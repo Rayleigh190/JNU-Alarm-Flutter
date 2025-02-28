@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:jnu_alarm/constants/gaps.dart';
+import 'package:jnu_alarm/features/dashboard/models/map_model.dart';
 
 class MapBottomSheet extends StatelessWidget {
   final ScrollController scrollController;
+  final PlaceModel place;
 
   const MapBottomSheet({
     super.key,
     required this.scrollController,
+    required this.place,
   });
 
   @override
@@ -47,17 +51,30 @@ class MapBottomSheet extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "나인틴52",
-                            style: TextStyle(
-                              color: Colors.blue[800],
-                              fontSize: 24,
-                              fontWeight: FontWeight.w900,
-                            ),
+                          Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              Text(
+                                place.title,
+                                style: TextStyle(
+                                  color: Colors.blue[800],
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                              ),
+                              Gaps.h6,
+                              Text(
+                                place.category_name,
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 15,
+                                ),
+                              ),
+                            ],
                           ),
-                          const Text(
-                            "📍스토리움 1층\n🕖영업시간\n- 매일 08:00~22:00",
-                            style: TextStyle(
+                          Text(
+                            place.description,
+                            style: const TextStyle(
                               fontSize: 16,
                             ),
                           )
@@ -78,15 +95,18 @@ class MapBottomSheet extends StatelessWidget {
                   ],
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(
+              Padding(
+                padding: const EdgeInsets.symmetric(
                   vertical: 10,
                   horizontal: 18,
                 ),
-                child: Text(
-                  "✔️깔끔하고 아늑한 분위기 ✔️카공 ✔️평일에 사람 많음",
-                  style: TextStyle(
-                    fontSize: 16,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    place.tag,
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               )

@@ -11,6 +11,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:jnu_alarm/common/analytics_service.dart';
+import 'package:jnu_alarm/common/secrets.dart';
 import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
 import 'package:jnu_alarm/features/dashboard/views/map_screen.dart';
 import 'package:jnu_alarm/features/main/main_screen.dart';
@@ -46,8 +47,10 @@ Future<void> main() async {
   // 디버그 모드에서 Firebase Analytics 비활성화
   if (kDebugMode) {
     AnalyticsService.setAnalyticsCollectionEnabled(false);
+    FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
   } else {
     AnalyticsService.setAnalyticsCollectionEnabled(true);
+    FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   }
 
   // START: Crashlytics setting
@@ -75,7 +78,7 @@ Future<void> main() async {
   final repository = NoticeSettingRepository(preferences);
 
   // Naver Map SDK
-  await NaverMapSdk.instance.initialize(clientId: "1m80wlkxd7");
+  await NaverMapSdk.instance.initialize(clientId: naverMapClientID);
 
   runApp(
     ProviderScope(

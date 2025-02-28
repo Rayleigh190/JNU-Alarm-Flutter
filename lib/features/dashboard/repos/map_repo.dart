@@ -18,4 +18,18 @@ class MapRepository {
     }
     return null;
   }
+
+  static Future<PlacesResponseModel?> fetchPlaces(String urlStr) async {
+    if (!await isNetworkConnected()) return null;
+    final url = Uri.parse(urlStr);
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      return PlacesResponseModel.fromJson(
+        json.decode(
+          utf8.decode(response.bodyBytes),
+        ),
+      );
+    }
+    return null;
+  }
 }

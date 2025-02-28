@@ -24,3 +24,40 @@ class TopCategoryModel with _$TopCategoryModel {
   factory TopCategoryModel.fromJson(Map<String, Object?> json) =>
       _$TopCategoryModelFromJson(json);
 }
+
+@freezed
+class PlacesResponseModel with _$PlacesResponseModel {
+  const factory PlacesResponseModel({
+    required List<PlaceModel> data,
+  }) = _PlacesResponseModel;
+
+  factory PlacesResponseModel.fromJson(Map<String, Object?> json) =>
+      _$PlacesResponseModelFromJson(json);
+}
+
+@freezed
+class PlaceModel with _$PlaceModel {
+  const factory PlaceModel({
+    required String title,
+    required String image_url,
+    required String description,
+    required String tag,
+    required String emoji,
+    required String category_name,
+    required CoordModel coord,
+  }) = _PlaceModel;
+
+  factory PlaceModel.fromJson(Map<String, Object?> json) =>
+      _$PlaceModelFromJson(json);
+}
+
+@freezed
+class CoordModel with _$CoordModel {
+  const factory CoordModel({
+    required double lat,
+    required double lng,
+  }) = _CoordModel;
+
+  factory CoordModel.fromJson(Map<String, Object?> json) =>
+      _$CoordModelFromJson(json);
+}
