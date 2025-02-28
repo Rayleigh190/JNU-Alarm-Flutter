@@ -22,18 +22,14 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   NaverMapController? naverMapController;
 
   @override
+  void dispose() {
+    naverMapController?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final topCategoryAsync = ref.watch(topCategoryProvider);
-    final places = ref.watch(placesProvider);
-    places.maybeWhen(
-      data: (data) => {
-        if (naverMapController != null)
-          {
-            setMarker(data, naverMapController!),
-          }
-      },
-      orElse: () => {},
-    );
 
     return Scaffold(
       key: scaffoldState,
@@ -52,6 +48,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             ),
             onMapReady: (controller) async {
               naverMapController = controller;
+              ref.read(topCategoryProvider.notifier).refreshCategory();
             },
             onMapTapped: (point, latLng) {
               if (bottomSheetController != null) {
@@ -138,11 +135,14 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                       children: categories.map(
                         (category) {
                           return GestureDetector(
-                            onTap: () {
+                            onTap: () async {
                               naverMapController?.clearOverlays();
-                              ref
+                              final places = await ref
                                   .read(placesProvider.notifier)
                                   .fetchPlaces(category.url);
+                              if (naverMapController != null) {
+                                setMarker(places, naverMapController!);
+                              }
                             },
                             child: MapTopCategoryButton(name: category.name),
                           );

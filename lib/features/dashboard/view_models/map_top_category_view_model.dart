@@ -8,6 +8,11 @@ class MapTopCategoryViewModel extends AsyncNotifier<List<TopCategoryModel>> {
     final a = await MapRepository.fetchMap();
     return a?.top_categories ?? [];
   }
+
+  Future<void> refreshCategory() async {
+    final response = await MapRepository.fetchMap();
+    state = AsyncValue.data(response?.top_categories ?? []);
+  }
 }
 
 final topCategoryProvider =
@@ -21,9 +26,9 @@ class MapPlacesViewModel extends AsyncNotifier<List<PlaceModel>> {
     return [];
   }
 
-  Future<void> fetchPlaces(String urlStr) async {
+  Future<List<PlaceModel>> fetchPlaces(String urlStr) async {
     final response = await MapRepository.fetchPlaces(urlStr);
-    state = AsyncValue.data(response?.data ?? []);
+    return response?.data ?? [];
   }
 }
 
