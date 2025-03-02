@@ -12,7 +12,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:jnu_alarm/common/analytics_service.dart';
 import 'package:jnu_alarm/common/secrets.dart';
-import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
+import 'package:jnu_alarm/common/widgets/common_web_view_screen.dart';
+import 'package:jnu_alarm/common/widgets/notice_web_view_screen.dart';
 import 'package:jnu_alarm/features/dashboard/views/map_screen.dart';
 import 'package:jnu_alarm/features/main/main_screen.dart';
 import 'package:jnu_alarm/features/notice/view_models/notice_view_model.dart';
@@ -169,11 +170,21 @@ class MyApp extends StatelessWidget {
         MapScreen.routeName: (context) => const MapScreen(),
       },
       onGenerateRoute: (settings) {
-        if (settings.name == WebViewScreen.routeName) {
+        if (settings.name == NoticeWebViewScreen.routeName) {
           final args = settings.arguments as WebViewScreenArgs;
           return CupertinoPageRoute(
-            settings: const RouteSettings(name: WebViewScreen.routeName),
-            builder: (context) => WebViewScreen(
+            settings: const RouteSettings(name: NoticeWebViewScreen.routeName),
+            builder: (context) => NoticeWebViewScreen(
+              title: args.title,
+              body: args.body,
+              link: args.link,
+            ),
+          );
+        } else if (settings.name == CommonWsebViewScreen.routeName) {
+          final args = settings.arguments as WebViewScreenArgs;
+          return CupertinoPageRoute(
+            settings: const RouteSettings(name: CommonWsebViewScreen.routeName),
+            builder: (context) => CommonWsebViewScreen(
               title: args.title,
               body: args.body,
               link: args.link,

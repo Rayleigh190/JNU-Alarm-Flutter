@@ -17,20 +17,20 @@ class WebViewScreenArgs {
   WebViewScreenArgs({required this.title, required this.link, this.body});
 }
 
-class WebViewScreen extends StatefulWidget {
-  static const routeName = "/webview";
+class NoticeWebViewScreen extends StatefulWidget {
+  static const routeName = "/webview/notice";
   final String title;
   final String link;
   final String? body;
 
-  const WebViewScreen(
+  const NoticeWebViewScreen(
       {super.key, required this.title, required this.link, this.body});
 
   @override
-  State<WebViewScreen> createState() => _WebViewScreenState();
+  State<NoticeWebViewScreen> createState() => _NoticeWebViewScreenState();
 }
 
-class _WebViewScreenState extends State<WebViewScreen> {
+class _NoticeWebViewScreenState extends State<NoticeWebViewScreen> {
   late WebViewController _controller;
   String currentUrl = "";
 

@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/common/utils.dart';
-import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
+import 'package:jnu_alarm/common/widgets/notice_web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
 import 'package:jnu_alarm/features/notice/models/notice_model.dart';
@@ -88,7 +88,7 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
     ref.watch(noticeProvider.notifier).setAsRead(id);
     Navigator.pushNamed(
       context,
-      WebViewScreen.routeName,
+      NoticeWebViewScreen.routeName,
       arguments: WebViewScreenArgs(
         title: title,
         link: link,

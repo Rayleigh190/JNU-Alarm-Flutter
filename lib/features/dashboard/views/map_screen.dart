@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
+import 'package:jnu_alarm/common/widgets/common_web_view_screen.dart';
+import 'package:jnu_alarm/common/widgets/notice_web_view_screen.dart';
 import 'package:jnu_alarm/features/dashboard/models/map_model.dart';
 import 'package:jnu_alarm/features/dashboard/view_models/map_top_category_view_model.dart';
 import 'package:jnu_alarm/features/dashboard/views/widgets/map_bottom_sheet.dart';
 import 'package:jnu_alarm/features/dashboard/views/widgets/map_top_category_button.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MapScreen extends ConsumerStatefulWidget {
   static const routeName = "/map";
@@ -87,21 +89,21 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                         shape: const CircleBorder(),
                         child: PopupMenuButton(
                           color: Colors.white,
-                          onSelected: (value) {
+                          onSelected: (value) async {
                             if (value == 0) {
                               Navigator.pushNamed(
-                                  context, WebViewScreen.routeName,
+                                  context, CommonWsebViewScreen.routeName,
                                   arguments: WebViewScreenArgs(
                                     title: "문의하기",
                                     link: "https://forms.gle/pXpf8qZV5f6pXvpo9",
                                   ));
                             } else if (value == 1) {
-                              Navigator.pushNamed(
-                                  context, WebViewScreen.routeName,
-                                  arguments: WebViewScreenArgs(
-                                    title: "지도 오픈카톡",
-                                    link: "https://open.kakao.com/o/sU2FdHih",
-                                  ));
+                              final url = Uri.parse(
+                                  "https://open.kakao.com/o/sU2FdHih");
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(url,
+                                    mode: LaunchMode.externalApplication);
+                              }
                             }
                           },
                           itemBuilder: (context) {

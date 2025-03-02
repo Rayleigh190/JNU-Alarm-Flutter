@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/common/error/exceptions/custom_exceptions.dart';
 import 'package:jnu_alarm/common/network/network_connection_check.dart';
-import 'package:jnu_alarm/common/widgets/web_view_screen.dart';
+import 'package:jnu_alarm/common/widgets/notice_web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
 import 'package:jnu_alarm/features/dashboard/views/dashboard_screen.dart';
@@ -41,12 +41,13 @@ class _MainScreenState extends ConsumerState<MainScreen>
 
     if (Platform.isAndroid) {
       fcmRepository.handleAndroidForegroundMessage((title, link, body, id) {
-        pushWebViewScreen(title, link, body, id);
+        pushNoticeWebViewScreen(title, link, body, id);
       });
     }
 
     fcmRepository.handleOnMessageOpenedFromBackgroundAndTerminated((message) {
-      pushWebViewScreen(message.title, message.link, message.body, message.id);
+      pushNoticeWebViewScreen(
+          message.title, message.link, message.body, message.id);
     });
 
     _tabController = TabController(
@@ -57,7 +58,7 @@ class _MainScreenState extends ConsumerState<MainScreen>
     _tabController.addListener(tabListener);
   }
 
-  Future<void> pushWebViewScreen(
+  Future<void> pushNoticeWebViewScreen(
       String title, String link, String body, int id) async {
     final noticeProvider_ = ref.read(noticeProvider.notifier);
     // 1. 새로운 알림내역 가져와서 db에 저장
@@ -69,7 +70,7 @@ class _MainScreenState extends ConsumerState<MainScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Navigator.pushNamed(
         context,
-        WebViewScreen.routeName,
+        NoticeWebViewScreen.routeName,
         arguments: WebViewScreenArgs(
           title: title,
           link: link,
