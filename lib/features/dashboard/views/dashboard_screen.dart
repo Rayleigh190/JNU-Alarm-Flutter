@@ -8,6 +8,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:jnu_alarm/common/enums/campus_type.dart';
 import 'package:jnu_alarm/common/utils.dart';
+import 'package:jnu_alarm/common/widgets/common_ad_web_view_screen.dart';
 import 'package:jnu_alarm/common/widgets/notice_web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
@@ -119,7 +120,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
     if (link.isEmpty) return;
     Navigator.pushNamed(
       context,
-      NoticeWebViewScreen.routeName,
+      CommonAdWebViewScreen.routeName,
       arguments: WebViewScreenArgs(
         title: title,
         link: link,

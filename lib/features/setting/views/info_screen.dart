@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/common/secrets.dart';
+import 'package:jnu_alarm/common/widgets/common_ad_web_view_screen.dart';
 import 'package:jnu_alarm/common/widgets/notice_web_view_screen.dart';
 import 'package:jnu_alarm/features/setting/view_models/setting_section_view_model.dart';
 import 'package:jnu_alarm/features/setting/views/widgets/settings_ui.dart';
@@ -24,7 +25,7 @@ class _InfoScreenState extends ConsumerState<InfoScreen> {
   void _openWebView(BuildContext context, String title, String link) {
     Navigator.pushNamed(
       context,
-      NoticeWebViewScreen.routeName,
+      CommonAdWebViewScreen.routeName,
       arguments: WebViewScreenArgs(
         title: title,
         link: link,

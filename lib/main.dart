@@ -12,6 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:jnu_alarm/common/analytics_service.dart';
 import 'package:jnu_alarm/common/secrets.dart';
+import 'package:jnu_alarm/common/widgets/common_ad_web_view_screen.dart';
 import 'package:jnu_alarm/common/widgets/common_web_view_screen.dart';
 import 'package:jnu_alarm/common/widgets/notice_web_view_screen.dart';
 import 'package:jnu_alarm/features/dashboard/views/map_screen.dart';
@@ -185,6 +186,17 @@ class MyApp extends StatelessWidget {
           return CupertinoPageRoute(
             settings: const RouteSettings(name: CommonWsebViewScreen.routeName),
             builder: (context) => CommonWsebViewScreen(
+              title: args.title,
+              body: args.body,
+              link: args.link,
+            ),
+          );
+        } else if (settings.name == CommonAdWebViewScreen.routeName) {
+          final args = settings.arguments as WebViewScreenArgs;
+          return CupertinoPageRoute(
+            settings:
+                const RouteSettings(name: CommonAdWebViewScreen.routeName),
+            builder: (context) => CommonAdWebViewScreen(
               title: args.title,
               body: args.body,
               link: args.link,

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/common/error/exceptions/custom_exceptions.dart';
+import 'package:jnu_alarm/common/widgets/common_ad_web_view_screen.dart';
 import 'package:jnu_alarm/common/widgets/loading_dialog.dart';
 import 'package:jnu_alarm/common/widgets/notice_web_view_screen.dart';
 import 'package:jnu_alarm/features/setting/constants/setting_const_model.dart';
@@ -93,7 +94,7 @@ class _MainSettingScreenState extends ConsumerState<MainSettingScreen>
                     title: Text(tile.title),
                     onPressed: (context) => Navigator.pushNamed(
                       context,
-                      NoticeWebViewScreen.routeName,
+                      CommonAdWebViewScreen.routeName,
                       arguments: WebViewScreenArgs(
                         title: tile.title,
                         link: tile.link,
