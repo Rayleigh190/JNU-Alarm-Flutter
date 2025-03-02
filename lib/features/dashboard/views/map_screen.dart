@@ -44,8 +44,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 zoom: 14,
               ),
               extent: NLatLngBounds(
-                southWest: NLatLng(35.17, 126.90),
-                northEast: NLatLng(35.18, 126.91),
+                southWest: NLatLng(35.17, 126.88),
+                northEast: NLatLng(35.19, 126.92),
               ),
             ),
             onMapReady: (controller) async {
@@ -178,7 +178,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               place.emoji,
               style: const TextStyle(fontSize: 30),
             ),
-            size: const Size(30, 36),
+            size: const Size(36, 36),
             context: context,
           ),
           position: NLatLng(place.coord.lat, place.coord.lng),
