@@ -61,12 +61,13 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
         mainBackgroundColor: Colors.transparent,
         cornerRadius: 10.0,
         callToActionTextStyle: NativeTemplateTextStyle(
-            textColor: const Color(0xFF282828),
-            backgroundColor: Colors.transparent,
-            // style: NativeTemplateFontStyle.monospace,
-            size: 16.0),
-        primaryTextStyle: NativeTemplateTextStyle(
-            style: NativeTemplateFontStyle.normal, size: 16.0),
+          textColor: Colors.white,
+          backgroundColor: Colors.grey[400],
+          size: 12.0,
+        ),
+        primaryTextStyle: NativeTemplateTextStyle(size: 12.0),
+        secondaryTextStyle: NativeTemplateTextStyle(size: 10.0),
+        tertiaryTextStyle: NativeTemplateTextStyle(size: 10.0),
       ),
     )..load();
   }
@@ -174,13 +175,17 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
               )
             ],
           ),
-          padding:
-              const EdgeInsets.only(left: 14, top: 5, right: 14, bottom: 5),
-          child: SizedBox(
-            height: (MediaQuery.of(context).size.width - ((14 + 20) * 2)) *
-                (2.67 / 8),
-            width: MediaQuery.of(context).size.width - ((14 + 20) * 2),
-            child: AdWidget(ad: _nativeAd!),
+          padding: const EdgeInsets.only(left: 14, top: 0, right: 0, bottom: 0),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 100),
+            child: SizedBox(
+              // 사이즈 줄이기 위해 추가로 75 더함
+              height:
+                  (MediaQuery.of(context).size.width - ((14 + 20 * 2 + 75))) *
+                      (2.67 / 8),
+              width: MediaQuery.of(context).size.width - ((14 + 20 * 2 + 75)),
+              child: AdWidget(ad: _nativeAd!),
+            ),
           ),
         ),
       // AdMob End

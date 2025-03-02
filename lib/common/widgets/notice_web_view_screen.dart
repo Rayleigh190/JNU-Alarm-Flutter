@@ -201,10 +201,15 @@ class _NoticeWebViewScreenState extends State<NoticeWebViewScreen> {
           ),
           // AdMob Start
           if (_bannerAd != null && _isLoaded)
-            SizedBox(
-              width: _bannerAd!.size.width.toDouble(),
-              height: _bannerAd!.size.height.toDouble(),
-              child: AdWidget(ad: _bannerAd!),
+            ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxHeight: 50,
+              ),
+              child: SizedBox(
+                width: _bannerAd!.size.width.toDouble(),
+                height: _bannerAd!.size.height.toDouble(),
+                child: AdWidget(ad: _bannerAd!),
+              ),
             )
           // AdMob End
         ],

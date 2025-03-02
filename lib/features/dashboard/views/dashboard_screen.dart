@@ -87,13 +87,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
     loadAd();
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 200),
     );
     _animation =
         CurvedAnimation(parent: _animationController, curve: Curves.easeIn);
     _adAnimationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 500),
+      duration: const Duration(milliseconds: 200),
     );
     _adAnimation =
         CurvedAnimation(parent: _adAnimationController, curve: Curves.easeIn);
