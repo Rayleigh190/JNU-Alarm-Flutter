@@ -3,6 +3,7 @@ import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/common/widgets/common_web_view_screen.dart';
 import 'package:jnu_alarm/common/widgets/notice_web_view_screen.dart';
+import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/features/dashboard/models/map_model.dart';
 import 'package:jnu_alarm/features/dashboard/view_models/map_top_category_view_model.dart';
 import 'package:jnu_alarm/features/dashboard/views/widgets/map_bottom_sheet.dart';
@@ -111,7 +112,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                               const PopupMenuItem(
                                 value: 0,
                                 child: Text(
-                                  '문의하기\n(장소등록,수정요청 등)',
+                                  '전대지도 문의센터\n(장소등록,수정요청 등)',
                                   style: TextStyle(color: Colors.black),
                                 ),
                               ),
@@ -134,23 +135,30 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                   ),
                 ),
                 SingleChildScrollView(
-                  padding: const EdgeInsets.only(right: 8, bottom: 6),
+                  padding: const EdgeInsets.only(left: 14, right: 6, bottom: 6),
                   scrollDirection: Axis.horizontal,
                   child: topCategoryAsync.maybeWhen(
                     data: (categories) => Row(
                       children: categories.map(
                         (category) {
-                          return GestureDetector(
-                            onTap: () async {
-                              await naverMapController?.clearOverlays();
-                              final places = await ref
-                                  .read(placesProvider.notifier)
-                                  .fetchPlaces(category.url);
-                              if (naverMapController != null) {
-                                setMarker(places, naverMapController!);
-                              }
-                            },
-                            child: MapTopCategoryButton(name: category.name),
+                          return Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () async {
+                                  await naverMapController?.clearOverlays();
+                                  final places = await ref
+                                      .read(placesProvider.notifier)
+                                      .fetchPlaces(category.url);
+                                  if (naverMapController != null &&
+                                      places.isNotEmpty) {
+                                    setMarker(places, naverMapController!);
+                                  }
+                                },
+                                child:
+                                    MapTopCategoryButton(name: category.name),
+                              ),
+                              Gaps.h8,
+                            ],
                           );
                         },
                       ).toList(),
