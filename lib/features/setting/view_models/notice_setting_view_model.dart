@@ -60,6 +60,11 @@ final sgSchoolNoticeSettingProvider =
   () => throw UnimplementedError(),
 );
 
+final spSchoolNoticeSettingProvider =
+    NotifierProvider<NoticeSettingViewModel, NoticeSettingModel>(
+  () => throw UnimplementedError(),
+);
+
 final businessNoticeSettingProvider =
     NotifierProvider<NoticeSettingViewModel, NoticeSettingModel>(
   () => throw UnimplementedError(),

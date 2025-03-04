@@ -5,6 +5,7 @@ import 'package:jnu_alarm/features/setting/views/college_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/depart_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/info_screen.dart';
 import 'package:jnu_alarm/features/setting/views/sg_school_setting_screen.dart';
+import 'package:jnu_alarm/features/setting/views/sp_school_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/widgets/settings_icon.dart';
 
 const SettingSection basicSettingSection = SettingSection(
@@ -72,6 +73,14 @@ const SettingSection collegeSettingSection = SettingSection(
       ),
       title: "전문대학원 알림",
       to: SgSchoolSettingScreen.routeName,
+    ),
+    NavigationTile(
+      icon: SettingsIcon(
+        color: Color(0xff5ebd3e),
+        icons: Icons.diamond,
+      ),
+      title: "특수대학원 알림",
+      to: SpSchoolSettingScreen.routeName,
     ),
   ],
 );

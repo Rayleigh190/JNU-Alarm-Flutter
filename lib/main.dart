@@ -25,6 +25,7 @@ import 'package:jnu_alarm/features/setting/constants/college_setting_const.dart'
 import 'package:jnu_alarm/features/setting/constants/depart_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/main_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/sg_school_setting_const.dart';
+import 'package:jnu_alarm/features/setting/constants/sp_school_setting_const.dart';
 import 'package:jnu_alarm/features/setting/repos/notice_config_repo.dart';
 import 'package:jnu_alarm/features/setting/view_models/setting_section_view_model.dart';
 import 'package:jnu_alarm/features/setting/view_models/notice_setting_view_model.dart';
@@ -33,6 +34,7 @@ import 'package:jnu_alarm/features/setting/views/college_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/depart_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/info_screen.dart';
 import 'package:jnu_alarm/features/setting/views/sg_school_setting_screen.dart';
+import 'package:jnu_alarm/features/setting/views/sp_school_setting_screen.dart';
 import 'package:jnu_alarm/firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -93,6 +95,8 @@ Future<void> main() async {
             NoticeSettingViewModel(repository, departSettingSectionGroup)),
         sgSchoolNoticeSettingProvider.overrideWith(() =>
             NoticeSettingViewModel(repository, sgSchoolSettingSectionGroup)),
+        spSchoolNoticeSettingProvider.overrideWith(() =>
+            NoticeSettingViewModel(repository, spSchoolSettingSectionGroup)),
         businessNoticeSettingProvider.overrideWith(() =>
             NoticeSettingViewModel(repository, businessSettingSectionGroup)),
         noticeProvider.overrideWith(() => NoticeViewModel(repository)),
@@ -165,6 +169,8 @@ class MyApp extends StatelessWidget {
         DepartSettingScreen.routeName: (context) => const DepartSettingScreen(),
         SgSchoolSettingScreen.routeName: (context) =>
             const SgSchoolSettingScreen(),
+        SpSchoolSettingScreen.routeName: (context) =>
+            const SpSchoolSettingScreen(),
         BusinessettingScreen.routeName: (context) =>
             const BusinessettingScreen(),
         InfoScreen.routeName: (context) => const InfoScreen(),
