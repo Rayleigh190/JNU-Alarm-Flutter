@@ -82,20 +82,31 @@ class MapBottomSheet extends StatelessWidget {
                     ),
                     Expanded(
                       flex: 0,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(6),
-                        child: Image.network(
-                          place.image_url,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              width: 100,
-                              height: 100,
-                              decoration:
-                                  BoxDecoration(color: Colors.grey[300]),
-                            );
-                          },
-                          width: 100,
-                          height: 100,
+                      child: Container(
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey.shade300,
+                            width: 1,
+                          ),
+                          borderRadius: BorderRadius.circular(7),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: Image.network(
+                            place.image_url,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: 100,
+                                height: 100,
+                                decoration:
+                                    BoxDecoration(color: Colors.grey[300]),
+                              );
+                            },
+                            width: 100,
+                            height: 100,
+                          ),
                         ),
                       ),
                     )
