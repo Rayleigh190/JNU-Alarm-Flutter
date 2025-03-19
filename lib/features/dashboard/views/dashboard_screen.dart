@@ -25,7 +25,7 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen>
-    with TickerProviderStateMixin {
+    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _animation;
   late AnimationController _adAnimationController;
@@ -131,6 +131,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final dashboardState = ref.watch(dashboardProvider);
     final isDark = isDarkMode(context);
     DateTime now = DateTime.now();
@@ -424,4 +425,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

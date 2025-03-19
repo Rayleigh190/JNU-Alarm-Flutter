@@ -120,7 +120,6 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       ref.watch(noticeProvider.notifier).refresh();
-      loadAd();
     }
   }
 
