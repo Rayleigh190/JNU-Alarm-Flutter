@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:jnu_alarm/common/enums/campus_type.dart';
@@ -13,8 +12,10 @@ import 'package:jnu_alarm/common/widgets/notice_web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
 import 'package:jnu_alarm/features/dashboard/view_models/dashboard_view_model.dart';
+import 'package:jnu_alarm/features/dashboard/view_models/wt_to_url.dart';
 import 'package:jnu_alarm/features/dashboard/views/map_screen.dart';
 import 'package:jnu_alarm/features/dashboard/views/widgets/dashboard_main_button.dart';
+import 'package:jnu_alarm/features/dashboard/views/widgets/weather_box.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
   const DashboardScreen({super.key});
@@ -26,8 +27,6 @@ class DashboardScreen extends ConsumerStatefulWidget {
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _animation;
   late AnimationController _adAnimationController;
   late Animation<double> _adAnimation;
 
@@ -86,12 +85,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
   void initState() {
     super.initState();
     loadAd();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-    );
-    _animation =
-        CurvedAnimation(parent: _animationController, curve: Curves.easeIn);
     _adAnimationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 200),
@@ -103,17 +96,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
   @override
   void dispose() {
     _nativeAd?.dispose();
-    _animationController.dispose();
     _adAnimationController.dispose();
     super.dispose();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.watch(dashboardProvider.notifier).refresh();
-    });
   }
 
   void _onTapWeb(String title, String link, String body) {
@@ -155,51 +139,23 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                 ),
               ),
               Gaps.v16,
-              dashboardState.when(
+              dashboardState.maybeWhen(
                 data: (data) {
-                  _animationController.forward(); // 데이터 로딩 후 애니메이션 실행
-                  return FadeTransition(
-                    opacity: _animation,
-                    child: GestureDetector(
-                      onTap: () => _onTapWeb(
-                          "캠퍼스 날씨", data.weather.naverUrl, "캠퍼스 날씨를 확인해 보세요!"),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SvgPicture.network(
-                            width: 60,
-                            data.weather.imageUrl,
-                            placeholderBuilder: (context) => const SizedBox(
-                              width: 60,
-                              height: 60,
-                            ),
-                          ),
-                          Gaps.h6,
-                          Text(
-                            "${data.weather.temperature}°C",
-                            style: const TextStyle(
-                              fontSize: Sizes.size24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const Icon(
-                            Icons.arrow_forward_ios_rounded,
-                          ),
-                        ],
-                      ),
+                  return GestureDetector(
+                    onTap: () => _onTapWeb(
+                        "캠퍼스 날씨", data.weather.naverUrl, "캠퍼스 날씨를 확인해 보세요!"),
+                    child: WeatherBox(
+                      imageUrl: data.weather.imageUrl,
+                      temperature: data.weather.temperature,
                     ),
                   );
                 },
-                loading: () {
-                  _animationController.reset();
-                  return const SizedBox(
-                    height: 60,
+                orElse: () {
+                  return WeatherBox(
+                    imageUrl: wtToUrl('wt99'),
+                    temperature: "-",
                   );
                 },
-                error: (err, stack) => SizedBox(
-                  height: 60,
-                  child: Center(child: Text('Error: $err')),
-                ),
               ),
               Gaps.v5,
               Container(
@@ -243,31 +199,28 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                         size: Sizes.size16,
                       ),
                       Gaps.h1,
-                      dashboardState.when(
+                      dashboardState.maybeWhen(
                         data: (data) {
-                          return FadeTransition(
-                            opacity: _animation,
-                            child: Text(
-                              data.weather.campusName,
-                              style: const TextStyle(
-                                color: Colors.white70,
-                                fontSize: Sizes.size14,
-                                fontWeight: FontWeight.w500,
-                              ),
+                          return Text(
+                            data.weather.campusName,
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: Sizes.size14,
+                              fontWeight: FontWeight.w500,
                             ),
                           );
                         },
-                        loading: () => const Text(
-                          "ㅇㅇ캠",
-                          style: TextStyle(
-                            color: Color(0xFF323430),
-                            fontSize: Sizes.size14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        error: (Object error, StackTrace stackTrace) =>
-                            Text('Error: $error'),
-                      ),
+                        orElse: () {
+                          return const Text(
+                            "--캠",
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: Sizes.size14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          );
+                        },
+                      )
                     ],
                   ),
                 ),
