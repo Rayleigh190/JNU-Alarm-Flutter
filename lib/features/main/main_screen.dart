@@ -7,6 +7,7 @@ import 'package:jnu_alarm/common/network/network_connection_check.dart';
 import 'package:jnu_alarm/common/widgets/notice_web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
+import 'package:jnu_alarm/features/dashboard/view_models/dashboard_view_model.dart';
 import 'package:jnu_alarm/features/dashboard/views/dashboard_screen.dart';
 import 'package:jnu_alarm/features/main/widgets/bottom_nav_btn.dart';
 import 'package:jnu_alarm/features/notice/view_models/notice_view_model.dart';
@@ -26,6 +27,9 @@ class _MainScreenState extends ConsumerState<MainScreen>
     with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   late TabController _tabController;
   int _currentIndex = 0;
+  bool isIndexZeroBuild = false;
+  bool isIndexOneBuild = false;
+  bool isIndexTwoBuild = false;
 
   final List<Widget> _page = [
     const NoticeScreen(),
@@ -123,6 +127,10 @@ class _MainScreenState extends ConsumerState<MainScreen>
     setState(() {
       _currentIndex = _tabController.index;
     });
+
+    if (_tabController.index == 1 && _tabController.indexIsChanging == true) {
+      ref.read(dashboardProvider.notifier).refresh();
+    }
   }
 
   void _onTap(int index) {

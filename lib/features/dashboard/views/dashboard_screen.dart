@@ -12,7 +12,6 @@ import 'package:jnu_alarm/common/widgets/notice_web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
 import 'package:jnu_alarm/features/dashboard/view_models/dashboard_view_model.dart';
-import 'package:jnu_alarm/features/dashboard/view_models/wt_to_url.dart';
 import 'package:jnu_alarm/features/dashboard/views/map_screen.dart';
 import 'package:jnu_alarm/features/dashboard/views/widgets/dashboard_main_button.dart';
 import 'package:jnu_alarm/features/dashboard/views/widgets/weather_box.dart';
@@ -151,10 +150,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                   );
                 },
                 orElse: () {
-                  return WeatherBox(
-                    imageUrl: wtToUrl('wt99'),
-                    temperature: "-",
-                  );
+                  return Container();
                 },
               ),
               Gaps.v5,
@@ -211,14 +207,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                           );
                         },
                         orElse: () {
-                          return const Text(
-                            "--캠",
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: Sizes.size14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          );
+                          return Container();
                         },
                       )
                     ],
