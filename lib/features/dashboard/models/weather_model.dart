@@ -1,25 +1,29 @@
-class WeatherResponseModel {
-  final String weatherType;
-  final String temperature;
-  final String naverUrl;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  WeatherResponseModel({
-    required this.weatherType,
-    required this.temperature,
-    required this.naverUrl,
-  });
+part 'weather_model.freezed.dart';
+part 'weather_model.g.dart';
+
+@freezed
+class WeatherResponseModel with _$WeatherResponseModel {
+  const factory WeatherResponseModel({
+    required bool success,
+    required WeatherModel response,
+    String? error,
+  }) = _WeatherResponseModel;
+
+  factory WeatherResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$WeatherResponseModelFromJson(json);
 }
 
-class WeatherModel {
-  final String temperature;
-  final String imageUrl;
-  final String campusName;
-  final String naverUrl;
+@freezed
+class WeatherModel with _$WeatherModel {
+  const factory WeatherModel({
+    required String image_url,
+    required String temperature,
+    required String campus_name,
+    required String naver_url,
+  }) = _WeatherModel;
 
-  WeatherModel({
-    required this.temperature,
-    required this.imageUrl,
-    required this.campusName,
-    required this.naverUrl,
-  });
+  factory WeatherModel.fromJson(Map<String, Object?> json) =>
+      _$WeatherModelFromJson(json);
 }

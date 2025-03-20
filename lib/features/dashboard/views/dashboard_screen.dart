@@ -1,11 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import 'package:jnu_alarm/common/enums/campus_type.dart';
+import 'package:jnu_alarm/common/secrets.dart';
 import 'package:jnu_alarm/common/utils.dart';
 import 'package:jnu_alarm/common/widgets/common_ad_web_view_screen.dart';
 import 'package:jnu_alarm/common/widgets/notice_web_view_screen.dart';
@@ -142,9 +142,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                 data: (data) {
                   return GestureDetector(
                     onTap: () => _onTapWeb(
-                        "캠퍼스 날씨", data.weather.naverUrl, "캠퍼스 날씨를 확인해 보세요!"),
+                        "캠퍼스 날씨", data.weather.naver_url, "캠퍼스 날씨를 확인해 보세요!"),
                     child: WeatherBox(
-                      imageUrl: data.weather.imageUrl,
+                      imageUrl: "$homeBaseUrl${data.weather.image_url}",
                       temperature: data.weather.temperature,
                     ),
                   );
@@ -198,7 +198,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                       dashboardState.maybeWhen(
                         data: (data) {
                           return Text(
-                            data.weather.campusName,
+                            data.weather.campus_name,
                             style: const TextStyle(
                               color: Colors.white70,
                               fontSize: Sizes.size14,
