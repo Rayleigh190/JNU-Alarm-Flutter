@@ -37,7 +37,9 @@ class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
     try {
       response =
           await NoticeRepository.fetchNotices(topics, lastNoticeFetchDate);
-      prefs.setString("last_notice_fetch_date", DateTime.now().toString());
+      if (response != null) {
+        prefs.setString("last_notice_fetch_date", DateTime.now().toString());
+      }
     } on ApiInternalServerException catch (e) {
       debugPrint(e.message);
     }
