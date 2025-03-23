@@ -23,6 +23,7 @@ import 'package:jnu_alarm/features/onboarding/views/onboarding_screen.dart';
 import 'package:jnu_alarm/features/setting/constants/business_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/college_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/depart_setting_const.dart';
+import 'package:jnu_alarm/features/setting/constants/home_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/main_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/sg_school_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/sp_school_setting_const.dart';
@@ -32,6 +33,7 @@ import 'package:jnu_alarm/features/setting/view_models/notice_setting_view_model
 import 'package:jnu_alarm/features/setting/views/business_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/college_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/depart_setting_screen.dart';
+import 'package:jnu_alarm/features/setting/views/home_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/info_screen.dart';
 import 'package:jnu_alarm/features/setting/views/sg_school_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/sp_school_setting_screen.dart';
@@ -89,6 +91,8 @@ Future<void> main() async {
       overrides: [
         mainNoticeSettingProvider.overrideWith(() =>
             NoticeSettingViewModel(repository, mainSettingSectionGroupWithDev)),
+        homeNoticeSettingProvider.overrideWith(
+            () => NoticeSettingViewModel(repository, homeSettingSectionGroup)),
         collegeNoticeSettingProvider.overrideWith(() =>
             NoticeSettingViewModel(repository, collegeSettingSectionGroup)),
         departNoticeSettingProvider.overrideWith(() =>
@@ -164,6 +168,7 @@ class MyApp extends StatelessWidget {
       routes: {
         InitScreen.routeName: (context) => const InitScreen(),
         OnboardingScreen.routeName: (context) => const OnboardingScreen(),
+        HomeSettingScreen.routeName: (context) => const HomeSettingScreen(),
         CollegeSettingScreen.routeName: (context) =>
             const CollegeSettingScreen(),
         DepartSettingScreen.routeName: (context) => const DepartSettingScreen(),

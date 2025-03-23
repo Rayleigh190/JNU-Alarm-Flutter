@@ -3,6 +3,7 @@ import 'package:jnu_alarm/features/setting/constants/setting_const_model.dart';
 import 'package:jnu_alarm/features/setting/views/business_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/college_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/depart_setting_screen.dart';
+import 'package:jnu_alarm/features/setting/views/home_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/info_screen.dart';
 import 'package:jnu_alarm/features/setting/views/sg_school_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/sp_school_setting_screen.dart';
@@ -32,23 +33,15 @@ const SettingSection basicSettingSection = SettingSection(
 );
 
 const SettingSection collegeSettingSection = SettingSection(
-  title: "대학",
+  title: "대학 알림",
   tiles: [
-    SwitchTile(
+    NavigationTile(
       icon: SettingsIcon(
         color: Color(0xff5ebd3e),
         icons: Icons.school,
       ),
-      title: "학사 알림",
-      topic: "academic",
-    ),
-    SwitchTile(
-      icon: SettingsIcon(
-        color: Color(0xff5ebd3e),
-        icons: Icons.redeem,
-      ),
-      title: "장학 알림",
-      topic: "scholarship",
+      title: "학사/장학 알림",
+      to: HomeSettingScreen.routeName,
     ),
     NavigationTile(
       icon: SettingsIcon(

@@ -45,6 +45,11 @@ final mainNoticeSettingProvider =
   () => throw UnimplementedError(),
 );
 
+final homeNoticeSettingProvider =
+    NotifierProvider<NoticeSettingViewModel, NoticeSettingModel>(
+  () => throw UnimplementedError(),
+);
+
 final collegeNoticeSettingProvider =
     NotifierProvider<NoticeSettingViewModel, NoticeSettingModel>(
   () => throw UnimplementedError(),
