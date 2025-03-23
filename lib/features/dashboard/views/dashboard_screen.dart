@@ -28,6 +28,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
     with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   late AnimationController _adAnimationController;
   late Animation<double> _adAnimation;
+  final ScrollController _scrollController = ScrollController();
 
   // AdMob Start
   NativeAd? _nativeAd;
@@ -96,6 +97,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
   void dispose() {
     _nativeAd?.dispose();
     _adAnimationController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -122,6 +124,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
 
     return Scaffold(
       body: SingleChildScrollView(
+        controller: _scrollController,
         padding: const EdgeInsets.symmetric(
           horizontal: Sizes.size16,
         ),

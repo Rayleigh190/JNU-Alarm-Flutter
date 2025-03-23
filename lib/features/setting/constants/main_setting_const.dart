@@ -9,29 +9,6 @@ import 'package:jnu_alarm/features/setting/views/sg_school_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/sp_school_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/widgets/settings_icon.dart';
 
-const SettingSection basicSettingSection = SettingSection(
-  title: "일반",
-  tiles: [
-    SwitchTile(
-      icon: SettingsIcon(
-        color: Color(0xff009cdf),
-        icons: Icons.notifications,
-      ),
-      title: "서비스 알림",
-      topic: "basic",
-      enabled: false,
-    ),
-    SwitchTile(
-      icon: SettingsIcon(
-        color: Color(0xff973999),
-        icons: Icons.savings,
-      ),
-      title: "홍보/광고",
-      topic: "ad",
-    ),
-  ],
-);
-
 const SettingSection collegeSettingSection = SettingSection(
   title: "대학 알림",
   tiles: [
@@ -79,7 +56,7 @@ const SettingSection collegeSettingSection = SettingSection(
 );
 
 const SettingSection businessSettingSection = SettingSection(
-  title: "사업단",
+  title: "사업단 알림",
   tiles: [
     NavigationTile(
       icon: SettingsIcon(
@@ -146,14 +123,12 @@ const SettingSection devModeSettingSection = SettingSection(
 );
 
 const List<SettingSection> mainSettingSectionGroup = [
-  basicSettingSection,
   collegeSettingSection,
   businessSettingSection,
   etcSettingSection,
 ];
 
 const List<SettingSection> mainSettingSectionGroupWithDev = [
-  basicSettingSection,
   collegeSettingSection,
   businessSettingSection,
   etcSettingSection,
