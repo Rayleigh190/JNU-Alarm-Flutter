@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,15 +9,40 @@ import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/features/main/main_screen.dart';
 import 'package:jnu_alarm/features/onboarding/view_models/init_view_model.dart';
 
-class InitScreen extends ConsumerWidget {
+class InitScreen extends ConsumerStatefulWidget {
   static const routeName = "/";
 
   const InitScreen({super.key});
 
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _InitScreenState();
+}
+
+class _InitScreenState extends ConsumerState {
   void replacementToMainScreen(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
     });
+  }
+
+  Future<void> _initAppTracking() async {
+    final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+
+    if (status == TrackingStatus.notDetermined) {
+      await AppTrackingTransparency.requestTrackingAuthorization();
+    }
+
+    final uuid = await AppTrackingTransparency.getAdvertisingIdentifier();
+    debugPrint('IDFA: $uuid');
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (Platform.isIOS) {
+      _initAppTracking();
+    }
   }
 
   Widget errorScaffold(String message1, String message2) {
@@ -44,7 +70,7 @@ class InitScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return ref.watch(initProvider).when(
       data: (data) {
         if (data.isFirstRun) {
