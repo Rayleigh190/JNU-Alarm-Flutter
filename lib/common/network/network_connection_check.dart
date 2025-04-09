@@ -9,10 +9,3 @@ Future<void> checkNetworkConnection() async {
         "인터넷이 연결되어 있지 않습니다. 연결 후 재시도 해주세요.");
   }
 }
-
-Future<bool> isNetworkConnected() async {
-  final connectivityResult = await Connectivity().checkConnectivity();
-  if (connectivityResult.contains(ConnectivityResult.wifi) ||
-      connectivityResult.contains(ConnectivityResult.mobile)) return true;
-  return false;
-}
