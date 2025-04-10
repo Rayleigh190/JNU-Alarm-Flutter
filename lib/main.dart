@@ -17,6 +17,7 @@ import 'package:jnu_alarm/common/widgets/common_web_view_screen.dart';
 import 'package:jnu_alarm/common/widgets/notice_web_view_screen.dart';
 import 'package:jnu_alarm/features/dashboard/views/map_screen.dart';
 import 'package:jnu_alarm/features/main/main_screen.dart';
+import 'package:jnu_alarm/features/main/widgets/internet_overlay_widget.dart';
 import 'package:jnu_alarm/features/notice/view_models/notice_view_model.dart';
 import 'package:jnu_alarm/features/onboarding/views/init_screen.dart';
 import 'package:jnu_alarm/features/onboarding/views/onboarding_screen.dart';
@@ -164,6 +165,14 @@ class MyApp extends StatelessWidget {
         progressIndicatorTheme:
             const ProgressIndicatorThemeData(color: Colors.grey),
       ),
+      builder: (context, child) {
+        return Stack(
+          children: [
+            child!, // 여기서 모든 화면이 교체됨
+            const InternetOverlayWidget(),
+          ],
+        );
+      },
       initialRoute: "/",
       routes: {
         InitScreen.routeName: (context) => const InitScreen(),

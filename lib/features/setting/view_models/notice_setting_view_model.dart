@@ -12,7 +12,6 @@ class NoticeSettingViewModel extends Notifier<NoticeSettingModel> {
   NoticeSettingViewModel(this._repository, this._settingSectionGroup);
 
   Future<void> toggleTopic(String topic, bool isSubscribed) async {
-    await checkNetworkConnection();
     if (isSubscribed) {
       await FirebaseMessaging.instance.subscribeToTopic(topic);
     } else {
