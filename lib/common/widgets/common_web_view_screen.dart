@@ -21,6 +21,7 @@ class CommonWsebViewScreen extends StatefulWidget {
 }
 
 class _CommonWsebViewScreenState extends State<CommonWsebViewScreen> {
+  bool _isLoading = true;
   late WebViewController _controller;
   String currentUrl = "";
 
@@ -43,6 +44,11 @@ class _CommonWsebViewScreenState extends State<CommonWsebViewScreen> {
           }
           return NavigationDecision.navigate;
         },
+        onPageStarted: (url) {
+          setState(() {
+            _isLoading = true;
+          });
+        },
         onPageFinished: (String url) {
           // 강제 확대 가능하도록 meta 태그 수정
           _controller.runJavaScript('''
@@ -56,6 +62,9 @@ class _CommonWsebViewScreenState extends State<CommonWsebViewScreen> {
             document.head.appendChild(newMeta);
           }
         ''');
+          setState(() {
+            _isLoading = false;
+          });
         },
         onUrlChange: (change) {
           currentUrl = change.url ?? widget.link;
@@ -103,7 +112,13 @@ class _CommonWsebViewScreenState extends State<CommonWsebViewScreen> {
       body: Column(
         children: [
           Expanded(
-            child: WebViewWidget(controller: _controller),
+            child: Stack(
+              children: [
+                WebViewWidget(controller: _controller),
+                if (_isLoading)
+                  const Center(child: CircularProgressIndicator()),
+              ],
+            ),
           ),
         ],
       ),
