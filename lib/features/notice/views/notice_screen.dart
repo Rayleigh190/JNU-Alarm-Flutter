@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -100,10 +101,24 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
     return ref.watch(noticeProvider.notifier).refresh();
   }
 
+  Future<void> initAppTracking() async {
+    final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+
+    if (status == TrackingStatus.notDetermined) {
+      await AppTrackingTransparency.requestTrackingAuthorization();
+    }
+
+    final uuid = await AppTrackingTransparency.getAdvertisingIdentifier();
+    debugPrint('IDFA: $uuid');
+  }
+
   @override
   void initState() {
     super.initState();
     loadAd();
+    if (Platform.isIOS) {
+      initAppTracking();
+    }
     _scrollController.addListener(_onScroll);
     WidgetsBinding.instance.addObserver(this);
   }

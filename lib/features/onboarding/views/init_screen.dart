@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,26 +21,6 @@ class _InitScreenState extends ConsumerState {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Navigator.of(context).pushReplacementNamed(MainScreen.routeName);
     });
-  }
-
-  Future<void> _initAppTracking() async {
-    final status = await AppTrackingTransparency.trackingAuthorizationStatus;
-
-    if (status == TrackingStatus.notDetermined) {
-      await AppTrackingTransparency.requestTrackingAuthorization();
-    }
-
-    final uuid = await AppTrackingTransparency.getAdvertisingIdentifier();
-    debugPrint('IDFA: $uuid');
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (Platform.isIOS) {
-      _initAppTracking();
-    }
   }
 
   Widget errorScaffold(String message1, String message2) {
