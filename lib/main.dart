@@ -20,7 +20,9 @@ import 'package:jnu_alarm/features/main/main_screen.dart';
 import 'package:jnu_alarm/features/main/widgets/internet_overlay_widget.dart';
 import 'package:jnu_alarm/features/notice/view_models/notice_view_model.dart';
 import 'package:jnu_alarm/features/onboarding/views/init_screen.dart';
-import 'package:jnu_alarm/features/onboarding/views/onboarding_screen.dart';
+import 'package:jnu_alarm/features/onboarding/views/onboarding_welcome_screen.dart';
+import 'package:jnu_alarm/features/onboarding/views/onboarding_notification_screen.dart';
+import 'package:jnu_alarm/features/onboarding/views/onboarding_ad_screen.dart';
 import 'package:jnu_alarm/features/setting/constants/business_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/college_setting_const.dart';
 import 'package:jnu_alarm/features/setting/constants/depart_setting_const.dart';
@@ -108,13 +110,14 @@ Future<void> main() async {
         settingSectionProvider
             .overrideWith(() => SettingSectionViewModel(repository)),
       ],
-      child: const MyApp(),
+      child: MyApp(preferences.getInt('build_number') == null),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isFirstRun;
+  const MyApp(this.isFirstRun, {super.key});
 
   static FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: AnalyticsService.instance);
@@ -173,10 +176,15 @@ class MyApp extends StatelessWidget {
           ],
         );
       },
-      initialRoute: "/",
+      initialRoute:
+          isFirstRun ? OnboardingWelcomeScreen.routeName : InitScreen.routeName,
       routes: {
         InitScreen.routeName: (context) => const InitScreen(),
-        OnboardingScreen.routeName: (context) => const OnboardingScreen(),
+        OnboardingWelcomeScreen.routeName: (context) =>
+            const OnboardingWelcomeScreen(),
+        OnboardingNotificationScreen.routeName: (context) =>
+            const OnboardingNotificationScreen(),
+        OnboardingAdScreen.routeName: (context) => const OnboardingAdScreen(),
         HomeSettingScreen.routeName: (context) => const HomeSettingScreen(),
         CollegeSettingScreen.routeName: (context) =>
             const CollegeSettingScreen(),
