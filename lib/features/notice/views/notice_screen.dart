@@ -119,8 +119,6 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
     }
 
     List<dynamic> items = [
-      const NoticeHeader(),
-      Gaps.v5,
       if (todayNotices.isNotEmpty) ...[
         '오늘',
         ...todayNotices,
@@ -163,81 +161,78 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
             color: Theme.of(context).primaryColor,
             backgroundColor: const Color(0xFF323430),
             onRefresh: _onRefresh,
-            child: notices.when(
-              data: (data) {
-                final items = _convertToListViewItems(data);
-                if (items.length == 2) {
-                  return Stack(
-                    children: [
-                      const Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text("설정에서 알림을 구독하세요!"),
-                            Gaps.v10,
-                            Text("새로운 알림이 오면 저장됩니다."),
-                          ],
+            child: CupertinoScrollbar(
+              controller: _scrollController,
+              child: ListView(
+                controller: _scrollController,
+                physics: const AlwaysScrollableScrollPhysics(),
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: Sizes.size20),
+                    child: NoticeHeader(),
+                  ),
+                  notices.when(
+                    data: (data) {
+                      final items = _convertToListViewItems(data);
+                      return ListView.separated(
+                        padding: const EdgeInsets.fromLTRB(
+                          Sizes.size20,
+                          Sizes.size10,
+                          Sizes.size20,
+                          0,
                         ),
+                        shrinkWrap: true, // 높이를 내용물만큼 줄이기
+                        // 스크롤 막기 (바깥 ListView가 담당)
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          if (index >= items.length) {
+                            noticesNotifier.fetchMoreNotices();
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.only(top: Sizes.size10),
+                                child: CircularProgressIndicator.adaptive(),
+                              ),
+                            );
+                          }
+                          final item = items[index];
+                          if (item is String) {
+                            return NoticeDivider(
+                              text: item,
+                            );
+                          } else if (item is NoticeModel) {
+                            return GestureDetector(
+                              onTap: () => _onTapNoticeTile(
+                                  item.title, item.link, item.body, item.id),
+                              child: NoticeTile(
+                                title: item.title,
+                                body: item.body,
+                                link: item.link,
+                                createdAt: item.created_at,
+                                isRead: item.is_read == 1,
+                              ),
+                            );
+                          }
+                          return item;
+                        },
+                        separatorBuilder: (context, index) =>
+                            (items[index] is String) ? Gaps.v6 : Gaps.v5,
+                        itemCount: items.length,
+                      );
+                    },
+                    error: (error, stackTrace) => SizedBox(
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: Center(
+                        child: Text(error.toString()),
                       ),
-                      ListView(),
-                    ],
-                  );
-                } else {
-                  return CupertinoScrollbar(
-                    controller: _scrollController,
-                    child: ListView.separated(
-                      controller: _scrollController,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      padding: EdgeInsets.fromLTRB(
-                        Sizes.size20,
-                        appBarHeight + Sizes.size5,
-                        Sizes.size20,
-                        Sizes.size96 + Sizes.size20,
-                      ),
-                      itemBuilder: (context, index) {
-                        if (index >= items.length) {
-                          noticesNotifier.fetchMoreNotices();
-                          return const Center(
-                            child: Padding(
-                              padding: EdgeInsets.only(top: Sizes.size10),
-                              child: CircularProgressIndicator.adaptive(),
-                            ),
-                          );
-                        }
-                        final item = items[index];
-                        if (item is String) {
-                          return NoticeDivider(
-                            text: item,
-                          );
-                        } else if (item is NoticeModel) {
-                          return GestureDetector(
-                            onTap: () => _onTapNoticeTile(
-                                item.title, item.link, item.body, item.id),
-                            child: NoticeTile(
-                              title: item.title,
-                              body: item.body,
-                              link: item.link,
-                              createdAt: item.created_at,
-                              isRead: item.is_read == 1,
-                            ),
-                          );
-                        }
-                        return item;
-                      },
-                      separatorBuilder: (context, index) =>
-                          (items[index] is String) ? Gaps.v6 : Gaps.v5,
-                      itemCount: noticesNotifier.hasMore
-                          ? items.length + 1
-                          : items.length,
                     ),
-                  );
-                }
-              },
-              error: (error, stackTrace) => Center(
-                child: Text(error.toString()),
-              ),
-              loading: () => const Center(
-                child: CircularProgressIndicator.adaptive(),
+                    loading: () => SizedBox(
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: const Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
