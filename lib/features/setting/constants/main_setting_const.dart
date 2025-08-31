@@ -7,6 +7,7 @@ import 'package:jnu_alarm/features/setting/views/home_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/info_screen.dart';
 import 'package:jnu_alarm/features/setting/views/sg_school_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/sp_school_setting_screen.dart';
+import 'package:jnu_alarm/features/setting/views/test_setting_screen.dart';
 import 'package:jnu_alarm/features/setting/views/widgets/settings_icon.dart';
 
 const SettingSection collegeSettingSection = SettingSection(
@@ -118,6 +119,14 @@ const SettingSection devModeSettingSection = SettingSection(
       ),
       title: "테스트2 알림",
       topic: "test2",
+    ),
+    NavigationTile(
+      icon: SettingsIcon(
+        color: Color.fromARGB(255, 7, 7, 243),
+        icons: Icons.bubble_chart,
+      ),
+      title: "테스트 설정",
+      to: TestSettingScreen.routeName,
     ),
   ],
 );
