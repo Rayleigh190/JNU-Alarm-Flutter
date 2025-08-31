@@ -62,7 +62,9 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
   }
 
   Future<void> _onRefresh() {
-    return ref.watch(noticeProvider.notifier).refresh();
+    final noticesNotifier = ref.watch(noticeProvider.notifier);
+    if (noticesNotifier.isEditMode) noticesNotifier.changeEditMode();
+    return noticesNotifier.refresh();
   }
 
   Future<void> initAppTracking() async {
@@ -100,41 +102,33 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
     }
   }
 
-  List<dynamic> _convertToListViewItems(List<dynamic> notices) {
-    DateTime now = DateTime.now();
-    DateTime todayStart = DateTime(now.year, now.month, now.day);
-    DateTime yesterdayStart = todayStart.subtract(const Duration(days: 1));
-    List<NoticeModel> todayNotices = [];
-    List<NoticeModel> yesterdayNotices = [];
-    List<NoticeModel> previousNotices = [];
-
-    for (var data in notices) {
-      if (data.created_at.isAfter(todayStart)) {
-        todayNotices.add(data);
-      } else if (data.created_at.isAfter(yesterdayStart)) {
-        yesterdayNotices.add(data);
-      } else {
-        previousNotices.add(data);
-      }
-    }
-
-    List<dynamic> items = [
-      if (todayNotices.isNotEmpty) ...[
-        '오늘',
-        ...todayNotices,
-        Gaps.v5,
-      ],
-      if (yesterdayNotices.isNotEmpty) ...[
-        '어제',
-        ...yesterdayNotices,
-        Gaps.v5,
-      ],
-      if (previousNotices.isNotEmpty) ...[
-        '이전',
-        ...previousNotices,
-      ],
-    ];
-    return items;
+  void _showAlertDialog(BuildContext context, void Function() action) {
+    showCupertinoDialog<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: const Text('🚨주의'),
+        content: const Text('알림을 삭제하면 복구가 불가능합니다.'),
+        actions: <CupertinoDialogAction>[
+          CupertinoDialogAction(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text(
+              '취소',
+              style: TextStyle(color: Colors.lightBlue),
+            ),
+          ),
+          CupertinoDialogAction(
+            isDestructiveAction: true,
+            onPressed: () {
+              action();
+              Navigator.pop(context);
+            },
+            child: const Text('삭제'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -153,6 +147,28 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
           "알림 내역",
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
+        actions: [
+          noticesNotifier.isEditMode
+              ? TextButton(
+                  style: ButtonStyle(
+                    overlayColor:
+                        WidgetStateProperty.all(Colors.transparent), // 눌림 효과 제거
+                  ),
+                  child: const Text("완료",
+                      style: TextStyle(color: Colors.lightBlue)),
+                  onPressed: () {
+                    noticesNotifier.changeEditMode();
+                  },
+                )
+              : IconButton(
+                  splashColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  icon: const Icon(Icons.edit),
+                  onPressed: () {
+                    noticesNotifier.changeEditMode();
+                  },
+                )
+        ],
       ),
       body: Stack(
         children: [
@@ -173,7 +189,21 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
                   ),
                   notices.when(
                     data: (data) {
-                      final items = _convertToListViewItems(data);
+                      if (data.isEmpty) {
+                        return SizedBox(
+                          height: MediaQuery.of(context).size.height / 2,
+                          child: const Center(
+                            child: Text(
+                              "설정에서 알림을 구독하세요!\n\n새로운 알림이 오면 이곳에 저장됩니다.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
                       return ListView.separated(
                         padding: const EdgeInsets.fromLTRB(
                           Sizes.size20,
@@ -185,21 +215,43 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
                         // 스크롤 막기 (바깥 ListView가 담당)
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (context, index) {
-                          if (index >= items.length) {
+                          if (index == data.length) {
                             noticesNotifier.fetchMoreNotices();
-                            return const Center(
-                              child: Padding(
-                                padding: EdgeInsets.only(top: Sizes.size10),
-                                child: CircularProgressIndicator.adaptive(),
-                              ),
-                            );
+                            return noticesNotifier.hasMore
+                                ? const Center(
+                                    child: Padding(
+                                      padding:
+                                          EdgeInsets.only(top: Sizes.size10),
+                                      child:
+                                          CircularProgressIndicator.adaptive(),
+                                    ),
+                                  )
+                                : Container();
                           }
-                          final item = items[index];
+                          final item = data[index];
                           if (item is String) {
                             return NoticeDivider(
                               text: item,
                             );
                           } else if (item is NoticeModel) {
+                            if (noticesNotifier.isEditMode) {
+                              return NoticeTile(
+                                title: item.title,
+                                body: item.body,
+                                link: item.link,
+                                createdAt: item.created_at,
+                                isRead: item.is_read == 1,
+                                isEditMode: true,
+                                onDeleteTap: () {
+                                  _showAlertDialog(context, () {
+                                    noticesNotifier.deleteNotice(
+                                      index,
+                                      item.id,
+                                    );
+                                  });
+                                },
+                              );
+                            }
                             return GestureDetector(
                               onTap: () => _onTapNoticeTile(
                                   item.title, item.link, item.body, item.id),
@@ -214,9 +266,10 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
                           }
                           return item;
                         },
-                        separatorBuilder: (context, index) =>
-                            (items[index] is String) ? Gaps.v6 : Gaps.v5,
-                        itemCount: items.length,
+                        separatorBuilder: (context, index) {
+                          return Gaps.v5;
+                        },
+                        itemCount: data.length + 1,
                       );
                     },
                     error: (error, stackTrace) => SizedBox(

@@ -48,6 +48,15 @@ class DatabaseHelper {
     );
   }
 
+  static Future<int> deleteNotice(int id) async {
+    final db = await database;
+    return await db.delete(
+      'notices',
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
   static Future<int> updateNoticeReadStatus(int id, int isRead) async {
     final db = await database;
     return await db.update(

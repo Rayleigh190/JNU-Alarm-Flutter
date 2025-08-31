@@ -12,6 +12,8 @@ class NoticeTile extends StatelessWidget {
     required this.link,
     required this.createdAt,
     required this.isRead,
+    this.isEditMode = false,
+    this.onDeleteTap,
   });
 
   final String title;
@@ -19,6 +21,8 @@ class NoticeTile extends StatelessWidget {
   final String link;
   final DateTime createdAt;
   final bool isRead;
+  final bool isEditMode;
+  final void Function()? onDeleteTap;
 
   String getFormattedTime(DateTime createdAt) {
     final now = DateTime.now();
@@ -61,11 +65,20 @@ class NoticeTile extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Icon(
-            isRead ? Icons.check_circle_outline : Icons.error_outline,
-            color:
-                isRead ? Colors.grey.shade400 : Theme.of(context).primaryColor,
-          ),
+          isEditMode
+              ? GestureDetector(
+                  onTap: () => onDeleteTap?.call(),
+                  child: const Icon(
+                    Icons.do_not_disturb_on_total_silence_outlined,
+                    color: Colors.red,
+                  ),
+                )
+              : Icon(
+                  isRead ? Icons.check_circle_outline : Icons.error_outline,
+                  color: isRead
+                      ? Colors.grey.shade400
+                      : Theme.of(context).primaryColor,
+                ),
           Gaps.h12,
           Expanded(
             child: Column(

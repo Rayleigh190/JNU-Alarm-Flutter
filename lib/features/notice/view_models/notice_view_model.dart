@@ -15,8 +15,22 @@ class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
   int _offset = 0;
   final int _limit = 15;
   bool _hasMore = true;
+  bool isEditMode = false;
 
   bool get hasMore => _hasMore;
+
+  void changeEditMode() {
+    isEditMode = !isEditMode;
+    state = AsyncData(state.value!);
+  }
+
+  void deleteNotice(int listIndex, int noticeID) {
+    state = state.whenData((notices) {
+      DatabaseHelper.deleteNotice(noticeID);
+      final newList = List<dynamic>.from(notices)..removeAt(listIndex);
+      return newList;
+    });
+  }
 
   Future<void> fetchMoreNotices() async {
     if (!_hasMore) return;
