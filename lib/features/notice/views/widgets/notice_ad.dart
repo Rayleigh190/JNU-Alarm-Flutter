@@ -12,7 +12,8 @@ class NoticeAd extends StatefulWidget {
   State<NoticeAd> createState() => _NoticeAdState();
 }
 
-class _NoticeAdState extends State<NoticeAd> {
+class _NoticeAdState extends State<NoticeAd>
+    with AutomaticKeepAliveClientMixin {
   // AdMob Start
   NativeAd? _nativeAd;
   bool _nativeAdIsLoaded = false;
@@ -62,6 +63,7 @@ class _NoticeAdState extends State<NoticeAd> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Container(
       decoration: BoxDecoration(
         color: isDarkMode(context) ? const Color(0xFF282828) : Colors.white,
@@ -90,4 +92,7 @@ class _NoticeAdState extends State<NoticeAd> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
