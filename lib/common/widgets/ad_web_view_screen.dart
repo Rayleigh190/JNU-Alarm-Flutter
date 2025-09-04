@@ -81,11 +81,19 @@ abstract class AdWebViewScreenState<T extends AdWebViewScreen>
             _isLoading = true;
           });
         },
-        onPageFinished: (String url) {
+        onPageFinished: (String url) async {
           runJavaScript(_controller);
           setState(() {
             _isLoading = false;
           });
+          // HTML 가져오기
+          final html = await _controller.runJavaScriptReturningResult(
+            "document.documentElement.outerHTML",
+          ) as String;
+          if (html.trim().contains("해당 게시물이 존재하지 않습니다.")) {
+            _showErrorDialog(const WebResourceError(
+                errorCode: 500, description: "empty page"));
+          }
         },
         onUrlChange: (change) {
           currentUrl = change.url ?? widget.link;
