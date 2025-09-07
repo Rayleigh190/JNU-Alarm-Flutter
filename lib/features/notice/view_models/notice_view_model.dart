@@ -74,8 +74,8 @@ class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
     }
   }
 
-  Future<List<dynamic>> _fetchNotices() async {
-    await checkNewNoticeAndSave();
+  Future<List<dynamic>> _fetchNotices({bool skipNetwork = false}) async {
+    if (!skipNetwork) await checkNewNoticeAndSave();
     _hasMore = true;
     _offset = 0;
     final response = await DatabaseHelper.fetchNotices(_offset, _limit,
@@ -91,8 +91,8 @@ class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
     return _fetchNotices();
   }
 
-  Future<void> refresh() async {
-    state = AsyncValue.data(await _fetchNotices());
+  Future<void> refresh({bool skipNetwork = false}) async {
+    state = AsyncValue.data(await _fetchNotices(skipNetwork: skipNetwork));
   }
 
   Future<void> setAsRead(int id) async {

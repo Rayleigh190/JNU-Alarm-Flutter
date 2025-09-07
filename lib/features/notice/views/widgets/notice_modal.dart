@@ -58,7 +58,7 @@ class _NoticeModalState extends ConsumerState<NoticeModal> {
                     setState(() {
                       selectedSegment = value;
                     });
-                    noticesNotifier.refresh();
+                    noticesNotifier.refresh(skipNetwork: true);
                   }
                 },
                 children: const <int, Widget>{
@@ -94,7 +94,7 @@ class _NoticeModalState extends ConsumerState<NoticeModal> {
                     setState(() {
                       selectedSegment2 = value;
                     });
-                    noticesNotifier.refresh();
+                    noticesNotifier.refresh(skipNetwork: true);
                   }
                 },
                 children: const <int, Widget>{

@@ -39,7 +39,7 @@ class _NoticeHeaderState extends ConsumerState<NoticeHeader> {
                 placeholder: "카테고리, 제목 검색",
                 onChanged: (value) {
                   noticesNotifier.keyword = value.isEmpty ? null : value;
-                  noticesNotifier.refresh();
+                  noticesNotifier.refresh(skipNetwork: true);
                 },
               ),
             ),
