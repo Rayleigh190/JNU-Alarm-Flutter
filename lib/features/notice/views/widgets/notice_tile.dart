@@ -117,11 +117,14 @@ class NoticeTile extends StatelessWidget {
             ),
           ),
           Gaps.h5,
-          Icon(
-            Icons.arrow_forward_ios_rounded,
-            color:
-                isRead ? Colors.grey.shade400 : Theme.of(context).primaryColor,
+          GestureDetector(
+            child: Icon(
+              true ? Icons.star_border_rounded : Icons.star_rounded,
+              color: true ? Colors.grey.shade400 : Colors.amber,
+            ),
+            onTap: () {},
           ),
+          // IconButton(onPressed: () {}, icon: const Icon(Icons.star_rounded))
         ],
       ),
     );

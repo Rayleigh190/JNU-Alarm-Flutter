@@ -207,7 +207,7 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
                       return ListView.separated(
                         padding: const EdgeInsets.fromLTRB(
                           Sizes.size20,
-                          Sizes.size10,
+                          Sizes.size5,
                           Sizes.size20,
                           0,
                         ),

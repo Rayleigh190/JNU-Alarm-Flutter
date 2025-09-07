@@ -16,6 +16,9 @@ class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
   final int _limit = 15;
   bool _hasMore = true;
   bool isEditMode = false;
+  // 필터링 관련
+  bool? isRead;
+  bool? isBookmarked;
 
   bool get hasMore => _hasMore;
 
@@ -34,7 +37,8 @@ class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
 
   Future<void> fetchMoreNotices() async {
     if (!_hasMore) return;
-    final newNotices = await DatabaseHelper.fetchNotices(_offset, _limit);
+    final newNotices = await DatabaseHelper.fetchNotices(_offset, _limit,
+        isBookmarked: isBookmarked, isRead: isRead);
     if (newNotices.length < _limit) {
       _hasMore = false;
     }
@@ -72,7 +76,8 @@ class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
     await checkNewNoticeAndSave();
     _hasMore = true;
     _offset = 0;
-    final response = await DatabaseHelper.fetchNotices(_offset, _limit);
+    final response = await DatabaseHelper.fetchNotices(_offset, _limit,
+        isBookmarked: isBookmarked, isRead: isRead);
     if (response.length < _limit) _hasMore = false;
     _offset += _limit;
 
