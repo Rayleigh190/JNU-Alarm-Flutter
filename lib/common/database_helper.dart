@@ -15,7 +15,8 @@ class DatabaseHelper {
             body TEXT, 
             link TEXT, 
             created_at TEXT, 
-            is_read INTEGER
+            is_read INTEGER,
+            is_bookmarked INTEGER
           )''',
         );
       },
