@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:jnu_alarm/features/notice/models/notice_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -36,7 +34,7 @@ class DatabaseHelper {
   }
 
   static Future<List<NoticeModel>> fetchNotices(int offset, int limit,
-      {bool? isBookmarked, bool? isRead}) async {
+      {bool? isBookmarked, bool? isRead, String? keyword}) async {
     final db = await database;
 
     final List<String> conditions = [];
@@ -50,6 +48,11 @@ class DatabaseHelper {
     if (isRead != null) {
       conditions.add("is_read = ?");
       args.add(isRead ? 1 : 0);
+    }
+
+    if (keyword != null && keyword.isNotEmpty) {
+      conditions.add("(title LIKE ? OR body LIKE ?)");
+      args.addAll(["%$keyword%", "%$keyword%"]);
     }
 
     final where = conditions.isNotEmpty ? conditions.join(" AND ") : null;

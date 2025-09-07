@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
+import 'package:jnu_alarm/features/notice/view_models/notice_view_model.dart';
 import 'package:jnu_alarm/features/notice/views/widgets/notice_ad.dart';
 import 'package:jnu_alarm/features/notice/views/widgets/notice_modal.dart';
 
@@ -25,6 +26,7 @@ class _NoticeHeaderState extends ConsumerState<NoticeHeader> {
 
   @override
   Widget build(BuildContext context) {
+    final noticesNotifier = ref.read(noticeProvider.notifier);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -32,9 +34,13 @@ class _NoticeHeaderState extends ConsumerState<NoticeHeader> {
         Gaps.v6,
         Row(
           children: [
-            const Expanded(
+            Expanded(
               child: CupertinoSearchTextField(
-                placeholder: "검색",
+                placeholder: "카테고리, 제목 검색",
+                onChanged: (value) {
+                  noticesNotifier.keyword = value.isEmpty ? null : value;
+                  noticesNotifier.refresh();
+                },
               ),
             ),
             IconButton(
