@@ -86,21 +86,12 @@ abstract class AdWebViewScreenState<T extends AdWebViewScreen>
           setState(() {
             _isLoading = false;
           });
-          // HTML 가져오기
-          final html = await _controller.runJavaScriptReturningResult(
-            "document.documentElement.outerHTML",
-          ) as String;
-          if (html.trim().contains("해당 게시물이 존재하지 않습니다.")) {
-            _showErrorDialog(const WebResourceError(
-                errorCode: 500, description: "empty page"));
-          }
         },
         onUrlChange: (change) {
           currentUrl = change.url ?? widget.link;
         },
         onWebResourceError: (error) {
           debugPrint("resource error");
-          _showErrorDialog(error);
         },
         onHttpError: (error) {
           debugPrint("http error");
@@ -119,27 +110,6 @@ abstract class AdWebViewScreenState<T extends AdWebViewScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadAd();
     });
-  }
-
-  void _showErrorDialog(WebResourceError error) {
-    if (!mounted) return;
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("에러 발생"),
-        content: Text("코드 : ${error.errorCode}\n"
-            "설명 : 게시물이 삭제되었거나 잘 못 됐습니다."),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text("확인"),
-          ),
-        ],
-      ),
-    );
   }
 
   @override
