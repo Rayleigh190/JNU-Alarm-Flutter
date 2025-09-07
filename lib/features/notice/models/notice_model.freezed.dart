@@ -222,6 +222,7 @@ mixin _$NoticeModel {
   String get link => throw _privateConstructorUsedError;
   DateTime get created_at => throw _privateConstructorUsedError;
   int get is_read => throw _privateConstructorUsedError;
+  int get is_bookmarked => throw _privateConstructorUsedError;
 
   /// Serializes this NoticeModel to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -245,7 +246,8 @@ abstract class $NoticeModelCopyWith<$Res> {
       String body,
       String link,
       DateTime created_at,
-      int is_read});
+      int is_read,
+      int is_bookmarked});
 }
 
 /// @nodoc
@@ -269,6 +271,7 @@ class _$NoticeModelCopyWithImpl<$Res, $Val extends NoticeModel>
     Object? link = null,
     Object? created_at = null,
     Object? is_read = null,
+    Object? is_bookmarked = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -295,6 +298,10 @@ class _$NoticeModelCopyWithImpl<$Res, $Val extends NoticeModel>
           ? _value.is_read
           : is_read // ignore: cast_nullable_to_non_nullable
               as int,
+      is_bookmarked: null == is_bookmarked
+          ? _value.is_bookmarked
+          : is_bookmarked // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -313,7 +320,8 @@ abstract class _$$NoticeModelImplCopyWith<$Res>
       String body,
       String link,
       DateTime created_at,
-      int is_read});
+      int is_read,
+      int is_bookmarked});
 }
 
 /// @nodoc
@@ -335,6 +343,7 @@ class __$$NoticeModelImplCopyWithImpl<$Res>
     Object? link = null,
     Object? created_at = null,
     Object? is_read = null,
+    Object? is_bookmarked = null,
   }) {
     return _then(_$NoticeModelImpl(
       id: null == id
@@ -361,6 +370,10 @@ class __$$NoticeModelImplCopyWithImpl<$Res>
           ? _value.is_read
           : is_read // ignore: cast_nullable_to_non_nullable
               as int,
+      is_bookmarked: null == is_bookmarked
+          ? _value.is_bookmarked
+          : is_bookmarked // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -374,7 +387,8 @@ class _$NoticeModelImpl implements _NoticeModel {
       required this.body,
       required this.link,
       required this.created_at,
-      this.is_read = 0});
+      this.is_read = 0,
+      this.is_bookmarked = 0});
 
   factory _$NoticeModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$NoticeModelImplFromJson(json);
@@ -392,10 +406,13 @@ class _$NoticeModelImpl implements _NoticeModel {
   @override
   @JsonKey()
   final int is_read;
+  @override
+  @JsonKey()
+  final int is_bookmarked;
 
   @override
   String toString() {
-    return 'NoticeModel(id: $id, title: $title, body: $body, link: $link, created_at: $created_at, is_read: $is_read)';
+    return 'NoticeModel(id: $id, title: $title, body: $body, link: $link, created_at: $created_at, is_read: $is_read, is_bookmarked: $is_bookmarked)';
   }
 
   @override
@@ -409,13 +426,15 @@ class _$NoticeModelImpl implements _NoticeModel {
             (identical(other.link, link) || other.link == link) &&
             (identical(other.created_at, created_at) ||
                 other.created_at == created_at) &&
-            (identical(other.is_read, is_read) || other.is_read == is_read));
+            (identical(other.is_read, is_read) || other.is_read == is_read) &&
+            (identical(other.is_bookmarked, is_bookmarked) ||
+                other.is_bookmarked == is_bookmarked));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, title, body, link, created_at, is_read);
+  int get hashCode => Object.hash(
+      runtimeType, id, title, body, link, created_at, is_read, is_bookmarked);
 
   /// Create a copy of NoticeModel
   /// with the given fields replaced by the non-null parameter values.
@@ -440,7 +459,8 @@ abstract class _NoticeModel implements NoticeModel {
       required final String body,
       required final String link,
       required final DateTime created_at,
-      final int is_read}) = _$NoticeModelImpl;
+      final int is_read,
+      final int is_bookmarked}) = _$NoticeModelImpl;
 
   factory _NoticeModel.fromJson(Map<String, dynamic> json) =
       _$NoticeModelImpl.fromJson;
@@ -457,6 +477,8 @@ abstract class _NoticeModel implements NoticeModel {
   DateTime get created_at;
   @override
   int get is_read;
+  @override
+  int get is_bookmarked;
 
   /// Create a copy of NoticeModel
   /// with the given fields replaced by the non-null parameter values.

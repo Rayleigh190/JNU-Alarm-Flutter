@@ -32,6 +32,7 @@ _$NoticeModelImpl _$$NoticeModelImplFromJson(Map<String, dynamic> json) =>
       link: json['link'] as String,
       created_at: DateTime.parse(json['created_at'] as String),
       is_read: (json['is_read'] as num?)?.toInt() ?? 0,
+      is_bookmarked: (json['is_bookmarked'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$$NoticeModelImplToJson(_$NoticeModelImpl instance) =>
@@ -42,4 +43,5 @@ Map<String, dynamic> _$$NoticeModelImplToJson(_$NoticeModelImpl instance) =>
       'link': instance.link,
       'created_at': instance.created_at.toIso8601String(),
       'is_read': instance.is_read,
+      'is_bookmarked': instance.is_bookmarked,
     };

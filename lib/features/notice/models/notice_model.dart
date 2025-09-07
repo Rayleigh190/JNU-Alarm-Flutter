@@ -24,6 +24,7 @@ class NoticeModel with _$NoticeModel {
     required String link,
     required DateTime created_at,
     @Default(0) int is_read,
+    @Default(0) int is_bookmarked,
   }) = _NoticeModel;
 
   factory NoticeModel.fromJson(Map<String, Object?> json) =>

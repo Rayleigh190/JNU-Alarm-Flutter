@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:jnu_alarm/features/notice/models/notice_model.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -19,7 +21,13 @@ class DatabaseHelper {
           )''',
         );
       },
-      version: 1,
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute(
+              "ALTER TABLE notices ADD COLUMN is_bookmarked INTEGER DEFAULT 0");
+        }
+      },
+      version: 2,
     );
   }
 
@@ -27,13 +35,32 @@ class DatabaseHelper {
     return _initDatabase();
   }
 
-  static Future<List<NoticeModel>> fetchNotices(int offset, int limit) async {
+  static Future<List<NoticeModel>> fetchNotices(int offset, int limit,
+      {bool? isBookmarked, bool? isRead}) async {
     final db = await database;
+
+    final List<String> conditions = [];
+    final List<Object?> args = [];
+
+    if (isBookmarked != null) {
+      conditions.add("is_bookmarked = ?");
+      args.add(isBookmarked ? 1 : 0);
+    }
+
+    if (isRead != null) {
+      conditions.add("is_read = ?");
+      args.add(isRead ? 1 : 0);
+    }
+
+    final where = conditions.isNotEmpty ? conditions.join(" AND ") : null;
+
     final List<Map<String, dynamic>> maps = await db.query(
       'notices',
       orderBy: 'id DESC',
       limit: limit,
       offset: offset,
+      where: where,
+      whereArgs: args,
     );
 
     return List.generate(maps.length, (i) => NoticeModel.fromJson(maps[i]));
