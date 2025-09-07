@@ -236,11 +236,13 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
                           } else if (item is NoticeModel) {
                             if (noticesNotifier.isEditMode) {
                               return NoticeTile(
+                                id: item.id,
                                 title: item.title,
                                 body: item.body,
                                 link: item.link,
                                 createdAt: item.created_at,
                                 isRead: item.is_read == 1,
+                                isBookmarked: item.is_bookmarked == 1,
                                 isEditMode: true,
                                 onDeleteTap: () {
                                   _showAlertDialog(context, () {
@@ -256,11 +258,13 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
                               onTap: () => _onTapNoticeTile(
                                   item.title, item.link, item.body, item.id),
                               child: NoticeTile(
+                                id: item.id,
                                 title: item.title,
                                 body: item.body,
                                 link: item.link,
                                 createdAt: item.created_at,
                                 isRead: item.is_read == 1,
+                                isBookmarked: item.is_bookmarked == 1,
                               ),
                             );
                           }

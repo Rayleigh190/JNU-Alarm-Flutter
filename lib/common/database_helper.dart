@@ -94,6 +94,16 @@ class DatabaseHelper {
     );
   }
 
+  static Future<int> updateNoticeBookmarkStatus(int id, int status) async {
+    final db = await database;
+    return await db.update(
+      'notices',
+      {'is_bookmarked': status == 1 ? 0 : 1},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
   static Future<void> deleteDatabase() async {
     final path = join(await getDatabasesPath(), 'notices.db');
     await databaseFactory.deleteDatabase(path);

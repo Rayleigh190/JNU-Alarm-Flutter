@@ -104,6 +104,18 @@ class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
       }).toList();
     });
   }
+
+  Future<void> toggleBookmark(int id, int status) async {
+    await DatabaseHelper.updateNoticeBookmarkStatus(id, status);
+    state = state.whenData((notices) {
+      return notices.map((notice) {
+        if (notice is NoticeModel && notice.id == id) {
+          return notice.copyWith(is_bookmarked: status == 1 ? 0 : 1);
+        }
+        return notice;
+      }).toList();
+    });
+  }
 }
 
 final noticeProvider = AsyncNotifierProvider<NoticeViewModel, List<dynamic>>(
