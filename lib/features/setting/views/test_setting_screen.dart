@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:jnu_alarm/common/database_helper.dart';
+import 'package:jnu_alarm/constants/gaps.dart';
+import 'package:jnu_alarm/features/notice/models/notice_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TestSettingScreen extends ConsumerStatefulWidget {
@@ -45,6 +48,40 @@ class _TestSettingScreenState extends ConsumerState<TestSettingScreen> {
                       DateTime.now()
                           .subtract(const Duration(days: 5))
                           .toString());
+                  if (context.mounted) showSnackBar(context, "success");
+                } catch (e) {
+                  if (context.mounted) showSnackBar(context, e.toString());
+                }
+              },
+            ),
+            Gaps.v5,
+            CupertinoButton.filled(
+              child: const Text("알림내역 1000개 생성"),
+              onPressed: () async {
+                try {
+                  for (int i = 0; i < 1000; i++) {
+                    await DatabaseHelper.insertNotice(
+                      NoticeModel(
+                        id: i + 1,
+                        title: "title${i + 1}",
+                        body: "body${i + 1}",
+                        link: "https://google.com",
+                        created_at: DateTime.now(),
+                      ),
+                    );
+                  }
+                  if (context.mounted) showSnackBar(context, "success");
+                } catch (e) {
+                  if (context.mounted) showSnackBar(context, e.toString());
+                }
+              },
+            ),
+            Gaps.v5,
+            CupertinoButton.filled(
+              child: const Text("알림내역 모두 제거"),
+              onPressed: () async {
+                try {
+                  await DatabaseHelper.deleteDatabase();
                   if (context.mounted) showSnackBar(context, "success");
                 } catch (e) {
                   if (context.mounted) showSnackBar(context, e.toString());
