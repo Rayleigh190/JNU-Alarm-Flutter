@@ -179,20 +179,31 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
             onRefresh: _onRefresh,
             child: CupertinoScrollbar(
               controller: _scrollController,
-              child: ListView(
+              child: CustomScrollView(
                 controller: _scrollController,
                 physics: const AlwaysScrollableScrollPhysics(),
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: Sizes.size20),
-                    child: NoticeHeader(),
+                slivers: [
+                  // 헤더
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        Sizes.size20,
+                        appBarHeight + Sizes.size5,
+                        Sizes.size20,
+                        Sizes.size5,
+                      ),
+                      child: const NoticeHeader(),
+                    ),
                   ),
+
+                  // 데이터 처리
                   notices.when(
                     data: (data) {
                       if (data.isEmpty) {
-                        return SizedBox(
-                          height: MediaQuery.of(context).size.height / 2,
-                          child: const Center(
+                        return const SliverFillRemaining(
+                          hasScrollBody: false,
+                          child: Align(
+                            alignment: Alignment(0, -0.25),
                             child: Text(
                               "설정에서 알림을 구독하세요!\n\n새로운 알림이 오면 이곳에 저장됩니다.",
                               textAlign: TextAlign.center,
@@ -204,87 +215,86 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
                           ),
                         );
                       }
-                      return ListView.separated(
-                        padding: const EdgeInsets.fromLTRB(
-                          Sizes.size20,
-                          Sizes.size5,
-                          Sizes.size20,
-                          0,
-                        ),
-                        shrinkWrap: true, // 높이를 내용물만큼 줄이기
-                        // 스크롤 막기 (바깥 ListView가 담당)
-                        physics: const NeverScrollableScrollPhysics(),
+
+                      return SliverList.separated(
                         itemBuilder: (context, index) {
                           if (index == data.length) {
                             noticesNotifier.fetchMoreNotices();
                             return noticesNotifier.hasMore
-                                ? const Center(
-                                    child: Padding(
-                                      padding:
-                                          EdgeInsets.only(top: Sizes.size10),
+                                ? const Padding(
+                                    padding: EdgeInsets.only(top: Sizes.size10),
+                                    child: Center(
                                       child:
                                           CircularProgressIndicator.adaptive(),
                                     ),
                                   )
-                                : Container();
+                                : const SizedBox.shrink();
                           }
+
                           final item = data[index];
                           if (item is String) {
-                            return NoticeDivider(
-                              text: item,
-                            );
+                            return NoticeDivider(text: item);
                           } else if (item is NoticeModel) {
                             if (noticesNotifier.isEditMode) {
-                              return NoticeTile(
-                                id: item.id,
-                                title: item.title,
-                                body: item.body,
-                                link: item.link,
-                                createdAt: item.created_at,
-                                isRead: item.is_read == 1,
-                                isBookmarked: item.is_bookmarked == 1,
-                                isEditMode: true,
-                                onDeleteTap: () {
-                                  _showAlertDialog(context, () {
-                                    noticesNotifier.deleteNotice(
-                                      index,
-                                      item.id,
-                                    );
-                                  });
-                                },
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: Sizes.size20),
+                                child: NoticeTile(
+                                  id: item.id,
+                                  title: item.title,
+                                  body: item.body,
+                                  link: item.link,
+                                  createdAt: item.created_at,
+                                  isRead: item.is_read == 1,
+                                  isBookmarked: item.is_bookmarked == 1,
+                                  isEditMode: true,
+                                  onDeleteTap: () {
+                                    _showAlertDialog(context, () {
+                                      noticesNotifier.deleteNotice(
+                                          index, item.id);
+                                    });
+                                  },
+                                ),
                               );
                             }
                             return GestureDetector(
                               onTap: () => _onTapNoticeTile(
-                                  item.title, item.link, item.body, item.id),
-                              child: NoticeTile(
-                                id: item.id,
-                                title: item.title,
-                                body: item.body,
-                                link: item.link,
-                                createdAt: item.created_at,
-                                isRead: item.is_read == 1,
-                                isBookmarked: item.is_bookmarked == 1,
+                                item.title,
+                                item.link,
+                                item.body,
+                                item.id,
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: Sizes.size20),
+                                child: NoticeTile(
+                                  id: item.id,
+                                  title: item.title,
+                                  body: item.body,
+                                  link: item.link,
+                                  createdAt: item.created_at,
+                                  isRead: item.is_read == 1,
+                                  isBookmarked: item.is_bookmarked == 1,
+                                ),
                               ),
                             );
                           }
-                          return item;
+                          return const SizedBox.shrink();
                         },
-                        separatorBuilder: (context, index) {
-                          return Gaps.v5;
-                        },
+                        separatorBuilder: (context, index) => Gaps.v5,
                         itemCount: data.length + 1,
                       );
                     },
-                    error: (error, stackTrace) => SizedBox(
-                      height: MediaQuery.of(context).size.height / 2,
+                    error: (error, stackTrace) => SliverFillRemaining(
+                      hasScrollBody: false,
                       child: Center(
                         child: Text(error.toString()),
                       ),
                     ),
-                    loading: () => SizedBox(
-                      height: MediaQuery.of(context).size.height / 2,
-                      child: const Center(
+                    loading: () => const SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Align(
+                        alignment: Alignment(0, -0.25),
                         child: CircularProgressIndicator.adaptive(),
                       ),
                     ),
@@ -293,6 +303,8 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
               ),
             ),
           ),
+
+          // 스크롤 업 버튼
           Positioned(
             right: Sizes.size10,
             bottom: Sizes.size64,
@@ -314,9 +326,7 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
                       Radius.circular(50),
                     ),
                   ),
-                  child: const Icon(
-                    Icons.keyboard_arrow_up,
-                  ),
+                  child: const Icon(Icons.keyboard_arrow_up),
                 ),
               ),
             ),
