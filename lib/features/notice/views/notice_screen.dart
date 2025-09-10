@@ -140,198 +140,206 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
     final notices = ref.watch(noticeProvider);
     final noticesNotifier = ref.read(noticeProvider.notifier);
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: const Text(
-          "알림 내역",
-          style: TextStyle(fontWeight: FontWeight.w600),
-        ),
-        actions: [
-          noticesNotifier.isEditMode
-              ? TextButton(
-                  style: ButtonStyle(
-                    overlayColor:
-                        WidgetStateProperty.all(Colors.transparent), // 눌림 효과 제거
-                  ),
-                  child: const Text("완료",
-                      style: TextStyle(color: Colors.lightBlue)),
-                  onPressed: () {
-                    noticesNotifier.changeEditMode();
-                  },
-                )
-              : IconButton(
-                  splashColor: Colors.transparent,
-                  highlightColor: Colors.transparent,
-                  icon: const Icon(Icons.edit),
-                  onPressed: () {
-                    noticesNotifier.changeEditMode();
-                  },
-                )
-        ],
-      ),
-      body: Stack(
-        children: [
-          RefreshIndicator(
-            edgeOffset: appBarHeight,
-            color: Theme.of(context).primaryColor,
-            backgroundColor: const Color(0xFF323430),
-            onRefresh: _onRefresh,
-            child: CupertinoScrollbar(
-              controller: _scrollController,
-              child: CustomScrollView(
-                controller: _scrollController,
-                physics: const AlwaysScrollableScrollPhysics(),
-                slivers: [
-                  // 헤더
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(
-                        Sizes.size20,
-                        appBarHeight + Sizes.size5,
-                        Sizes.size20,
-                        Sizes.size5,
-                      ),
-                      child: const NoticeHeader(),
+    return GestureDetector(
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          title: const Text(
+            "알림 내역",
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
+          actions: [
+            noticesNotifier.isEditMode
+                ? TextButton(
+                    style: ButtonStyle(
+                      overlayColor: WidgetStateProperty.all(
+                          Colors.transparent), // 눌림 효과 제거
                     ),
-                  ),
+                    child: const Text("완료",
+                        style: TextStyle(color: Colors.lightBlue)),
+                    onPressed: () {
+                      noticesNotifier.changeEditMode();
+                    },
+                  )
+                : IconButton(
+                    splashColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    icon: const Icon(Icons.edit),
+                    onPressed: () {
+                      noticesNotifier.changeEditMode();
+                    },
+                  )
+          ],
+        ),
+        body: Stack(
+          children: [
+            RefreshIndicator(
+              edgeOffset: appBarHeight,
+              color: Theme.of(context).primaryColor,
+              backgroundColor: const Color(0xFF323430),
+              onRefresh: _onRefresh,
+              child: CupertinoScrollbar(
+                controller: _scrollController,
+                child: CustomScrollView(
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
+                  controller: _scrollController,
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  slivers: [
+                    // 헤더
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(
+                          Sizes.size20,
+                          appBarHeight + Sizes.size5,
+                          Sizes.size20,
+                          Sizes.size5,
+                        ),
+                        child: const NoticeHeader(),
+                      ),
+                    ),
 
-                  // 데이터 처리
-                  notices.when(
-                    data: (data) {
-                      if (data.isEmpty) {
-                        return const SliverFillRemaining(
-                          hasScrollBody: false,
-                          child: Align(
-                            alignment: Alignment(0, -0.25),
-                            child: Text(
-                              "설정에서 알림을 구독하세요!\n\n새로운 알림이 오면 이곳에 저장됩니다.",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                    // 데이터 처리
+                    notices.when(
+                      data: (data) {
+                        if (data.isEmpty) {
+                          return const SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Align(
+                              alignment: Alignment(0, -0.25),
+                              child: Text(
+                                "설정에서 알림을 구독하세요!\n\n새로운 알림이 오면 이곳에 저장됩니다.",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      }
+                          );
+                        }
 
-                      return SliverList.separated(
-                        itemBuilder: (context, index) {
-                          if (index == data.length) {
-                            noticesNotifier.fetchMoreNotices();
-                            return noticesNotifier.hasMore
-                                ? const Padding(
-                                    padding: EdgeInsets.only(top: Sizes.size10),
-                                    child: Center(
-                                      child:
-                                          CircularProgressIndicator.adaptive(),
-                                    ),
-                                  )
-                                : const SizedBox(height: 100);
-                          }
+                        return SliverList.separated(
+                          itemBuilder: (context, index) {
+                            if (index == data.length) {
+                              noticesNotifier.fetchMoreNotices();
+                              return noticesNotifier.hasMore
+                                  ? const Padding(
+                                      padding:
+                                          EdgeInsets.only(top: Sizes.size10),
+                                      child: Center(
+                                        child: CircularProgressIndicator
+                                            .adaptive(),
+                                      ),
+                                    )
+                                  : const SizedBox(height: 100);
+                            }
 
-                          final item = data[index];
-                          if (item is String) {
-                            return NoticeDivider(text: item);
-                          } else if (item is NoticeModel) {
-                            if (noticesNotifier.isEditMode) {
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: Sizes.size20),
-                                child: NoticeTile(
-                                  id: item.id,
-                                  title: item.title,
-                                  body: item.body,
-                                  link: item.link,
-                                  createdAt: item.created_at,
-                                  isRead: item.is_read == 1,
-                                  isBookmarked: item.is_bookmarked == 1,
-                                  isEditMode: true,
-                                  onDeleteTap: () {
-                                    _showAlertDialog(context, () {
-                                      noticesNotifier.deleteNotice(
-                                          index, item.id);
-                                    });
-                                  },
+                            final item = data[index];
+                            if (item is String) {
+                              return NoticeDivider(text: item);
+                            } else if (item is NoticeModel) {
+                              if (noticesNotifier.isEditMode) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: Sizes.size20),
+                                  child: NoticeTile(
+                                    id: item.id,
+                                    title: item.title,
+                                    body: item.body,
+                                    link: item.link,
+                                    createdAt: item.created_at,
+                                    isRead: item.is_read == 1,
+                                    isBookmarked: item.is_bookmarked == 1,
+                                    isEditMode: true,
+                                    onDeleteTap: () {
+                                      _showAlertDialog(context, () {
+                                        noticesNotifier.deleteNotice(
+                                            index, item.id);
+                                      });
+                                    },
+                                  ),
+                                );
+                              }
+                              return GestureDetector(
+                                onTap: () => _onTapNoticeTile(
+                                  item.title,
+                                  item.link,
+                                  item.body,
+                                  item.id,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: Sizes.size20),
+                                  child: NoticeTile(
+                                    id: item.id,
+                                    title: item.title,
+                                    body: item.body,
+                                    link: item.link,
+                                    createdAt: item.created_at,
+                                    isRead: item.is_read == 1,
+                                    isBookmarked: item.is_bookmarked == 1,
+                                  ),
                                 ),
                               );
                             }
-                            return GestureDetector(
-                              onTap: () => _onTapNoticeTile(
-                                item.title,
-                                item.link,
-                                item.body,
-                                item.id,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: Sizes.size20),
-                                child: NoticeTile(
-                                  id: item.id,
-                                  title: item.title,
-                                  body: item.body,
-                                  link: item.link,
-                                  createdAt: item.created_at,
-                                  isRead: item.is_read == 1,
-                                  isBookmarked: item.is_bookmarked == 1,
-                                ),
-                              ),
-                            );
-                          }
-                          return const SizedBox.shrink();
-                        },
-                        separatorBuilder: (context, index) => Gaps.v5,
-                        itemCount: data.length + 1,
-                      );
-                    },
-                    error: (error, stackTrace) => SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Center(
-                        child: Text(error.toString()),
+                            return const SizedBox.shrink();
+                          },
+                          separatorBuilder: (context, index) => Gaps.v5,
+                          itemCount: data.length + 1,
+                        );
+                      },
+                      error: (error, stackTrace) => SliverFillRemaining(
+                        hasScrollBody: false,
+                        child: Center(
+                          child: Text(error.toString()),
+                        ),
+                      ),
+                      loading: () => const SliverFillRemaining(
+                        hasScrollBody: false,
+                        child: Align(
+                          alignment: Alignment(0, -0.25),
+                          child: CircularProgressIndicator.adaptive(),
+                        ),
                       ),
                     ),
-                    loading: () => const SliverFillRemaining(
-                      hasScrollBody: false,
-                      child: Align(
-                        alignment: Alignment(0, -0.25),
-                        child: CircularProgressIndicator.adaptive(),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // 스크롤 업 버튼
-          Positioned(
-            right: Sizes.size10,
-            bottom: Sizes.size64,
-            child: AnimatedOpacity(
-              opacity: _showScrollUpBtn ? 1 : 0,
-              duration: const Duration(milliseconds: 150),
-              child: GestureDetector(
-                onTap: _tapScrollUpBtn,
-                child: Container(
-                  width: Sizes.size36,
-                  height: Sizes.size36,
-                  decoration: BoxDecoration(
-                    color: isDark ? const Color(0xFF323430) : Colors.white,
-                    border: Border.all(
-                      width: 0.5,
-                      color: isDark ? Colors.white10 : Colors.black26,
-                    ),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(50),
-                    ),
-                  ),
-                  child: const Icon(Icons.keyboard_arrow_up),
+                  ],
                 ),
               ),
             ),
-          ),
-        ],
+
+            // 스크롤 업 버튼
+            Positioned(
+              right: Sizes.size10,
+              bottom: Sizes.size64,
+              child: AnimatedOpacity(
+                opacity: _showScrollUpBtn ? 1 : 0,
+                duration: const Duration(milliseconds: 150),
+                child: GestureDetector(
+                  onTap: _tapScrollUpBtn,
+                  child: Container(
+                    width: Sizes.size36,
+                    height: Sizes.size36,
+                    decoration: BoxDecoration(
+                      color: isDark ? const Color(0xFF323430) : Colors.white,
+                      border: Border.all(
+                        width: 0.5,
+                        color: isDark ? Colors.white10 : Colors.black26,
+                      ),
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(50),
+                      ),
+                    ),
+                    child: const Icon(Icons.keyboard_arrow_up),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
