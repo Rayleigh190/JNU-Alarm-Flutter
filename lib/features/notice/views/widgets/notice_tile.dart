@@ -70,10 +70,8 @@ class _NoticeTileState extends ConsumerState<NoticeTile> {
           )
         ],
       ),
-      padding: const EdgeInsets.symmetric(
-        vertical: Sizes.size10,
-        horizontal: Sizes.size16,
-      ),
+      padding: const EdgeInsets.fromLTRB(
+          Sizes.size16, Sizes.size10, Sizes.size14, Sizes.size10),
       child: Row(
         children: [
           widget.isEditMode
@@ -129,13 +127,17 @@ class _NoticeTileState extends ConsumerState<NoticeTile> {
               ],
             ),
           ),
-          Gaps.h5,
+          Gaps.h3,
           GestureDetector(
-            child: Icon(
-              widget.isBookmarked
-                  ? Icons.star_rounded
-                  : Icons.star_border_rounded,
-              color: widget.isBookmarked ? Colors.amber : Colors.grey.shade400,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(2, 3, 2, 3),
+              child: Icon(
+                widget.isBookmarked
+                    ? Icons.star_rounded
+                    : Icons.star_border_rounded,
+                color:
+                    widget.isBookmarked ? Colors.amber : Colors.grey.shade400,
+              ),
             ),
             onTap: () {
               ref
