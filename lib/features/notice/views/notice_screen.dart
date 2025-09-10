@@ -228,7 +228,7 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
                                           CircularProgressIndicator.adaptive(),
                                     ),
                                   )
-                                : const SizedBox.shrink();
+                                : const SizedBox(height: 100);
                           }
 
                           final item = data[index];
