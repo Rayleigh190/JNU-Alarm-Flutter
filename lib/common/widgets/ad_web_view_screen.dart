@@ -204,10 +204,23 @@ abstract class AdWebViewScreenState<T extends AdWebViewScreen>
             ),
             IconButton(
               onPressed: () async {
+                Rect sharePosition = Rect.fromLTWH(
+                  0,
+                  0,
+                  MediaQuery.of(context).size.width,
+                  MediaQuery.of(context).size.height / 2,
+                );
+
                 if (widget.body != null) {
-                  await Share.share("[전대알림]\n${widget.body}\n$currentUrl");
+                  await Share.share(
+                    "[전대알림]\n${widget.body}\n$currentUrl",
+                    sharePositionOrigin: sharePosition,
+                  );
                 } else {
-                  await Share.share("[전대알림]\n$currentUrl");
+                  await Share.share(
+                    "[전대알림]\n$currentUrl",
+                    sharePositionOrigin: sharePosition,
+                  );
                 }
               },
               icon: Icon(
