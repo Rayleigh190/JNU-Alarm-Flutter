@@ -33,5 +33,14 @@ class _CommonAdWebViewScreenState
   }
 
   @override
-  void runJavaScript(WebViewController controller) {}
+  void runJavaScript(WebViewController controller) {
+    if (widget.link.contains("mrestaurant")) {
+      controller.runJavaScript('''
+        const element = document.querySelector('div.svtit');
+        if (element) {
+          element.remove();
+        }
+      ''');
+    }
+  }
 }

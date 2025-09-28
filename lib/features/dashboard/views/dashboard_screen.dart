@@ -239,7 +239,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                     child: GestureDetector(
                       onTap: () => _onTapWeb(
                         "학식메뉴",
-                        "https://today.jnu.ac.kr/Program/MealPlan.aspx",
+                        "https://m.jnu.ac.kr/mstaff/mrestaurant/default.aspx",
                         "학식메뉴를 확인해 보세요!",
                       ),
                       child: const DashboardMainButton(
