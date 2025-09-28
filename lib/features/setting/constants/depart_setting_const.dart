@@ -560,6 +560,16 @@ const SettingSection depart16SettingSection = SettingSection(
   ],
 );
 
+const SettingSection depart17SettingSection = SettingSection(
+  title: "대외협력처",
+  tiles: [
+    SwitchTile(
+      title: "국제협력과",
+      topic: "international",
+    ),
+  ],
+);
+
 const List<SettingSection> departSettingSectionGroup = [
   depart1SettingSection,
   depart2SettingSection,
@@ -577,4 +587,5 @@ const List<SettingSection> departSettingSectionGroup = [
   depart14SettingSection,
   depart15SettingSection,
   depart16SettingSection,
+  depart17SettingSection,
 ];
