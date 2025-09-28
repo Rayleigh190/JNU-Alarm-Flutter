@@ -19,6 +19,10 @@ const SettingSection businessSettingSection = SettingSection(
       title: "반도체특성화대학사업단",
       topic: "semi",
     ),
+    SwitchTile(
+      title: "이차전지특성화대학사업단",
+      topic: "battery",
+    ),
   ],
 );
 
