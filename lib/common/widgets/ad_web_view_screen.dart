@@ -81,7 +81,7 @@ abstract class AdWebViewScreenState<T extends AdWebViewScreen>
             _isLoading = true;
           });
         },
-        onPageFinished: (String url) async {
+        onPageFinished: (String url) {
           runJavaScript(_controller);
           setState(() {
             _isLoading = false;
