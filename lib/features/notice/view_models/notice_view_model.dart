@@ -107,6 +107,20 @@ class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
     });
   }
 
+  Future<void> hitNotice(int noticeID) async {
+    final prefs = await SharedPreferences.getInstance();
+    final uuid = prefs.getString("uuid");
+
+    try {
+      if (uuid != null) {
+        NoticeRepository.hitNotice(noticeID, uuid);
+      }
+    } on ApiInternalServerException catch (e) {
+      debugPrint(e.message);
+    }
+    return;
+  }
+
   Future<void> toggleBookmark(int id, int status) async {
     await DatabaseHelper.updateNoticeBookmarkStatus(id, status);
     state = state.whenData((notices) {

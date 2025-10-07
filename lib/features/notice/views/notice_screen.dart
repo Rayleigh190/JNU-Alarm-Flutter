@@ -37,6 +37,7 @@ class _NoticeScreenState extends ConsumerState<NoticeScreen>
   void _onTapNoticeTile(String title, String link, String body, int id) {
     if (link.isEmpty) return;
     ref.watch(noticeProvider.notifier).setAsRead(id);
+    ref.watch(noticeProvider.notifier).hitNotice(id);
     Navigator.pushNamed(
       context,
       NoticeWebViewScreen.routeName,

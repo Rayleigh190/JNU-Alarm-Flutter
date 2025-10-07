@@ -28,4 +28,24 @@ class NoticeRepository {
     }
     return null;
   }
+
+  static Future<void> hitNotice(int noticeID, String uuid) async {
+    final url = Uri.parse('$baseUrl/alarm/notification/$noticeID/hit/');
+    final headers = {
+      'X-Device-ID': uuid,
+    };
+
+    try {
+      final response = await http.post(url, headers: headers);
+      if (response.statusCode == 200) {
+        debugPrint("공지 조회수 증가 요청 성공 > ID : $noticeID");
+        return;
+      } else if (response.statusCode >= 500) {
+        throw const ApiInternalServerException("서버와 연결이 끊겼습니다.");
+      }
+    } on SocketException catch (e) {
+      debugPrint(e.message);
+    }
+    return;
+  }
 }
