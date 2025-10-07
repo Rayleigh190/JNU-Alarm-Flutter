@@ -2,7 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/common/fcm/repos/fcm_ropo.dart';
 import 'package:jnu_alarm/common/network/network_connection_check.dart';
 import 'package:jnu_alarm/features/onboarding/models/init_state_model.dart';
+import 'package:jnu_alarm/features/onboarding/view_models/update_list.dart';
 import 'package:jnu_alarm/features/onboarding/view_models/updates/build12.dart';
+import 'package:jnu_alarm/features/onboarding/view_models/updates/build34.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -25,12 +27,15 @@ class InitViewModel extends AsyncNotifier<InitState> {
       }
       // 추가로 해야 될 작업
       await build12Update();
+      // UUID 생성 및 저장
+      await build34Update();
 
       await prefs.setInt('build_number', currentBuildNumber);
       return InitState(isFirstRun: true, isUpdated: false);
     } else if (savedBuildNumber < currentBuildNumber) {
-      // await checkNetworkConnection();
+      await checkNetworkConnection();
       // 앱 업데이트 실행
+      await updateApp(savedBuildNumber);
       await prefs.setInt('build_number', currentBuildNumber);
       return InitState(isFirstRun: false, isUpdated: true);
     } else {
