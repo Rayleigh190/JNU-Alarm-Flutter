@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/common/error/exceptions/custom_exceptions.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
+import 'package:jnu_alarm/constants/sizes.dart';
 import 'package:jnu_alarm/features/main/main_screen.dart';
 import 'package:jnu_alarm/features/onboarding/view_models/init_view_model.dart';
 
@@ -51,33 +52,67 @@ class _InitScreenState extends ConsumerState {
   Widget build(BuildContext context) {
     return ref.watch(initProvider).when(
       data: (data) {
-        if (data.isFirstRun) {
-          debugPrint("InitScreen - isFirstRun");
-          replacementToMainScreen(context);
-        } else if (data.isUpdated) {
-          debugPrint("InitScreen - isUpdated");
-          replacementToMainScreen(context);
-        } else {
-          debugPrint("InitScreen - NoFirstRun & NoUpdated");
-          replacementToMainScreen(context);
-        }
-        return const Scaffold();
-      },
-      loading: () {
-        return Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+        if (data.loadingMeassage != null) {
+          return Scaffold(
+            body: Column(
               children: [
-                const Text("앱 설정 중..."),
-                Gaps.v14,
+                const SizedBox(
+                  height: 120,
+                ),
+                Text(
+                  "${data.loadingMeassage}하는 중이에요.\n화면을 나가지 말아 주세요!",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 23.0,
+                  ),
+                ),
+                Gaps.v80,
                 CircularProgressIndicator(
                   color: Theme.of(context).primaryColor,
                 ),
+                Gaps.v80,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: Sizes.size20),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: Sizes.size20,
+                      horizontal: Sizes.size10,
+                    ),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ),
+                    child: const Row(
+                      children: [
+                        Text("💡", style: TextStyle(fontSize: 30)),
+                        Gaps.h10,
+                        Flexible(
+                          child: Text(
+                              "필요한 기능이 있으신가요? 설정 > 문의 및 제안하기를 통해 여러분의 목소리를 들려주세요!"),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
-          ),
-        );
+          );
+        } else {
+          if (data.isFirstRun == true) {
+            debugPrint("InitScreen - isFirstRun");
+            replacementToMainScreen(context);
+          } else if (data.isUpdated == true) {
+            debugPrint("InitScreen - isUpdated");
+            replacementToMainScreen(context);
+          } else {
+            debugPrint("InitScreen - NoFirstRun & NoUpdated");
+            replacementToMainScreen(context);
+          }
+          return const Scaffold();
+        }
       },
       error: (error, stackTrace) {
         if (error is NoNetworkConnectivityException) {
@@ -95,6 +130,9 @@ class _InitScreenState extends ConsumerState {
           error.toString(),
           "알 수 없는 오류입니다. 개발자에게 문의하세요.",
         );
+      },
+      loading: () {
+        return const Scaffold();
       },
     );
   }

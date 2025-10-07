@@ -18,6 +18,7 @@ class InitViewModel extends AsyncNotifier<InitState> {
     final currentBuildNumber = int.parse(packageInfo.buildNumber);
 
     if (savedBuildNumber == null) {
+      state = AsyncValue.data(InitState(loadingMeassage: "초기 설정"));
       // 인터넷 연결 확인
       await checkNetworkConnection();
       // 앱 최초 실행
@@ -33,6 +34,7 @@ class InitViewModel extends AsyncNotifier<InitState> {
       await prefs.setInt('build_number', currentBuildNumber);
       return InitState(isFirstRun: true, isUpdated: false);
     } else if (savedBuildNumber < currentBuildNumber) {
+      state = AsyncValue.data(InitState(loadingMeassage: "업데이트"));
       await checkNetworkConnection();
       // 앱 업데이트 실행
       await updateApp(savedBuildNumber);

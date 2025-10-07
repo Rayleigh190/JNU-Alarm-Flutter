@@ -1,6 +1,7 @@
 class InitState {
-  final bool isFirstRun;
-  final bool isUpdated;
+  final bool? isFirstRun;
+  final bool? isUpdated;
+  final String? loadingMeassage;
 
-  InitState({required this.isFirstRun, required this.isUpdated});
+  InitState({this.isFirstRun, this.isUpdated, this.loadingMeassage});
 }
