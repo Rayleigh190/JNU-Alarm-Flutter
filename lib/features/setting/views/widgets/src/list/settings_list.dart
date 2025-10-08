@@ -99,10 +99,6 @@ class SettingsList extends StatelessWidget {
             'You can\'t use the DevicePlatform.device in this context. '
             'Incorrect platform: SettingsList.calculateDefaultPadding',
           );
-        default:
-          return EdgeInsets.symmetric(
-            horizontal: padding,
-          );
       }
     }
     switch (platform) {
