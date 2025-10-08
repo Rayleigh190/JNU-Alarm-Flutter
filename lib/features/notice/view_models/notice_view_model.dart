@@ -108,6 +108,7 @@ class NoticeViewModel extends AsyncNotifier<List<dynamic>> {
   }
 
   Future<void> hitNotice(int noticeID) async {
+    if (_repository.isDevModeActivated()) return;
     final prefs = await SharedPreferences.getInstance();
     final uuid = prefs.getString("uuid");
 
