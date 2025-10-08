@@ -66,7 +66,8 @@ class _MainScreenState extends ConsumerState<MainScreen>
     // 1. 새로운 알림내역 가져와서 db에 저장
     await noticeProvider_.checkNewNoticeAndSave();
     // 2. 읽음처리
-    await noticeProvider_.setAsRead(id);
+    noticeProvider_.setAsRead(id);
+    noticeProvider_.hitNotice(id);
 
     if (link.isEmpty) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
