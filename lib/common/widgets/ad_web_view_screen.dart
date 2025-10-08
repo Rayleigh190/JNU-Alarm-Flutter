@@ -91,7 +91,10 @@ abstract class AdWebViewScreenState<T extends AdWebViewScreen>
           currentUrl = change.url ?? widget.link;
         },
         onWebResourceError: (error) {
-          debugPrint("resource error");
+          setState(() {
+            _isLoading = false;
+          });
+          debugPrint("resource error : ${error.description}");
         },
         onHttpError: (error) {
           debugPrint("http error");
