@@ -163,7 +163,7 @@ class MyApp extends StatelessWidget {
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
           },
         ),
-        dialogTheme: const DialogTheme(
+        dialogTheme: const DialogThemeData(
           barrierColor: Colors.white10,
         ),
         progressIndicatorTheme:
