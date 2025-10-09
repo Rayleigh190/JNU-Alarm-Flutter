@@ -12,6 +12,7 @@ import 'package:jnu_alarm/features/notice/view_models/notice_view_model.dart';
 import 'package:jnu_alarm/features/notice/views/notice_screen.dart';
 import 'package:jnu_alarm/common/fcm/repos/fcm_ropo.dart';
 import 'package:jnu_alarm/features/setting/views/main_setting_screen.dart';
+import 'package:jnu_alarm/features/trend/views/trend_screen.dart';
 
 class MainScreen extends ConsumerStatefulWidget {
   static const routeName = "/main";
@@ -31,6 +32,7 @@ class _MainScreenState extends ConsumerState<MainScreen>
 
   final List<Widget> _page = [
     const NoticeScreen(),
+    const TrendScreen(),
     const DashboardScreen(),
     const MainSettingScreen(),
   ];
@@ -160,23 +162,30 @@ class _MainScreenState extends ConsumerState<MainScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           BottomNavBtn(
-                            icon: Icons.alarm,
+                            icon: Icons.notifications,
                             currentIndex: _currentIndex,
                             index: 0,
                             onTap: (index) => _onTap(index),
                           ),
                           Gaps.h10,
                           BottomNavBtn(
-                            icon: Icons.space_dashboard_rounded,
+                            icon: Icons.insights,
                             currentIndex: _currentIndex,
                             index: 1,
                             onTap: (index) => _onTap(index),
                           ),
                           Gaps.h10,
                           BottomNavBtn(
-                            icon: Icons.settings,
+                            icon: Icons.space_dashboard_rounded,
                             currentIndex: _currentIndex,
                             index: 2,
+                            onTap: (index) => _onTap(index),
+                          ),
+                          Gaps.h10,
+                          BottomNavBtn(
+                            icon: Icons.settings,
+                            currentIndex: _currentIndex,
+                            index: 3,
                             onTap: (index) => _onTap(index),
                           ),
                         ],
@@ -201,6 +210,8 @@ double bottomNavBtnAnimatedPositionedLeftValue(int currentIndex) {
       return 46;
     case 2:
       return 92;
+    case 3:
+      return 92 + 46;
     default:
       return 0;
   }
