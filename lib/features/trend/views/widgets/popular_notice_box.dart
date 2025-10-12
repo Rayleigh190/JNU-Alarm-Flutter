@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jnu_alarm/common/utils.dart';
+import 'package:jnu_alarm/common/widgets/notice_web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
+import 'package:jnu_alarm/features/notice/models/notice_model.dart';
+import 'package:jnu_alarm/features/notice/view_models/notice_view_model.dart';
 import 'package:jnu_alarm/features/trend/models/popular_notice_item_model.dart';
 import 'package:jnu_alarm/features/trend/views/widgets/popular_notice_item.dart';
 
-class PopularNoticesBox extends StatelessWidget {
+class PopularNoticesBox extends ConsumerStatefulWidget {
   final String title;
   final List<PopularNoticeItemModel> items;
   final bool? isLoading;
@@ -18,13 +22,34 @@ class PopularNoticesBox extends StatelessWidget {
   });
 
   @override
+  ConsumerState<PopularNoticesBox> createState() => _PopularNoticesBoxState();
+}
+
+class _PopularNoticesBoxState extends ConsumerState<PopularNoticesBox> {
+  void _onTapNotice(NoticeModel notice) {
+    if (notice.link.isEmpty) return;
+    ref.watch(noticeProvider.notifier).hitNotice(notice.id);
+    Navigator.pushNamed(
+      context,
+      NoticeWebViewScreen.routeName,
+      arguments: WebViewScreenArgs(
+        title: notice.title,
+        link: notice.link,
+        body: notice.body,
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final items = widget.items;
+    final isLoading = widget.isLoading ?? false;
+
     return Column(
-      // mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          title,
+          widget.title,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: Sizes.size16,
@@ -38,39 +63,59 @@ class PopularNoticesBox extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  PopularNoticeItem(
-                    rank: "1",
-                    body: items.isNotEmpty ? items[0].body : "-",
-                    hits: items.isNotEmpty ? items[0].hits : 0,
+                  GestureDetector(
+                    onTap: () =>
+                        items.isNotEmpty ? _onTapNotice(items[0].notice) : null,
+                    child: PopularNoticeItem(
+                      rank: "1",
+                      body: items.isNotEmpty ? items[0].notice.body : "-",
+                      hits: items.isNotEmpty ? items[0].hits : 0,
+                    ),
                   ),
                   Gaps.v10,
-                  PopularNoticeItem(
-                    rank: "2",
-                    body: items.length > 1 ? items[1].body : "-",
-                    hits: items.length > 1 ? items[1].hits : 0,
+                  GestureDetector(
+                    onTap: () =>
+                        items.length > 1 ? _onTapNotice(items[1].notice) : null,
+                    child: PopularNoticeItem(
+                      rank: "2",
+                      body: items.length > 1 ? items[1].notice.body : "-",
+                      hits: items.length > 1 ? items[1].hits : 0,
+                    ),
                   ),
                   Gaps.v10,
-                  PopularNoticeItem(
-                    rank: "3",
-                    body: items.length > 2 ? items[2].body : "-",
-                    hits: items.length > 2 ? items[2].hits : 0,
+                  GestureDetector(
+                    onTap: () =>
+                        items.length > 2 ? _onTapNotice(items[2].notice) : null,
+                    child: PopularNoticeItem(
+                      rank: "3",
+                      body: items.length > 2 ? items[2].notice.body : "-",
+                      hits: items.length > 2 ? items[2].hits : 0,
+                    ),
                   ),
                   Gaps.v10,
-                  PopularNoticeItem(
-                    rank: "4",
-                    body: items.length > 3 ? items[3].body : "-",
-                    hits: items.length > 3 ? items[3].hits : 0,
+                  GestureDetector(
+                    onTap: () =>
+                        items.length > 3 ? _onTapNotice(items[3].notice) : null,
+                    child: PopularNoticeItem(
+                      rank: "4",
+                      body: items.length > 3 ? items[3].notice.body : "-",
+                      hits: items.length > 3 ? items[3].hits : 0,
+                    ),
                   ),
                   Gaps.v10,
-                  PopularNoticeItem(
-                    rank: "5",
-                    body: items.length > 4 ? items[4].body : "-",
-                    hits: items.length > 4 ? items[4].hits : 0,
+                  GestureDetector(
+                    onTap: () =>
+                        items.length > 4 ? _onTapNotice(items[4].notice) : null,
+                    child: PopularNoticeItem(
+                      rank: "5",
+                      body: items.length > 4 ? items[4].notice.body : "-",
+                      hits: items.length > 4 ? items[4].hits : 0,
+                    ),
                   ),
                 ],
               ),
             ),
-            if (isLoading == true)
+            if (isLoading)
               const PopularNoticeContainer(
                 child: Center(
                   child: SizedBox(
@@ -80,7 +125,7 @@ class PopularNoticesBox extends StatelessWidget {
                   ),
                 ),
               ),
-            if (isLoading != true && items.isEmpty)
+            if (!isLoading && items.isEmpty)
               const PopularNoticeContainer(
                 child: Center(
                   child: Column(

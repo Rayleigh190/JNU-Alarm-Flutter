@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:jnu_alarm/common/widgets/common_ad_web_view_screen.dart';
-import 'package:jnu_alarm/common/widgets/notice_web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
+import 'package:jnu_alarm/features/notice/models/notice_model.dart';
 import 'package:jnu_alarm/features/trend/models/popular_notice_item_model.dart';
 import 'package:jnu_alarm/features/trend/view_models/trend_view_model.dart';
 import 'package:jnu_alarm/features/trend/views/widgets/popular_notice_box.dart';
@@ -95,19 +95,6 @@ class _TrendScreenState extends ConsumerState<TrendScreen>
     super.dispose();
   }
 
-  void _onTapWeb(String title, String link, String body) {
-    if (link.isEmpty) return;
-    Navigator.pushNamed(
-      context,
-      CommonAdWebViewScreen.routeName,
-      arguments: WebViewScreenArgs(
-        title: title,
-        link: link,
-        body: body,
-      ),
-    );
-  }
-
   Future<void> _onRefresh() async {
     await ref.watch(trendProvider.notifier).refresh();
   }
@@ -144,7 +131,13 @@ class _TrendScreenState extends ConsumerState<TrendScreen>
                     final items = List.generate(
                       dailyPopularNotices.length,
                       (index) => PopularNoticeItemModel(
-                          body: dailyPopularNotices[index].body,
+                          notice: NoticeModel(
+                            id: dailyPopularNotices[index].id,
+                            title: dailyPopularNotices[index].title,
+                            body: dailyPopularNotices[index].body,
+                            link: dailyPopularNotices[index].link,
+                            created_at: DateTime.now(),
+                          ),
                           hits: dailyPopularNotices[index].daily_hits ?? 0),
                     );
                     return PopularNoticesBox(title: "일간 인기 공지", items: items);
@@ -169,7 +162,13 @@ class _TrendScreenState extends ConsumerState<TrendScreen>
                     final items = List.generate(
                       weeklyPopularNotices.length,
                       (index) => PopularNoticeItemModel(
-                          body: weeklyPopularNotices[index].body,
+                          notice: NoticeModel(
+                            id: weeklyPopularNotices[index].id,
+                            title: weeklyPopularNotices[index].title,
+                            body: weeklyPopularNotices[index].body,
+                            link: weeklyPopularNotices[index].link,
+                            created_at: DateTime.now(),
+                          ),
                           hits: weeklyPopularNotices[index].weekly_hits ?? 0),
                     );
                     return PopularNoticesBox(title: "주간 인기 공지", items: items);
