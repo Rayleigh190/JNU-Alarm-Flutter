@@ -108,6 +108,10 @@ class _TrendScreenState extends ConsumerState<TrendScreen>
     );
   }
 
+  Future<void> _onRefresh() async {
+    await ref.watch(trendProvider.notifier).refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -120,63 +124,71 @@ class _TrendScreenState extends ConsumerState<TrendScreen>
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
       ),
-      body: SingleChildScrollView(
-        controller: _scrollController,
-        padding: const EdgeInsets.symmetric(
-          horizontal: Sizes.size16,
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              trendState.when(
-                data: (data) {
-                  final dailyPopularNotices = data.popularNoticeList.daily_top;
-                  final items = List.generate(
-                    dailyPopularNotices.length,
-                    (index) => PopularNoticeItemModel(
-                        body: dailyPopularNotices[index].body,
-                        hits: dailyPopularNotices[index].daily_hits ?? 0),
-                  );
-                  return PopularNoticesBox(title: "일간 인기 공지", items: items);
-                },
-                loading: () {
-                  return const PopularNoticesBox(
-                    title: "일간 인기 공지",
-                    items: [],
-                    isLoading: true,
-                  );
-                },
-                error: (Object error, StackTrace stackTrace) {
-                  debugPrint(error.toString());
-                  return Container();
-                },
-              ),
-              Gaps.v16,
-              trendState.when(
-                data: (data) {
-                  final weeklyPopularNotices =
-                      data.popularNoticeList.weekly_top;
-                  final items = List.generate(
-                    weeklyPopularNotices.length,
-                    (index) => PopularNoticeItemModel(
-                        body: weeklyPopularNotices[index].body,
-                        hits: weeklyPopularNotices[index].weekly_hits ?? 0),
-                  );
-                  return PopularNoticesBox(title: "주간 인기 공지", items: items);
-                },
-                loading: () {
-                  return const PopularNoticesBox(
-                    title: "주간 인기 공지",
-                    items: [],
-                    isLoading: true,
-                  );
-                },
-                error: (Object error, StackTrace stackTrace) {
-                  debugPrint(error.toString());
-                  return Container();
-                },
-              )
-            ],
+      body: RefreshIndicator(
+        color: Theme.of(context).primaryColor,
+        backgroundColor: const Color(0xFF323430),
+        onRefresh: _onRefresh,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          controller: _scrollController,
+          padding: const EdgeInsets.symmetric(
+            horizontal: Sizes.size16,
+          ),
+          child: SafeArea(
+            child: Column(
+              children: [
+                trendState.when(
+                  data: (data) {
+                    final dailyPopularNotices =
+                        data.popularNoticeList.daily_top;
+                    final items = List.generate(
+                      dailyPopularNotices.length,
+                      (index) => PopularNoticeItemModel(
+                          body: dailyPopularNotices[index].body,
+                          hits: dailyPopularNotices[index].daily_hits ?? 0),
+                    );
+                    return PopularNoticesBox(title: "일간 인기 공지", items: items);
+                  },
+                  loading: () {
+                    return const PopularNoticesBox(
+                      title: "일간 인기 공지",
+                      items: [],
+                      isLoading: true,
+                    );
+                  },
+                  error: (Object error, StackTrace stackTrace) {
+                    debugPrint(error.toString());
+                    return Container();
+                  },
+                ),
+                Gaps.v16,
+                trendState.when(
+                  data: (data) {
+                    final weeklyPopularNotices =
+                        data.popularNoticeList.weekly_top;
+                    final items = List.generate(
+                      weeklyPopularNotices.length,
+                      (index) => PopularNoticeItemModel(
+                          body: weeklyPopularNotices[index].body,
+                          hits: weeklyPopularNotices[index].weekly_hits ?? 0),
+                    );
+                    return PopularNoticesBox(title: "주간 인기 공지", items: items);
+                  },
+                  loading: () {
+                    return const PopularNoticesBox(
+                      title: "주간 인기 공지",
+                      items: [],
+                      isLoading: true,
+                    );
+                  },
+                  error: (Object error, StackTrace stackTrace) {
+                    debugPrint(error.toString());
+                    return Container();
+                  },
+                ),
+                Gaps.v96
+              ],
+            ),
           ),
         ),
       ),
