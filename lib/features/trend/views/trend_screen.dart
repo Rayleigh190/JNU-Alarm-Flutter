@@ -3,8 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:jnu_alarm/common/secrets.dart';
-import 'package:jnu_alarm/common/utils.dart';
 import 'package:jnu_alarm/common/widgets/common_ad_web_view_screen.dart';
 import 'package:jnu_alarm/common/widgets/notice_web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
@@ -113,9 +111,7 @@ class _TrendScreenState extends ConsumerState<TrendScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    // final trendState = ref.watch(trendProvider);
-    final isDark = isDarkMode(context);
-    DateTime now = DateTime.now();
+    final trendState = ref.watch(trendProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -132,25 +128,54 @@ class _TrendScreenState extends ConsumerState<TrendScreen>
         child: SafeArea(
           child: Column(
             children: [
-              PopularNoticesBox(
-                title: "일간 인기 공지",
-                items: [
-                  PopularNoticeItemModel(body: "아무게1", hits: 30),
-                  PopularNoticeItemModel(body: "아무게2", hits: 20),
-                  PopularNoticeItemModel(body: "아무게3", hits: 10),
-                  PopularNoticeItemModel(body: "아무게4", hits: 5),
-                  PopularNoticeItemModel(body: "아무게5", hits: 1),
-                ],
+              trendState.when(
+                data: (data) {
+                  final dailyPopularNotices = data.popularNoticeList.daily_top;
+                  final items = List.generate(
+                    dailyPopularNotices.length,
+                    (index) => PopularNoticeItemModel(
+                        body: dailyPopularNotices[index].body,
+                        hits: dailyPopularNotices[index].daily_hits ?? 0),
+                  );
+                  return PopularNoticesBox(title: "일간 인기 공지", items: items);
+                },
+                loading: () {
+                  return const PopularNoticesBox(
+                    title: "일간 인기 공지",
+                    items: [],
+                    isLoading: true,
+                  );
+                },
+                error: (Object error, StackTrace stackTrace) {
+                  debugPrint(error.toString());
+                  return Container();
+                },
               ),
               Gaps.v16,
-              PopularNoticesBox(
-                title: "주간 인기 공지",
-                items: [
-                  PopularNoticeItemModel(body: "아무게1", hits: 30),
-                  PopularNoticeItemModel(body: "아무게2", hits: 20),
-                  PopularNoticeItemModel(body: "아무게3", hits: 10),
-                ],
-              ),
+              trendState.when(
+                data: (data) {
+                  final weeklyPopularNotices =
+                      data.popularNoticeList.weekly_top;
+                  final items = List.generate(
+                    weeklyPopularNotices.length,
+                    (index) => PopularNoticeItemModel(
+                        body: weeklyPopularNotices[index].body,
+                        hits: weeklyPopularNotices[index].weekly_hits ?? 0),
+                  );
+                  return PopularNoticesBox(title: "주간 인기 공지", items: items);
+                },
+                loading: () {
+                  return const PopularNoticesBox(
+                    title: "주간 인기 공지",
+                    items: [],
+                    isLoading: true,
+                  );
+                },
+                error: (Object error, StackTrace stackTrace) {
+                  debugPrint(error.toString());
+                  return Container();
+                },
+              )
             ],
           ),
         ),
