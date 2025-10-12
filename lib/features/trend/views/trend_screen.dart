@@ -9,7 +9,9 @@ import 'package:jnu_alarm/common/widgets/common_ad_web_view_screen.dart';
 import 'package:jnu_alarm/common/widgets/notice_web_view_screen.dart';
 import 'package:jnu_alarm/constants/gaps.dart';
 import 'package:jnu_alarm/constants/sizes.dart';
+import 'package:jnu_alarm/features/trend/models/popular_notice_item_model.dart';
 import 'package:jnu_alarm/features/trend/view_models/trend_view_model.dart';
+import 'package:jnu_alarm/features/trend/views/widgets/popular_notice_box.dart';
 
 class TrendScreen extends ConsumerStatefulWidget {
   const TrendScreen({super.key});
@@ -127,12 +129,28 @@ class _TrendScreenState extends ConsumerState<TrendScreen>
         padding: const EdgeInsets.symmetric(
           horizontal: Sizes.size16,
         ),
-        child: const SafeArea(
+        child: SafeArea(
           child: Column(
             children: [
-              Gaps.v36,
+              PopularNoticesBox(
+                title: "일간 인기 공지",
+                items: [
+                  PopularNoticeItemModel(body: "아무게1", hits: 30),
+                  PopularNoticeItemModel(body: "아무게2", hits: 20),
+                  PopularNoticeItemModel(body: "아무게3", hits: 10),
+                  PopularNoticeItemModel(body: "아무게4", hits: 5),
+                  PopularNoticeItemModel(body: "아무게5", hits: 1),
+                ],
+              ),
               Gaps.v16,
-              Gaps.v16,
+              PopularNoticesBox(
+                title: "주간 인기 공지",
+                items: [
+                  PopularNoticeItemModel(body: "아무게1", hits: 30),
+                  PopularNoticeItemModel(body: "아무게2", hits: 20),
+                  PopularNoticeItemModel(body: "아무게3", hits: 10),
+                ],
+              ),
             ],
           ),
         ),
