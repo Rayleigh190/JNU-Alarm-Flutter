@@ -1,0 +1,97 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:jnu_alarm/common/utils.dart';
+import 'package:jnu_alarm/constants/sizes.dart';
+
+class TrendAd extends StatefulWidget {
+  const TrendAd({super.key});
+
+  @override
+  State<TrendAd> createState() => _TrendAdState();
+}
+
+class _TrendAdState extends State<TrendAd> with AutomaticKeepAliveClientMixin {
+  // AdMob Start
+  NativeAd? _nativeAd;
+  bool _nativeAdIsLoaded = false;
+
+  final String _debugAdUnitId = Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/2247696110'
+      : 'ca-app-pub-3940256099942544/3986624511';
+  final String _releaseAdUnitId = Platform.isAndroid
+      ? 'ca-app-pub-4183402691727093/3925352110'
+      : 'ca-app-pub-4183402691727093/6760959516';
+  String get _adUnitId => kDebugMode ? _debugAdUnitId : _releaseAdUnitId;
+
+  /// Loads a native ad.
+  void loadAd() {
+    _nativeAd = NativeAd(
+      adUnitId: _adUnitId,
+      listener: NativeAdListener(
+        onAdLoaded: (ad) {
+          debugPrint('$NativeAd loaded.');
+          setState(() {
+            _nativeAdIsLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          // Dispose the ad here to free resources.
+          debugPrint('$NativeAd failed to load: $error');
+          ad.dispose();
+        },
+      ),
+      request: const AdRequest(),
+      factoryId: "NoticeNativeAd",
+    )..load();
+  }
+  // AdMob End
+
+  @override
+  void initState() {
+    super.initState();
+    loadAd();
+  }
+
+  @override
+  void dispose() {
+    _nativeAd?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return Container(
+      decoration: BoxDecoration(
+        color: isDarkMode(context) ? const Color(0xFF282828) : Colors.white,
+        borderRadius: const BorderRadius.all(
+          Radius.circular(Sizes.size9),
+        ),
+        boxShadow: const [
+          BoxShadow(
+            color: Color.fromARGB(5, 0, 0, 0),
+            blurRadius: Sizes.size5,
+            spreadRadius: Sizes.size1,
+            offset: Offset(0, 3),
+          )
+        ],
+      ),
+      padding: const EdgeInsets.only(left: 0, top: 0, right: 0, bottom: 0),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxHeight: 100),
+        child: SizedBox(
+          height:
+              (MediaQuery.of(context).size.width - ((5 + 20) * 2)) * (1 / 4),
+          child: _nativeAdIsLoaded && _nativeAd != null
+              ? AdWidget(ad: _nativeAd!)
+              : Container(),
+        ),
+      ),
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+}
