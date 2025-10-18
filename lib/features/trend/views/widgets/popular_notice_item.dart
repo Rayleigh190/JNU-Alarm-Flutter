@@ -33,8 +33,8 @@ class PopularNoticeItem extends StatelessWidget {
     return Row(
       children: [
         Container(
-          width: 17,
-          height: 17,
+          width: 16,
+          height: 16,
           decoration: BoxDecoration(
             color: Theme.of(context).primaryColor,
             borderRadius: BorderRadius.circular(10),
@@ -43,7 +43,7 @@ class PopularNoticeItem extends StatelessWidget {
             child: Text(
               rank,
               style: const TextStyle(
-                fontSize: 11,
+                fontSize: 10,
                 color: Colors.black87,
               ),
             ),
@@ -56,7 +56,7 @@ class PopularNoticeItem extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
             style: TextStyle(
-              fontSize: 14,
+              fontSize: 12,
               color: isDark ? Colors.white70 : Colors.black,
             ),
           ),
@@ -74,7 +74,7 @@ class PopularNoticeItem extends StatelessWidget {
         if (trend != null)
           Text(
             convertTrendToEmoji(trend!),
-            style: const TextStyle(fontSize: 15),
+            style: const TextStyle(fontSize: 12),
           )
       ],
     );

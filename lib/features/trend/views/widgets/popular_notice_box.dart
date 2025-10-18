@@ -52,10 +52,10 @@ class _PopularNoticesBoxState extends ConsumerState<PopularNoticesBox> {
           widget.title,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: Sizes.size16,
+            fontSize: 17,
           ),
         ),
-        Gaps.v2,
+        Gaps.v5,
         Stack(
           children: [
             PopularNoticeContainer(
@@ -73,7 +73,7 @@ class _PopularNoticesBoxState extends ConsumerState<PopularNoticesBox> {
                       trend: items.isNotEmpty ? items[0].trend : null,
                     ),
                   ),
-                  Gaps.v10,
+                  Gaps.v14,
                   GestureDetector(
                     onTap: () =>
                         items.length > 1 ? _onTapNotice(items[1].notice) : null,
@@ -84,7 +84,7 @@ class _PopularNoticesBoxState extends ConsumerState<PopularNoticesBox> {
                       trend: items.length > 1 ? items[1].trend : null,
                     ),
                   ),
-                  Gaps.v10,
+                  Gaps.v14,
                   GestureDetector(
                     onTap: () =>
                         items.length > 2 ? _onTapNotice(items[2].notice) : null,
@@ -95,7 +95,7 @@ class _PopularNoticesBoxState extends ConsumerState<PopularNoticesBox> {
                       trend: items.length > 2 ? items[2].trend : null,
                     ),
                   ),
-                  Gaps.v10,
+                  Gaps.v14,
                   GestureDetector(
                     onTap: () =>
                         items.length > 3 ? _onTapNotice(items[3].notice) : null,
@@ -106,7 +106,7 @@ class _PopularNoticesBoxState extends ConsumerState<PopularNoticesBox> {
                       trend: items.length > 3 ? items[3].trend : null,
                     ),
                   ),
-                  Gaps.v10,
+                  Gaps.v14,
                   GestureDetector(
                     onTap: () =>
                         items.length > 4 ? _onTapNotice(items[4].notice) : null,

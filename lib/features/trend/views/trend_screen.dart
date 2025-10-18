@@ -88,7 +88,7 @@ class _TrendScreenState extends ConsumerState<TrendScreen>
                     return Container();
                   },
                 ),
-                Gaps.v16,
+                Gaps.v20,
                 trendState.when(
                   data: (data) {
                     final weeklyPopularNotices =
