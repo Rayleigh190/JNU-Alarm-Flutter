@@ -5,14 +5,27 @@ import 'package:jnu_alarm/constants/gaps.dart';
 class PopularNoticeItem extends StatelessWidget {
   final String rank;
   final String body;
-  final int hits;
+  final int? hits;
+  final String? trend;
 
   const PopularNoticeItem({
     super.key,
     required this.rank,
     required this.body,
-    required this.hits,
+    this.hits,
+    this.trend,
   });
+
+  String convertTrendToEmoji(String trend) {
+    switch (trend) {
+      case "상승":
+        return "🔺";
+      case "하강":
+        return "🔻";
+      default:
+        return "➖";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,14 +62,20 @@ class PopularNoticeItem extends StatelessWidget {
           ),
         ),
         Gaps.h5,
-        Text(
-          "+$hits",
-          style: const TextStyle(
-            fontSize: 10,
-            color: Colors.deepOrange,
-            fontWeight: FontWeight.bold,
+        if (hits != null)
+          Text(
+            "+$hits",
+            style: const TextStyle(
+              fontSize: 10,
+              color: Colors.deepOrange,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        )
+        if (trend != null)
+          Text(
+            convertTrendToEmoji(trend!),
+            style: const TextStyle(fontSize: 15),
+          )
       ],
     );
   }

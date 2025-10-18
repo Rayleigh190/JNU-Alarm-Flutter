@@ -34,6 +34,7 @@ class PopularNoticeModel with _$PopularNoticeModel {
     required String body,
     required String link,
     int? daily_hits,
+    String? trend,
     int? weekly_hits,
   }) = _PopularNoticeModel;
 

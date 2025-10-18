@@ -49,6 +49,7 @@ _$PopularNoticeModelImpl _$$PopularNoticeModelImplFromJson(
       body: json['body'] as String,
       link: json['link'] as String,
       daily_hits: (json['daily_hits'] as num?)?.toInt(),
+      trend: json['trend'] as String?,
       weekly_hits: (json['weekly_hits'] as num?)?.toInt(),
     );
 
@@ -60,5 +61,6 @@ Map<String, dynamic> _$$PopularNoticeModelImplToJson(
       'body': instance.body,
       'link': instance.link,
       'daily_hits': instance.daily_hits,
+      'trend': instance.trend,
       'weekly_hits': instance.weekly_hits,
     };

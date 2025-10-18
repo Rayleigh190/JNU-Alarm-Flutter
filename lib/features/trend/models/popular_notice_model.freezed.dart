@@ -433,6 +433,7 @@ mixin _$PopularNoticeModel {
   String get body => throw _privateConstructorUsedError;
   String get link => throw _privateConstructorUsedError;
   int? get daily_hits => throw _privateConstructorUsedError;
+  String? get trend => throw _privateConstructorUsedError;
   int? get weekly_hits => throw _privateConstructorUsedError;
 
   /// Serializes this PopularNoticeModel to a JSON map.
@@ -457,6 +458,7 @@ abstract class $PopularNoticeModelCopyWith<$Res> {
       String body,
       String link,
       int? daily_hits,
+      String? trend,
       int? weekly_hits});
 }
 
@@ -480,6 +482,7 @@ class _$PopularNoticeModelCopyWithImpl<$Res, $Val extends PopularNoticeModel>
     Object? body = null,
     Object? link = null,
     Object? daily_hits = freezed,
+    Object? trend = freezed,
     Object? weekly_hits = freezed,
   }) {
     return _then(_value.copyWith(
@@ -503,6 +506,10 @@ class _$PopularNoticeModelCopyWithImpl<$Res, $Val extends PopularNoticeModel>
           ? _value.daily_hits
           : daily_hits // ignore: cast_nullable_to_non_nullable
               as int?,
+      trend: freezed == trend
+          ? _value.trend
+          : trend // ignore: cast_nullable_to_non_nullable
+              as String?,
       weekly_hits: freezed == weekly_hits
           ? _value.weekly_hits
           : weekly_hits // ignore: cast_nullable_to_non_nullable
@@ -525,6 +532,7 @@ abstract class _$$PopularNoticeModelImplCopyWith<$Res>
       String body,
       String link,
       int? daily_hits,
+      String? trend,
       int? weekly_hits});
 }
 
@@ -546,6 +554,7 @@ class __$$PopularNoticeModelImplCopyWithImpl<$Res>
     Object? body = null,
     Object? link = null,
     Object? daily_hits = freezed,
+    Object? trend = freezed,
     Object? weekly_hits = freezed,
   }) {
     return _then(_$PopularNoticeModelImpl(
@@ -569,6 +578,10 @@ class __$$PopularNoticeModelImplCopyWithImpl<$Res>
           ? _value.daily_hits
           : daily_hits // ignore: cast_nullable_to_non_nullable
               as int?,
+      trend: freezed == trend
+          ? _value.trend
+          : trend // ignore: cast_nullable_to_non_nullable
+              as String?,
       weekly_hits: freezed == weekly_hits
           ? _value.weekly_hits
           : weekly_hits // ignore: cast_nullable_to_non_nullable
@@ -586,6 +599,7 @@ class _$PopularNoticeModelImpl implements _PopularNoticeModel {
       required this.body,
       required this.link,
       this.daily_hits,
+      this.trend,
       this.weekly_hits});
 
   factory _$PopularNoticeModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -602,11 +616,13 @@ class _$PopularNoticeModelImpl implements _PopularNoticeModel {
   @override
   final int? daily_hits;
   @override
+  final String? trend;
+  @override
   final int? weekly_hits;
 
   @override
   String toString() {
-    return 'PopularNoticeModel(id: $id, title: $title, body: $body, link: $link, daily_hits: $daily_hits, weekly_hits: $weekly_hits)';
+    return 'PopularNoticeModel(id: $id, title: $title, body: $body, link: $link, daily_hits: $daily_hits, trend: $trend, weekly_hits: $weekly_hits)';
   }
 
   @override
@@ -620,14 +636,15 @@ class _$PopularNoticeModelImpl implements _PopularNoticeModel {
             (identical(other.link, link) || other.link == link) &&
             (identical(other.daily_hits, daily_hits) ||
                 other.daily_hits == daily_hits) &&
+            (identical(other.trend, trend) || other.trend == trend) &&
             (identical(other.weekly_hits, weekly_hits) ||
                 other.weekly_hits == weekly_hits));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, title, body, link, daily_hits, weekly_hits);
+  int get hashCode => Object.hash(
+      runtimeType, id, title, body, link, daily_hits, trend, weekly_hits);
 
   /// Create a copy of PopularNoticeModel
   /// with the given fields replaced by the non-null parameter values.
@@ -653,6 +670,7 @@ abstract class _PopularNoticeModel implements PopularNoticeModel {
       required final String body,
       required final String link,
       final int? daily_hits,
+      final String? trend,
       final int? weekly_hits}) = _$PopularNoticeModelImpl;
 
   factory _PopularNoticeModel.fromJson(Map<String, dynamic> json) =
@@ -668,6 +686,8 @@ abstract class _PopularNoticeModel implements PopularNoticeModel {
   String get link;
   @override
   int? get daily_hits;
+  @override
+  String? get trend;
   @override
   int? get weekly_hits;
 

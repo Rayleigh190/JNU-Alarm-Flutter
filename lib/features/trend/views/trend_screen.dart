@@ -63,20 +63,22 @@ class _TrendScreenState extends ConsumerState<TrendScreen>
                     final items = List.generate(
                       dailyPopularNotices.length,
                       (index) => PopularNoticeItemModel(
-                          notice: NoticeModel(
-                            id: dailyPopularNotices[index].id,
-                            title: dailyPopularNotices[index].title,
-                            body: dailyPopularNotices[index].body,
-                            link: dailyPopularNotices[index].link,
-                            created_at: DateTime.now(),
-                          ),
-                          hits: dailyPopularNotices[index].daily_hits ?? 0),
+                        notice: NoticeModel(
+                          id: dailyPopularNotices[index].id,
+                          title: dailyPopularNotices[index].title,
+                          body: dailyPopularNotices[index].body,
+                          link: dailyPopularNotices[index].link,
+                          created_at: DateTime.now(),
+                        ),
+                        trend: dailyPopularNotices[index].trend,
+                      ),
                     );
-                    return PopularNoticesBox(title: "일간 인기 공지", items: items);
+                    return PopularNoticesBox(
+                        title: " 지난 24시간 인기 공지", items: items);
                   },
                   loading: () {
                     return const PopularNoticesBox(
-                      title: "일간 인기 공지",
+                      title: " 지난 24시간 인기 공지",
                       items: [],
                       isLoading: true,
                     );
@@ -103,11 +105,12 @@ class _TrendScreenState extends ConsumerState<TrendScreen>
                           ),
                           hits: weeklyPopularNotices[index].weekly_hits ?? 0),
                     );
-                    return PopularNoticesBox(title: "주간 인기 공지", items: items);
+                    return PopularNoticesBox(
+                        title: " 지난 7일 인기 공지", items: items);
                   },
                   loading: () {
                     return const PopularNoticesBox(
-                      title: "주간 인기 공지",
+                      title: " 지난 7일 인기 공지",
                       items: [],
                       isLoading: true,
                     );
